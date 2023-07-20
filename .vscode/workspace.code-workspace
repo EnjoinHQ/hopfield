@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "hopfield",
+      "path": "../"
+    },
+    {
+      "name": "docs",
+      "path": "../docs"
+    },
+    {
+      "name": "examples",
+      "path": "../examples"
+    },
+    {
+      "name": "playground",
+      "path": "../playground"
+    }
+  ]
+}

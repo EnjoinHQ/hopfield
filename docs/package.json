@@ -1,0 +1,17 @@
+{
+  "name": "docs",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "serve": "vitepress serve"
+  },
+  "devDependencies": {
+    "@types/markdown-it-footnote": "^3.0.0",
+    "markdown-it-footnote": "^3.0.3",
+    "hopfield": "workspace:*",
+    "vitepress": "1.0.0-beta.5",
+    "vitepress-plugin-shiki-twoslash": "0.0.6",
+    "vue": "^3.3.4"
+  }
+}
