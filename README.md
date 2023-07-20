@@ -57,14 +57,12 @@ Hopfield might be a good option for your project if:
 - 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
 - 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
 
-
 Our guiding principles:
 
 - 🚀 **Lightweight and extensible**: Hopfield provides a streamlined pipeline for crafting generative agents.
 - 🔗 **Versatile Functionality**: Our agents can utilize custom tools and support OpenAI function calls.
 - 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
 - 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
-
 - You want to use text embeddings or OpenAI function calling with Typescript-first features (e.g. using [Zod](https://github.com/colinhacks/zod)).
 - You want 
 - You don’t want to use a bloated library for simple LLM interactions (e.g. Langchain.js).
