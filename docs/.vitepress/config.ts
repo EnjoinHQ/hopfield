@@ -111,22 +111,6 @@ export default withTwoslash(
             text: 'API',
             items: [
               {
-                text: 'Types',
-                link: '/api/types',
-              },
-              {
-                text: 'Utilities',
-                link: '/api/utilities',
-              },
-              {
-                text: 'Human-Readable',
-                link: '/api/human',
-              },
-              {
-                text: 'Test',
-                link: '/api/test',
-              },
-              {
                 text: 'Zod',
                 link: '/api/zod',
               },

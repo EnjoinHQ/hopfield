@@ -5,7 +5,7 @@ title: 'Zod'
 
 # Zod
 
-Hopfield exports the [core types](/api/types) as [Zod](https://github.com/colinhacks/zod) schemas from the `'hopfield/zod'` entrypoint.
+Hopfield exports the as [Zod](https://github.com/colinhacks/zod) schemas from the `'hopfield/zod'` entrypoint.
 
 ## Install
 
@@ -32,42 +32,6 @@ yarn add zod
 Import and use schemas:
 
 ```ts twoslash
-import { Abi } from 'hopfield/zod'
-
-const result = await fetch(
-  'https://api.etherscan.io/api?module=contract&action=getabi&address=0x…'
-)
-const abi = Abi.parse(result)
+import { test } from 'hopfield/config'
 ```
 
-## Schemas
-
-```ts twoslash
-import {
-  Abi,
-  AbiConstructor,
-  AbiEvent,
-  AbiEventParameter,
-  AbiError,
-  AbiFallback,
-  AbiFunction,
-  AbiParameter,
-  Address,
-  AbiReceive,
-  AbiStateMutability,
-  SolidityAddress,
-  SolidityArray,
-  SolidityArrayWithoutTuple,
-  SolidityArrayWithTuple,
-  SolidityBool,
-  SolidityBytes,
-  SolidityFunction,
-  SolidityInt,
-  SolidityString,
-  SolidityTuple,
-  TypedData,
-  TypedDataDomain,
-  TypedDataParameter,
-  TypedDataType,
-} from 'hopfield/zod'
-```

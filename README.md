@@ -4,10 +4,14 @@
   <a href="https://hopfield.ai">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-dark.svg">
-      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" width="auto" height="45">
+      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" width="auto" height="120">
     </picture>
   </a>
 </p>
+
+<h3 align="center">
+  Hopfield
+</h3>
 
 <div align="center">
   <a href="https://www.npmjs.com/package/hopfield">
@@ -52,7 +56,21 @@ type TransferInputTypes = AbiParametersToPrimitiveTypes<
 
 Hopfield might be a good option for your project if:
 
+- 🚀 **Lightweight and extensible**: Hopfield provides a streamlined pipeline for crafting generative agents.
+- 🔗 **Versatile Functionality**: Our agents can utilize custom tools and support OpenAI function calls.
+- 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
+- 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
+
+
+Our guiding principles:
+
+- 🚀 **Lightweight and extensible**: Hopfield provides a streamlined pipeline for crafting generative agents.
+- 🔗 **Versatile Functionality**: Our agents can utilize custom tools and support OpenAI function calls.
+- 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
+- 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
+
 - You want to use text embeddings or OpenAI function calling with Typescript-first features (e.g. using [Zod](https://github.com/colinhacks/zod)).
+- You want 
 - You don’t want to use a bloated library for simple LLM interactions (e.g. Langchain.js).
 
 ## Install
