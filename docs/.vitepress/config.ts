@@ -130,7 +130,7 @@ export default withTwoslash(
       },
       siteTitle: false,
       socialLinks: [
-        { icon: 'twitter', link: 'https://twitter.com/0xcadams' },
+        { icon: 'twitter', link: 'https://twitter.com/propology_' },
         { icon: 'github', link: 'https://github.com/propology/hopfield' },
       ],
     },
