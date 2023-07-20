@@ -1,10 +1,10 @@
 ---
-description: 'Minimal typescript library for easy, testable interactions with LLMs'
+description: "Minimal typescript library for easy, testable interactions with LLMs"
 head:
   - - meta
     - name: keywords
       content: ai, openai, gpt, llm, ai-tools
-title: 'Hopfield: Minimal typescript library for easy, testable interactions with LLMs'
+title: "Hopfield: Minimal typescript library for easy, testable interactions with LLMs"
 titleTemplate: false
 ---
 
@@ -38,31 +38,31 @@ titleTemplate: false
   </a>
 </div>
 
-Minimal typescript library for easy, testable interactions with LLMs. Hopfield provides utilities and type definitions for ABI properties and values, covering the [Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html), as well as [EIP-712](https://eips.ethereum.org/EIPS/eip-712) Typed Data.
-
-<!-- ```ts twoslash
-import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'hopfield'
-import { erc20Abi } from 'hopfield/test'
-
-type TransferInputTypes = AbiParametersToPrimitiveTypes<
-  // ^?
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
->
-``` -->
-
-Works great for adding blazing fast [autocomplete](https://twitter.com/awkweb/status/1555678944770367493) and type checking to functions, variables, or your own types. No need to generate types with third-party tools – just use your ABI and let TypeScript do the rest!
+Minimal typescript library for easy, testable interactions with LLMs.
 
 ## TL;DR
 
-Hopfield might be a good option for your project if:
+Hopfield might be a good fit for your project if:
 
+- 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
+- 🪨 You don't need a heavyweight LLM orchestration framework (that ships with a ton of dependencies you'll never use).
+- 💬 You're building complex LLM interactions which need evaluation.
+- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. using [Zod](https://github.com/colinhacks/zod)).
+- 📝 You want simple and extensible conversational memory.
 
+Our guiding principles:
+
+- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
+- 🤏 We provide a simple interface with common LLM use-cases.
+- 🪢 We explicitly _don't_ provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
+- 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
 
 ## Install
 
 Read the [Getting Started](/guide/getting-started) guide to learn more how to use Hopfield.
 
 ::: code-group
+
 ```bash [pnpm]
 pnpm add hopfield
 ```
@@ -74,6 +74,7 @@ npm i hopfield
 ```bash [yarn]
 yarn add hopfield
 ```
+
 :::
 
 ## Community

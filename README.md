@@ -34,8 +34,7 @@
 
 Minimal typescript library for easy, testable interactions with LLMs.
 
-<!-- 
-```ts
+<!-- ```ts
 import type { AbiParametersToPrimitiveTypes, ExtractAbiFunctions, ExtractAbiFunctionNames } from 'hopfield'
 import { erc20Abi } from 'hopfield/test'
 
@@ -50,22 +49,20 @@ type TransferInputTypes = AbiParametersToPrimitiveTypes<
 
 ## TL;DR
 
-Hopfield might be a good option for your project if:
+Hopfield might be a good fit for your project if:
 
-- 🚀 **Lightweight and extensible**: Hopfield provides a streamlined pipeline for crafting generative agents.
-- 🔗 **Versatile Functionality**: Our agents can utilize custom tools and support OpenAI function calls.
-- 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
-- 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
+- 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
+- 🪨 You don't need a heavyweight LLM orchestration framework (that ships with a ton of dependencies you'll never use).
+- 💬 You're building complex LLM interactions which need evaluation.
+- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. using [Zod](https://github.com/colinhacks/zod)).
+- 📝 You want simple and extensible conversational memory.
 
 Our guiding principles:
 
-- 🚀 **Lightweight and extensible**: Hopfield provides a streamlined pipeline for crafting generative agents.
-- 🔗 **Versatile Functionality**: Our agents can utilize custom tools and support OpenAI function calls.
-- 💾 **Efficient Memory Tracking**: Easily monitor conversation - history and tool outputs.
-- 🤖 **Automated evaluation:** Conduct multi-turn conversation evaluations with simulated dialogues, all hands-free.
-- You want to use text embeddings or OpenAI function calling with Typescript-first features (e.g. using [Zod](https://github.com/colinhacks/zod)).
-- You want 
-- You don’t want to use a bloated library for simple LLM interactions (e.g. Langchain.js).
+- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python in your stack?
+- 🤏 We provide a simple interface with common LLM use-cases.
+- 🪢 We explicitly *don't* provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
+- 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
 
 ## Install
 
@@ -88,6 +85,24 @@ For full documentation, visit [hopfield.ai](https://hopfield.ai).
 ## Community
 
 If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions).
+
+## Roadmap
+
+- Temp
+
+<!-- PaLM Chat (Bard) and Anthropic Claude support
+More fun/feature-filled CLI chat app based on Textual
+Simple example of using simpleaichat in a webapp
+Simple of example of using simpleaichat in a stateless manner (e.g. AWS Lambda functions) -->
+
+## Inspiration
+
+Shoutout to these projects which inspired Hopfield:
+
+- [Zod](https://github.com/colinhacks/zod)
+- [Autochain](https://github.com/Forethought-Technologies/AutoChain)
+- [Langchain.js](https://github.com/hwchase17/langchainjs)
+- [simpleaichat](https://github.com/minimaxir/simpleaichat)
 
 ## Contributing
 
