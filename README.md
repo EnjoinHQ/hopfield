@@ -9,10 +9,6 @@
   </a>
 </p>
 
-<h3 align="center">
-  Hopfield
-</h3>
-
 <div align="center">
   <a href="https://www.npmjs.com/package/hopfield">
     <picture>
