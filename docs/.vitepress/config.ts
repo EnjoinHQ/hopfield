@@ -8,7 +8,8 @@ import { version } from '../../package.json';
 export default withTwoslash(
   defineConfig({
     cleanUrls: true,
-    description: '...',
+    description:
+      'Minimal typescript library for easy, testable interactions with LLMs',
     head: [
       ['meta', { name: 'theme-color', content: '#729b1a' }],
       ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
