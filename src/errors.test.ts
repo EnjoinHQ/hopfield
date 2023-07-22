@@ -4,7 +4,7 @@ import { BaseError } from './errors.js';
 
 test('BaseError', () => {
   expect(new BaseError('An error occurred.')).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
     Version: hopfield@x.y.z]
   `);
@@ -12,14 +12,14 @@ test('BaseError', () => {
   expect(
     new BaseError('An error occurred.', { details: 'details' }),
   ).toMatchInlineSnapshot(`
-      [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
-      Details: details
-      Version: hopfield@x.y.z]
-    `);
+    Details: details
+    Version: hopfield@x.y.z]
+  `);
 
   expect(new BaseError('', { details: 'details' })).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
     Details: details
     Version: hopfield@x.y.z]
@@ -30,34 +30,34 @@ test('BaseError (w/ docsPath)', () => {
   expect(
     new BaseError('An error occurred.', {
       details: 'details',
-      docsPath: '/lol',
+      docsPath: '/api/function',
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/lol
+    Docs: https://hopfield.ai/api/function
     Details: details
     Version: hopfield@x.y.z]
   `);
   expect(
     new BaseError('An error occurred.', {
-      cause: new BaseError('error', { docsPath: '/docs' }),
+      cause: new BaseError('error', { docsPath: '/api/function' }),
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/docs
+    Docs: https://hopfield.ai/api/function
     Version: hopfield@x.y.z]
   `);
   expect(
     new BaseError('An error occurred.', {
       cause: new BaseError('error'),
-      docsPath: '/lol',
+      docsPath: '/api/function',
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/lol
+    Docs: https://hopfield.ai/api/function
     Version: hopfield@x.y.z]
   `);
 });
@@ -66,13 +66,13 @@ test('BaseError (w/ metaMessages)', () => {
   expect(
     new BaseError('An error occurred.', {
       details: 'details',
-      metaMessages: ['Reason: idk', 'Cause: lol'],
+      metaMessages: ['Reason: huh', 'Cause: why'],
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An error occurred.
+    [HopfieldError: An error occurred.
 
-    Reason: idk
-    Cause: lol
+    Reason: huh
+    Cause: why
 
     Details: details
     Version: hopfield@x.y.z]
@@ -82,16 +82,16 @@ test('BaseError (w/ metaMessages)', () => {
 test('inherited BaseError', () => {
   const err = new BaseError('An error occurred.', {
     details: 'details',
-    docsPath: '/lol',
+    docsPath: '/api/function',
   });
   expect(
     new BaseError('An internal error occurred.', {
       cause: err,
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An internal error occurred.
+    [HopfieldError: An internal error occurred.
 
-    Docs: https://hopfield.ai/lol
+    Docs: https://hopfield.ai/api/function
     Details: details
     Version: hopfield@x.y.z]
   `);
@@ -102,12 +102,12 @@ test('inherited Error', () => {
   expect(
     new BaseError('An internal error occurred.', {
       cause: err,
-      docsPath: '/lol',
+      docsPath: '/api/function',
     }),
   ).toMatchInlineSnapshot(`
-    [AbiTypeError: An internal error occurred.
+    [HopfieldError: An internal error occurred.
 
-    Docs: https://hopfield.ai/lol
+    Docs: https://hopfield.ai/api/function
     Details: details
     Version: hopfield@x.y.z]
   `);

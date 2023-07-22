@@ -1,9 +1,11 @@
-import type { OneOf, Pretty } from './types.js';
+import type { OneOf, Pretty } from './type-utils.js';
 import { version } from './version.js';
+
+type DocsPaths = '/api/function';
 
 type BaseErrorArgs = Pretty<
   {
-    docsPath?: string | undefined;
+    docsPath?: DocsPaths | undefined;
     metaMessages?: string[] | undefined;
   } & OneOf<{ details?: string | undefined } | { cause?: BaseError | Error }>
 >;

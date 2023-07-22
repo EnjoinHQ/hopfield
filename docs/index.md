@@ -50,12 +50,13 @@ Hopfield might be a good fit for your project if:
 - 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. using [Zod](https://github.com/colinhacks/zod)).
 - 📝 You want simple and extensible conversational memory.
 
-Our guiding principles:
+### Our guiding principles
 
 - 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
-- 🤏 We provide a simple interface with common LLM use-cases.
+- 🤏 We provide a simple interface with common LLM use-cases. This is aligned 1-1 with OpenAI's abstractions.
 - 🪢 We explicitly _don't_ provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
 - 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
+- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (we expect `fetch` to be in the global namespace, as it is in web, edge and modern Node environments, but support also custom `fetch`).
 
 ## Install
 

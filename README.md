@@ -54,15 +54,17 @@ Hopfield might be a good fit for your project if:
 - 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
 - 🪨 You don't need a heavyweight LLM orchestration framework (that ships with a ton of dependencies you'll never use).
 - 💬 You're building complex LLM interactions which need evaluation.
-- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. using [Zod](https://github.com/colinhacks/zod)).
+- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. [Zod](https://github.com/colinhacks/zod) as a first-class citizen).
+- 📝 You want simple and extensible conversational memory.
 - 📝 You want simple and extensible conversational memory.
 
-Our guiding principles:
+### Our guiding principles
 
-- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python in your stack?
-- 🤏 We provide a simple interface with common LLM use-cases.
-- 🪢 We explicitly *don't* provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
+- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
+- 🤏 We provide a simple interface with common LLM use-cases. This is aligned 1-1 with OpenAI's abstractions.
+- 🪢 We explicitly _don't_ provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
 - 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
+- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (we expect `fetch` to be in the global namespace, as it is in web, edge and modern Node environments, but support also custom `fetch`).
 
 ## Install
 
@@ -100,9 +102,13 @@ Simple of example of using simpleaichat in a stateless manner (e.g. AWS Lambda f
 Shoutout to these projects which inspired Hopfield:
 
 - [Zod](https://github.com/colinhacks/zod)
+- [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema) (we had to fork to be able to introspect the zod schema)
 - [Autochain](https://github.com/Forethought-Technologies/AutoChain)
 - [Langchain.js](https://github.com/hwchase17/langchainjs)
 - [simpleaichat](https://github.com/minimaxir/simpleaichat)
+- [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
+
+And many others.
 
 ## Contributing
 

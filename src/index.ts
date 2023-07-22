@@ -1,3 +1,3 @@
 export { BaseError } from './errors.js';
 
-export { test } from './config.js';
+export * from './types.js';

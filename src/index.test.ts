@@ -6,30 +6,6 @@ it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "BaseError",
-      "narrow",
-      "formatAbi",
-      "formatAbiItem",
-      "formatAbiParameter",
-      "formatAbiParameters",
-      "parseAbi",
-      "parseAbiItem",
-      "parseAbiParameter",
-      "parseAbiParameters",
-      "UnknownTypeError",
-      "InvalidAbiItemError",
-      "UnknownSolidityTypeError",
-      "InvalidAbiTypeParameterError",
-      "InvalidFunctionModifierError",
-      "InvalidModifierError",
-      "SolidityProtectedKeywordError",
-      "InvalidParameterError",
-      "InvalidAbiParametersError",
-      "InvalidAbiParameterError",
-      "InvalidStructSignatureError",
-      "InvalidSignatureError",
-      "UnknownSignatureError",
-      "InvalidParenthesisError",
-      "CircularReferenceError",
     ]
   `);
 });
