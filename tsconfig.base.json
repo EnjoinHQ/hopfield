@@ -15,7 +15,7 @@
     "noImplicitOverride": true, // Not enabled by default in `strict` mode.
     "noUnusedLocals": true, // Not enabled by default in `strict` mode.
     "noUnusedParameters": true, // Not enabled by default in `strict` mode.
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": true,
 
     // JavaScript support

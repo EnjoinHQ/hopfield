@@ -10,6 +10,7 @@ tsconfig*.tsbuildinfo
 trace
 bench
 !examples/trace
+openai-json-schema.json
 
 # local env files
 .env

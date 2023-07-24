@@ -1,30 +1,34 @@
+import type { Tuple } from './type-utils.js';
+import type { ZodNumber } from 'zod';
+
+export type BaseHopfieldEmbeddingProps<
+  ModelName extends string,
+  EmbeddingCount extends number,
+  EmbeddingLength extends number,
+> = {
+  model: ModelName;
+  length: EmbeddingLength;
+  count: EmbeddingCount;
+};
+
 export abstract class BaseHopfieldEmbedding<
   ModelName extends string,
-  Embedding extends number[],
-  Provider,
+  EmbeddingCount extends number,
+  EmbeddingLength extends number,
 > {
-  modelName: ModelName;
-  provider: Provider;
+  model: ModelName;
+  protected length: EmbeddingLength;
+  protected count: EmbeddingCount;
 
   constructor({
-    modelName,
-    provider,
-  }: {
-    modelName: ModelName;
-    provider: Provider;
-  }) {
-    this.modelName = modelName;
-    this.provider = provider;
-  }
-
-  protected abstract _textEmbedding(input: string): Promise<Embedding>;
-
-  /**
-   * An embedding for a given text.
-   *
-   * @interface JsonSchemaFunction
-   */
-  async embedding(input: string): Promise<Embedding> {
-    return this._textEmbedding(input);
+    model,
+    length,
+    count,
+  }: BaseHopfieldEmbeddingProps<ModelName, EmbeddingCount, EmbeddingLength>) {
+    this.model = model;
+    this.length = length;
+    this.count = count;
   }
 }
+
+export type Tuple256 = Tuple<256, ZodNumber>;

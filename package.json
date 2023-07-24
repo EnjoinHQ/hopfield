@@ -18,6 +18,7 @@
     "docs:build": "pnpm -r --filter docs build",
     "docs:preview": "pnpm -r --filter docs preview",
     "format": "rome format . --write",
+    "generate": "pnpm bun scripts/generate-json-schema.ts",
     "lint": "rome check .",
     "lint:fix": "pnpm lint --apply",
     "preinstall": "npx only-allow pnpm",

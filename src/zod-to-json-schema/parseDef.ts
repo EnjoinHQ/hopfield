@@ -271,12 +271,6 @@ const selectParser = (
   }
 };
 
-const disallowedTypes: ZodFirstPartyTypeKind[] = [
-  ZodFirstPartyTypeKind.ZodAny,
-  ZodFirstPartyTypeKind.ZodBigInt,
-  ZodFirstPartyTypeKind.ZodTuple,
-];
-
 const requiredDescriptionTypes: ZodFirstPartyTypeKind[] = [
   ZodFirstPartyTypeKind.ZodBigInt,
   ZodFirstPartyTypeKind.ZodBoolean,
@@ -294,7 +288,7 @@ const addMeta = (
   jsonSchema: JsonSchema7Type,
   typeName: ZodFirstPartyTypeKind,
 ): JsonSchema7Type => {
-  // added check here for typeName and description being defined
+  // check here for typeName and description being defined
   if (
     refs.requireDescriptions &&
     requiredDescriptionTypes.includes(typeName) &&
@@ -330,21 +324,18 @@ const addMeta = (
     );
   }
 
-  // added check here for disallowed types
-  if (disallowedTypes.includes(typeName)) {
-    const error = new BaseError(
+  // check here for disabled types
+  if (
+    typeof refs.disabledTypes !== 'boolean' &&
+    refs.disabledTypes.includes(typeName)
+  ) {
+    throw new BaseError(
       `You should not use ${typeName} yet - it provides unreliable results from LLMs.`,
       {
         docsPath: '/api/function',
         details: '',
       },
     );
-
-    if (refs.enableUnstableTypes) {
-      console.warn(error);
-    } else {
-      throw error;
-    }
   }
 
   if (def.description) {

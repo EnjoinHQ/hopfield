@@ -1,4 +1,4 @@
-import { OpenAIHopfieldFunction } from '../openai/function.js';
+import { oa } from '../index.js';
 import { z } from 'zod';
 
 export const weatherFunction = {
@@ -11,11 +11,7 @@ export const weatherFunction = {
           .describe('The city and state, e.g. San Francisco, CA'),
         unit: z
           .enum(['celsius', 'fahrenheit'])
-          .describe(
-            OpenAIHopfieldFunction.templates.enum(
-              'The unit for the temperature.',
-            ),
-          ),
+          .describe(oa.template.function.enum('The unit for the temperature.')),
       }),
     )
     .describe('Get the current weather in a given location'),

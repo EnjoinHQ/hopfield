@@ -1,8 +1,8 @@
 import { expect, it, test } from 'vitest';
 
+import { openai } from '../_test/openai.js';
 import * as Exports from './embedding.js';
-import { OpenAIHopfieldEmbedding } from './embedding.js';
-import OpenAI from 'openai';
+import { oa } from './index.js';
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
@@ -13,18 +13,22 @@ it('should expose correct exports', () => {
 });
 
 test('should set a default model name', async () => {
-  expect(
-    new OpenAIHopfieldEmbedding({
-      provider: new OpenAI({ apiKey: process.env.VITE_OPENAI_API_KEY ?? '' }),
-    }).modelName,
-  ).toMatchInlineSnapshot('"text-embedding-ada-002"');
+  expect(oa.embedding().model).toMatchInlineSnapshot(
+    '"text-embedding-ada-002"',
+  );
 });
 
-test('should create a text embedding', async () => {
-  const embedding = await new OpenAIHopfieldEmbedding({
-    provider: new OpenAI({ apiKey: process.env.VITE_OPENAI_API_KEY ?? '' }),
-  }).embedding('hopfield');
-  expect(embedding[0]).toMatchInlineSnapshot('-0.0073666335');
-  expect(embedding[1]).toMatchInlineSnapshot('0.012898559');
-  expect(embedding[1535]).toMatchInlineSnapshot('-0.0013916683');
+test('should parse a text embedding response', async () => {
+  const hopfieldEmbedding = oa.embedding();
+
+  const response = await openai.embeddings.create(
+    hopfieldEmbedding.input.parse({
+      input: 'hopfield',
+    }),
+  );
+
+  const embedding = await hopfieldEmbedding.output.parseAsync(response);
+
+  expect(embedding.data[0].embedding[0]).toMatchInlineSnapshot('-0.0073666335');
+  expect(embedding.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
 });

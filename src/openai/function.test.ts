@@ -3,6 +3,7 @@ import { expect, it, test } from 'vitest';
 import { weatherFunction } from '../_test/function.js';
 import * as Exports from './function.js';
 import { OpenAIHopfieldFunction } from './function.js';
+import { oa } from './index.js';
 import { z } from 'zod';
 
 it('should expose correct exports', () => {
@@ -15,9 +16,7 @@ it('should expose correct exports', () => {
 
 test('should add enum suffix', () => {
   expect(
-    OpenAIHopfieldFunction.templates.enum(
-      'The city and state, e.g. San Francisco, CA.',
-    ),
+    oa.template.function.enum('The city and state, e.g. San Francisco, CA.'),
   ).toMatchInlineSnapshot(
     '"The city and state, e.g. San Francisco, CA. This must always be a possible value from the `enum` array."',
   );
@@ -25,10 +24,10 @@ test('should add enum suffix', () => {
 
 test('should pass with valid function', () => {
   expect(
-    new OpenAIHopfieldFunction({
+    oa.function({
       schema: weatherFunction.schema,
-      functionName: weatherFunction.name,
-    }).format(),
+      name: weatherFunction.name,
+    }).input,
   ).toMatchInlineSnapshot(`
     {
       "description": "Get the current weather in a given location",
@@ -61,24 +60,25 @@ test('should pass with valid function', () => {
 });
 
 test('should fail with no function description', () => {
-  expect(() =>
-    new OpenAIHopfieldFunction({
-      functionName: 'getWeather',
-      schema: z.function().args(
-        z.object({
-          location: z
-            .string()
-            .describe('The city and state, e.g. San Francisco, CA'),
-          unit: z
-            .enum(['celsius', 'fahrenheit'])
-            .describe(
-              OpenAIHopfieldFunction.templates.enum(
-                'The unit for the temperature.',
+  expect(
+    () =>
+      oa.function({
+        name: 'getWeather',
+        schema: z.function().args(
+          z.object({
+            location: z
+              .string()
+              .describe('The city and state, e.g. San Francisco, CA'),
+            unit: z
+              .enum(['celsius', 'fahrenheit'])
+              .describe(
+                OpenAIHopfieldFunction.templates.enum(
+                  'The unit for the temperature.',
+                ),
               ),
-            ),
-        }),
-      ),
-    }).format(),
+          }),
+        ),
+      }).input,
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the function schema
 
@@ -89,21 +89,22 @@ test('should fail with no function description', () => {
 });
 
 test('should fail with no enum description', () => {
-  expect(() =>
-    new OpenAIHopfieldFunction({
-      functionName: 'getWeather',
-      schema: z
-        .function()
-        .args(
-          z.object({
-            location: z
-              .string()
-              .describe('The city and state, e.g. San Francisco, CA'),
-            unit: z.enum(['celsius', 'fahrenheit']),
-          }),
-        )
-        .describe('Get the current weather in a given location'),
-    }).format(),
+  expect(
+    () =>
+      oa.function({
+        name: 'getWeather',
+        schema: z
+          .function()
+          .args(
+            z.object({
+              location: z
+                .string()
+                .describe('The city and state, e.g. San Francisco, CA'),
+              unit: z.enum(['celsius', 'fahrenheit']),
+            }),
+          )
+          .describe('Get the current weather in a given location'),
+      }).input,
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the type: ZodEnum
 
@@ -114,25 +115,26 @@ test('should fail with no enum description', () => {
 });
 
 test('should fail with no string description', () => {
-  expect(() =>
-    new OpenAIHopfieldFunction({
-      functionName: 'getWeather',
-      schema: z
-        .function()
-        .args(
-          z.object({
-            location: z.string(),
-            unit: z
-              .enum(['celsius', 'fahrenheit'])
-              .describe(
-                OpenAIHopfieldFunction.templates.enum(
-                  'The unit for the temperature.',
+  expect(
+    () =>
+      oa.function({
+        name: 'getWeather',
+        schema: z
+          .function()
+          .args(
+            z.object({
+              location: z.string(),
+              unit: z
+                .enum(['celsius', 'fahrenheit'])
+                .describe(
+                  OpenAIHopfieldFunction.templates.enum(
+                    'The unit for the temperature.',
+                  ),
                 ),
-              ),
-          }),
-        )
-        .describe('Get the current weather in a given location'),
-    }).format(),
+            }),
+          )
+          .describe('Get the current weather in a given location'),
+      }).input,
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the type: ZodString
 
@@ -143,23 +145,24 @@ test('should fail with no string description', () => {
 });
 
 test('should fail with no enum templated description', () => {
-  expect(() =>
-    new OpenAIHopfieldFunction({
-      functionName: 'getWeather',
-      schema: z
-        .function()
-        .args(
-          z.object({
-            location: z
-              .string()
-              .describe('The city and state, e.g. San Francisco, CA'),
-            unit: z
-              .enum(['celsius', 'fahrenheit'])
-              .describe('The unit for the temperature.'),
-          }),
-        )
-        .describe('Get the current weather in a given location'),
-    }).format(),
+  expect(
+    () =>
+      oa.function({
+        name: 'getWeather',
+        schema: z
+          .function()
+          .args(
+            z.object({
+              location: z
+                .string()
+                .describe('The city and state, e.g. San Francisco, CA'),
+              unit: z
+                .enum(['celsius', 'fahrenheit'])
+                .describe('The unit for the temperature.'),
+            }),
+          )
+          .describe('Get the current weather in a given location'),
+      }).input,
   ).toThrowErrorMatchingInlineSnapshot(`
     "It's recommended to template your descriptions - we recommend ending the type ZodEnum with \\" This must always be a possible value from the \`enum\` array.\\".
 
@@ -169,11 +172,12 @@ test('should fail with no enum templated description', () => {
 });
 
 test('should fail with an invalid function name', () => {
-  expect(() =>
-    new OpenAIHopfieldFunction({
-      schema: weatherFunction.schema,
-      functionName: 'function?',
-    }).format(),
+  expect(
+    () =>
+      oa.function({
+        schema: weatherFunction.schema,
+        name: 'function?',
+      }).input,
   ).toThrowErrorMatchingInlineSnapshot(`
     "The function name is invalid.
 

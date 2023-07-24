@@ -1,12 +1,25 @@
 import { BaseError } from './errors.js';
-import type { TypeTemplates } from './templates.js';
 import type { Targets } from './zod-to-json-schema/Options.js';
 
 import {
   type JsonSchema,
   zodToJsonSchema,
 } from './zod-to-json-schema/zodToJsonSchema.js';
-import { ZodFunction, ZodTuple, type ZodTypeAny } from 'zod';
+import {
+  type ZodFirstPartyTypeKind,
+  type ZodFunction,
+  type ZodTuple,
+  type ZodTypeAny,
+} from 'zod';
+
+export type DisabledTypes =
+  | ZodFirstPartyTypeKind[]
+  | readonly ZodFirstPartyTypeKind[]
+  | false;
+
+export type TypeTemplates =
+  | Partial<Record<ZodFirstPartyTypeKind, (input: string) => string>>
+  | false;
 
 export interface JsonSchemaFunction<
   Name extends string,
@@ -35,10 +48,28 @@ export interface JsonSchemaFunction<
   description: Description;
 }
 
-export type HopfieldFunctionOptions = {
-  enableUnstableTypes?: boolean;
+export type HopfieldFunctionOptions<
+  D extends DisabledTypes,
+  T extends TypeTemplates,
+> = {
+  /**
+   * Allows you to throw development errors in production. This defaults to `false`
+   * for speed/devex when deploying to prod.
+   */
   requireDescriptions?: boolean;
-  templates?: TypeTemplates | false;
+  /**
+   * Allows you to throw development errors in production. This defaults to `false`
+   * for speed/devex when deploying to prod.
+   */
+  templates?: T;
+  /**
+   * Allows you override or disable "unstable" types, which are types that do not typically
+   * produce good results with a given model. These are defined on a per-model basis and
+   * test cases must back up their unreliability.
+   *
+   * Set to false to allow all "unstable" types.
+   */
+  disabledTypes?: D;
 };
 
 function isValidFunctionName(name: string) {
@@ -46,40 +77,79 @@ function isValidFunctionName(name: string) {
   return regex.test(name);
 }
 
-export abstract class BaseHopfieldFunction<
-  ZFunction extends ZodFunction<Args, Returns>,
+export type BaseHopfieldFunctionProps<
   Args extends ZodTuple<any, any>,
   Returns extends ZodTypeAny,
+  ZFunction extends ZodFunction<Args, Returns>,
   FName extends string,
-  Templates extends TypeTemplates | false,
-> {
+  D extends DisabledTypes,
+  T extends TypeTemplates,
+> = {
   schema: ZFunction;
-  functionName: FName;
-  protected options: HopfieldFunctionOptions;
+  name: FName;
+  options?: HopfieldFunctionOptions<D, T> | undefined;
+};
+
+export abstract class BaseHopfieldFunction<
+  ZFunctionArgs extends ZodTuple<any, any>,
+  ZFunctionReturns extends ZodTypeAny,
+  ZFunction extends ZodFunction<ZFunctionArgs, ZFunctionReturns>,
+  FName extends string,
+  DTypes extends DisabledTypes,
+  TTemplates extends TypeTemplates,
+> {
+  /**
+   *
+   */
+  protected schema: ZFunction;
+  /**
+   *
+   */
+  name: FName;
+  /**
+   *
+   */
+  options: HopfieldFunctionOptions<DTypes, TTemplates>;
+  protected _parameters: ZFunction['_def']['args'];
 
   constructor({
     schema,
-    functionName,
+    name,
     options = {},
-  }: {
-    schema: ZFunction;
-    functionName: FName;
-    options?: HopfieldFunctionOptions | undefined;
-  }) {
+  }: BaseHopfieldFunctionProps<
+    ZFunctionArgs,
+    ZFunctionReturns,
+    ZFunction,
+    FName,
+    DTypes,
+    TTemplates
+  >) {
     this.schema = schema;
-    this.functionName = functionName;
+    this.name = name;
     this.options = options;
+
+    const items = this.schema.parameters()?.items ?? [];
+
+    this._parameters =
+      (items?.length ?? 0) === 1 ? items[0] : this.schema.parameters();
+
+    this._defaultTypeTemplates = this._defaultTypeTemplates.bind(this);
+    this._defaultDisabledTypes = this._defaultDisabledTypes.bind(this);
   }
 
-  protected abstract _defaultTypeTemplates(): Templates;
+  protected abstract _defaultTypeTemplates(): TypeTemplates;
+  protected abstract _defaultDisabledTypes(): DisabledTypes;
+  protected abstract get output(): ZodTypeAny;
 
   /**
-   * A JSON schema function definition for LLM function calling.
+   * Returns a formatted JSON schema function definition for LLM function calling.
+   * This is checked for correctness against the provided rules, so make sure this is only done
+   * once and not called repeatedly in the critical path.
    *
-   * @interface JsonSchemaFunction
+   * @returns @interface JsonSchemaFunction a definition for a valid JSON schema function.
    */
-  format(): JsonSchemaFunction<FName> {
-    if (!isValidFunctionName(this.functionName)) {
+  get input(): JsonSchemaFunction<FName> {
+    if (!isValidFunctionName(this.name)) {
       throw new BaseError('The function name is invalid.', {
         docsPath: '/api/function',
         details:
@@ -98,27 +168,33 @@ export abstract class BaseHopfieldFunction<
       );
     }
 
-    const params = this.schema.parameters?.();
-    const items = params?.items ?? [];
-
     return {
-      name: this.functionName,
+      name: this.name,
       description: this.schema.description,
-      parameters: zodToJsonSchema(
-        (items?.length ?? 0) === 1 ? items[0] : params,
-        {
-          $refStrategy: 'none',
-          templates:
-            this.options.templates === false
-              ? false
-              : {
-                  ...this._defaultTypeTemplates(),
-                  ...this.options.templates,
-                },
-          requireDescriptions: this.options.requireDescriptions ?? true,
-          enableUnstableTypes: this.options.enableUnstableTypes ?? false,
-        },
-      ),
+      parameters: zodToJsonSchema(this._parameters, {
+        $refStrategy: 'none',
+        templates:
+          this.options.templates === false
+            ? false
+            : {
+                ...this._defaultTypeTemplates(),
+                ...this.options.templates,
+              },
+        requireDescriptions: this.options.requireDescriptions ?? true,
+        disabledTypes: !this.options.disabledTypes
+          ? false
+          : {
+              ...this._defaultDisabledTypes(),
+              ...this.options.disabledTypes,
+            },
+      }),
     };
+  }
+
+  /**
+   *
+   */
+  get parameters(): ZFunction['_def']['args'] {
+    return this._parameters;
   }
 }

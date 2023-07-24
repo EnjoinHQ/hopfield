@@ -1,3 +1,4 @@
+import type { DisabledTypes, TypeTemplates } from '../function.js';
 import type { Options, Targets } from './Options.js';
 import { getRefs } from './Refs.js';
 import { type JsonSchema7Type, parseDef } from './parseDef.js';
@@ -18,10 +19,12 @@ export type JsonSchema<Target> = (Target extends 'jsonSchema7'
 
 export const zodToJsonSchema = <
   TSchema,
+  D extends DisabledTypes,
+  T extends TypeTemplates,
   Target extends Targets = 'jsonSchema7',
 >(
   schema: ZodSchema<TSchema>,
-  options?: Partial<Options<Target>> | string,
+  options?: Partial<Options<D, T, Target>> | string,
 ): JsonSchema<Target> => {
   const refs = getRefs(options);
 
@@ -58,7 +61,7 @@ export const zodToJsonSchema = <
       false,
     ) ?? {};
 
-  const combined: ReturnType<typeof zodToJsonSchema<Target>> =
+  const combined: ReturnType<typeof zodToJsonSchema<Target, D, T>> =
     name === undefined
       ? definitions
         ? {
