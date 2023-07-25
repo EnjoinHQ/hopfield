@@ -32,7 +32,7 @@
 
 ---
 
-Minimal typescript library for easy, testable interactions with LLMs.
+Minimal typescript library for type-safe, testable interactions with LLMs.
 
 <!-- ```ts
 import type { AbiParametersToPrimitiveTypes, ExtractAbiFunctions, ExtractAbiFunctionNames } from 'hopfield'

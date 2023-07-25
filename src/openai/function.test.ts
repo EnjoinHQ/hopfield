@@ -1,9 +1,11 @@
 import { expect, it, test } from 'vitest';
 
 import { weatherFunction } from '../_test/function.js';
+import { openai } from '../_test/openai.js';
 import * as Exports from './function.js';
 import { OpenAIHopfieldFunction } from './function.js';
-import { oa } from './index.js';
+
+import hop from '../index.js';
 import { z } from 'zod';
 
 it('should expose correct exports', () => {
@@ -16,7 +18,7 @@ it('should expose correct exports', () => {
 
 test('should add enum suffix', () => {
   expect(
-    oa.template.function.enum('The city and state, e.g. San Francisco, CA.'),
+    hop.template.function.enum('The city and state, e.g. San Francisco, CA.'),
   ).toMatchInlineSnapshot(
     '"The city and state, e.g. San Francisco, CA. This must always be a possible value from the `enum` array."',
   );
@@ -24,10 +26,13 @@ test('should add enum suffix', () => {
 
 test('should pass with valid function', () => {
   expect(
-    oa.function({
-      schema: weatherFunction.schema,
-      name: weatherFunction.name,
-    }).input,
+    hop
+      .provider(openai)
+      .function({
+        schema: weatherFunction.schema,
+        name: weatherFunction.name,
+      })
+      .format(),
   ).toMatchInlineSnapshot(`
     {
       "description": "Get the current weather in a given location",
@@ -60,9 +65,10 @@ test('should pass with valid function', () => {
 });
 
 test('should fail with no function description', () => {
-  expect(
-    () =>
-      oa.function({
+  expect(() =>
+    hop
+      .provider(openai)
+      .function({
         name: 'getWeather',
         schema: z.function().args(
           z.object({
@@ -78,7 +84,8 @@ test('should fail with no function description', () => {
               ),
           }),
         ),
-      }).input,
+      })
+      .format(),
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the function schema
 
@@ -89,9 +96,10 @@ test('should fail with no function description', () => {
 });
 
 test('should fail with no enum description', () => {
-  expect(
-    () =>
-      oa.function({
+  expect(() =>
+    hop
+      .provider(openai)
+      .function({
         name: 'getWeather',
         schema: z
           .function()
@@ -104,7 +112,8 @@ test('should fail with no enum description', () => {
             }),
           )
           .describe('Get the current weather in a given location'),
-      }).input,
+      })
+      .format(),
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the type: ZodEnum
 
@@ -115,9 +124,10 @@ test('should fail with no enum description', () => {
 });
 
 test('should fail with no string description', () => {
-  expect(
-    () =>
-      oa.function({
+  expect(() =>
+    hop
+      .provider(openai)
+      .function({
         name: 'getWeather',
         schema: z
           .function()
@@ -134,7 +144,8 @@ test('should fail with no string description', () => {
             }),
           )
           .describe('Get the current weather in a given location'),
-      }).input,
+      })
+      .format(),
   ).toThrowErrorMatchingInlineSnapshot(`
     "You must define a description for the type: ZodString
 
@@ -145,9 +156,10 @@ test('should fail with no string description', () => {
 });
 
 test('should fail with no enum templated description', () => {
-  expect(
-    () =>
-      oa.function({
+  expect(() =>
+    hop
+      .provider(openai)
+      .function({
         name: 'getWeather',
         schema: z
           .function()
@@ -162,7 +174,8 @@ test('should fail with no enum templated description', () => {
             }),
           )
           .describe('Get the current weather in a given location'),
-      }).input,
+      })
+      .format(),
   ).toThrowErrorMatchingInlineSnapshot(`
     "It's recommended to template your descriptions - we recommend ending the type ZodEnum with \\" This must always be a possible value from the \`enum\` array.\\".
 
@@ -172,12 +185,14 @@ test('should fail with no enum templated description', () => {
 });
 
 test('should fail with an invalid function name', () => {
-  expect(
-    () =>
-      oa.function({
+  expect(() =>
+    hop
+      .provider(openai)
+      .function({
         schema: weatherFunction.schema,
         name: 'function?',
-      }).input,
+      })
+      .format(),
   ).toThrowErrorMatchingInlineSnapshot(`
     "The function name is invalid.
 

@@ -6,7 +6,8 @@ it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "BaseError",
-      "oa",
+      "hop",
+      "default",
     ]
   `);
 });

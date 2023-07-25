@@ -1,5 +1,4 @@
-import type { Tuple } from './type-utils.js';
-import type { ZodNumber } from 'zod';
+import { BaseHopfieldSchema } from './base.js';
 
 export type BaseHopfieldEmbeddingProps<
   ModelName extends string,
@@ -15,7 +14,7 @@ export abstract class BaseHopfieldEmbedding<
   ModelName extends string,
   EmbeddingCount extends number,
   EmbeddingLength extends number,
-> {
+> extends BaseHopfieldSchema {
   model: ModelName;
   protected length: EmbeddingLength;
   protected count: EmbeddingCount;
@@ -25,10 +24,10 @@ export abstract class BaseHopfieldEmbedding<
     length,
     count,
   }: BaseHopfieldEmbeddingProps<ModelName, EmbeddingCount, EmbeddingLength>) {
+    super();
+
     this.model = model;
     this.length = length;
     this.count = count;
   }
 }
-
-export type Tuple256 = Tuple<256, ZodNumber>;

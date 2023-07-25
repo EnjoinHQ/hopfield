@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 
 import { weatherFunction } from '../_test/function.js';
 import { openai } from '../_test/openai.js';
-import { oa } from '../openai/index.js';
+import { hop } from '../index.js';
 import { SupportCategoryEnum } from './test.js';
 import OpenAI from 'openai';
 import { z } from 'zod';
@@ -21,7 +21,7 @@ test('should classify a support request', async () => {
     )
     .describe('Triage a message.');
 
-  const hopfieldFunction = oa.function({
+  const hopfieldFunction = hop.provider(openai).function({
     schema: classificationFunction,
     name: 'classifyMessage',
     options: {
@@ -46,11 +46,11 @@ test('should classify a support request', async () => {
     model: chatModelName,
     messages,
     temperature: 0,
-    functions: [hopfieldFunction.input],
+    functions: [hopfieldFunction.format()],
     function_call: { name: hopfieldFunction.name },
   });
 
-  const parsed = hopfieldFunction.output.parse(
+  const parsed = hopfieldFunction.returnType.parse(
     response.choices?.[0]?.message?.function_call,
   );
 
@@ -66,7 +66,7 @@ test('should classify a support request', async () => {
 });
 
 test('should request the weather', async () => {
-  const hopfieldFunction = oa.function({
+  const hopfieldFunction = hop.provider(openai).function({
     schema: weatherFunction.schema,
     name: weatherFunction.name,
   });
@@ -83,10 +83,10 @@ test('should request the weather', async () => {
     model: chatModelName,
     messages,
     temperature: 0,
-    functions: [hopfieldFunction.input],
+    functions: [hopfieldFunction.format()],
   });
 
-  const parsed = hopfieldFunction.output.parse(
+  const parsed = hopfieldFunction.returnType.parse(
     response.choices?.[0]?.message?.function_call,
   );
 

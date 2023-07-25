@@ -52,10 +52,6 @@ export type OpenAIHopfieldFunctionProps<
   options?: HopfieldFunctionOptions<D, T>;
 };
 
-/**
- * Takes a Zod schema for a function and formats it into
- *
- */
 export class OpenAIHopfieldFunction<
   ZFunctionArgs extends ZodTuple<any, any>,
   ZFunctionReturns extends ZodTypeAny,
@@ -98,7 +94,7 @@ export class OpenAIHopfieldFunction<
     return disallowedTypes;
   }
 
-  get output() {
+  get returnType() {
     return z.object({
       name: z.enum([this.name]).describe('The name of the function to call.'),
       arguments: stringToJSONSchema
@@ -120,7 +116,7 @@ export class OpenAIHopfieldFunction<
   /**
    *
    */
-  static create<
+  static schema<
     ZFunctionArgs extends ZodTuple<any, any>,
     ZFunctionReturns extends ZodTypeAny,
     ZFunction extends ZodFunction<ZFunctionArgs, ZFunctionReturns>,
@@ -141,46 +137,6 @@ export class OpenAIHopfieldFunction<
   }
 }
 
-/**
- * Enum for finish reasons
- * @enum {string}
- *
- * Enum Members:
- * - `stop`: API returned complete message, or a message terminated by one of the stop sequences provided via the stop parameter
- * - `length`: Incomplete model output due to max_tokens parameter or token limit
- * - `function_call`: The model decided to call a function
- * - `content_filter`: Omitted content due to a flag from our content filters
- * - null: API response still in progress or incomplete
- */
-// const FinishReasonEnum = z
-//   .enum(['stop', 'length', 'function_call', 'content_filter'])
-//   .nullable();
-
-// const MessageRoleEnum = z.enum(['system', 'user', 'assistant', 'function']);
-
-// const MessageSchema = z.object({
-//   role: MessageRoleEnum,
-//   content: z.string().nullable(),
-//   function_call: FunctionCallSchema.optional(),
-// });
-
-// const ChoiceSchema = z.object({
-//   index: z.number().int().nonnegative(),
-//   message: MessageSchema,
-//   finish_reason: FinishReasonEnum,
-// });
-
-// const UsageSchema = z.object({
-//   prompt_tokens: z.number(),
-//   completion_tokens: z.number(),
-//   total_tokens: z.number(),
-// });
-
-// return z.object({
-//   id: z.string(),
-//   object: z.string(),
-//   created: z.number(),
-//   model: z.string(),
-//   choices: z.array(ChoiceSchema),
-//   usage: UsageSchema,
-// });
+export type OpenAIFunctionSchema = ReturnType<
+  typeof OpenAIHopfieldFunction.schema
+>;

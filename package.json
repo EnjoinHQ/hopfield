@@ -1,6 +1,6 @@
 {
   "name": "hopfield",
-  "description": "Minimal typescript library for easy, testable interactions with LLMs",
+  "description": "Minimal typescript library for type-safe, testable interactions with LLMs",
   "version": "0.0.1",
   "license": "MIT",
   "repository": "propology/hopfield",
@@ -61,10 +61,17 @@
   },
   "typesVersions": {
     "*": {
-      "config": ["./dist/types/config.d.ts"]
+      "config": [
+        "./dist/types/config.d.ts"
+      ]
     }
   },
-  "keywords": ["ai", "openai", "gpt", "ai-tools"],
+  "keywords": [
+    "ai",
+    "openai",
+    "gpt",
+    "ai-tools"
+  ],
   "peerDependencies": {
     "openai": ">=4.0.0",
     "typescript": ">=5.0.4",
@@ -109,7 +116,15 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": ["@algolia/client-search"]
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
+    },
+    "patchedDependencies": {
+      "zod-to-json-schema@3.21.4": "patches/zod-to-json-schema@3.21.4.patch"
     }
+  },
+  "dependencies": {
+    "zod-to-json-schema": "^3.21.4"
   }
 }

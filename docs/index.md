@@ -1,16 +1,16 @@
 ---
-description: "Minimal typescript library for easy, testable interactions with LLMs"
+description: "Minimal typescript library for type-safe, testable interactions with LLMs"
 head:
   - - meta
     - name: keywords
       content: ai, openai, gpt, llm, ai-tools
-title: "Hopfield: Minimal typescript library for easy, testable interactions with LLMs"
+title: "Hopfield: Minimal typescript library for type-safe, testable interactions with LLMs"
 titleTemplate: false
 ---
 
-<p align="center" style="min-height:45px;width:100%;">
-  <img img-dark alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-dark.svg" height="45" style="width:auto;">
-  <img img-light alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" height="45" style="width:auto;">
+<p align="center" style="min-height:60px;width:100%;">
+  <img img-dark alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-dark.svg" height="60" style="width:auto;">
+  <img img-light alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" height="60" style="width:auto;">
 </p>
 
 <div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:48px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
@@ -38,7 +38,106 @@ titleTemplate: false
   </a>
 </div>
 
-Minimal typescript library for easy, testable interactions with LLMs.
+Minimal typescript library for type-safe, testable interactions with LLMs.
+
+Easily validate input/output with extremely strong types. No confusing abstractions, with best practices baked in.
+
+```tsx
+import { oa } from "hopfield";
+import { z } from "zod";
+import OpenAI from "openai";
+
+const weatherFunction = z
+  .function()
+  .args(
+    z.object({
+      location: z
+        .string()
+        .describe("The city and state, e.g. San Francisco, CA"),
+      unit: z
+        .enum(["celsius", "fahrenheit"])
+        .describe(oa.template.function.enum("The unit for the temperature.")),
+    })
+  )
+  .describe("Get the current weather in a given location");
+
+const hopfieldFunction = oa.function({
+  schema: weatherFunction,
+  name: "getCurrentWeather",
+});
+
+const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
+
+const messages = [
+  {
+    role: "user",
+    content: "What's the weather in San Francisco?",
+  },
+];
+
+const response = await openai.chat.completions.create({
+  model: "gpt-3.5-turbo-16k-0613",
+  messages,
+  temperature: 0,
+  functions: [hopfieldFunction.input],
+});
+
+const parsed = hopfieldFunction.output.parse(
+  response.choices?.[0]?.message?.function_call
+);
+
+console.log(parsed);
+// {
+//   "arguments": {
+//     "location": "San Francisco, CA",
+//     "unit": "celsius",
+//   },
+//   "name": "getCurrentWeather",
+// }
+```
+
+The input function definition will be validated to make sure that:
+
+1. Descriptions are provided for every argument.
+2. No error-prone types are used as args (this includes `ZodTuple`, `ZodBigInt`, and `ZodAny`).
+3. If a type description performs better with a template, it is checked against the template (this currently checks any `ZodEnum`, since enums tend to perform better with a specific description ending).
+
+All of these checks are entirely customizable and can be disabled with the `options` parameter.
+
+You can then use the `HopfieldFunction` with OpenAI:
+
+```tsx
+import OpenAI from "openai";
+
+const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
+
+const messages = [
+  {
+    role: "user",
+    content: "What's the weather in San Francisco?",
+  },
+];
+
+const response = await openai.chat.completions.create({
+  model: "gpt-3.5-turbo-16k-0613",
+  messages,
+  temperature: 0,
+  functions: [hopfieldFunction.input],
+});
+
+const parsed = hopfieldFunction.output.parse(
+  response.choices?.[0]?.message?.function_call
+);
+
+console.log(parsed);
+// {
+//   "arguments": {
+//     "location": "San Francisco, CA",
+//     "unit": "celsius",
+//   },
+//   "name": "getCurrentWeather",
+// }
+```
 
 ## TL;DR
 

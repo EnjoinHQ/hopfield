@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Hopfield: Next.js Demo App',
   description:
-    'Minimal typescript library for easy, testable interactions with LLMs',
+    'Minimal typescript library for type-safe, testable interactions with LLMs',
 };
 
 export default function RootLayout({

@@ -9,7 +9,7 @@ export default withTwoslash(
   defineConfig({
     cleanUrls: true,
     description:
-      'Minimal typescript library for easy, testable interactions with LLMs',
+      'Minimal typescript library for type-safe, testable interactions with LLMs',
     head: [
       ['meta', { name: 'theme-color', content: '#729b1a' }],
       ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
@@ -135,7 +135,7 @@ export default withTwoslash(
       ],
     },
     title:
-      'Hopfield: Minimal typescript library for easy, testable interactions with LLMs',
+      'Hopfield: Minimal typescript library for type-safe, testable interactions with LLMs',
     twoslash: {
       addTryButton: true,
       defaultCompilerOptions: {

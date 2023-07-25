@@ -1,4 +1,5 @@
-import { oa } from '../index.js';
+import { hop } from '../index.js';
+import { openai } from './openai.js';
 import { z } from 'zod';
 
 export const weatherFunction = {
@@ -11,7 +12,11 @@ export const weatherFunction = {
           .describe('The city and state, e.g. San Francisco, CA'),
         unit: z
           .enum(['celsius', 'fahrenheit'])
-          .describe(oa.template.function.enum('The unit for the temperature.')),
+          .describe(
+            hop
+              .provider(openai)
+              .template.function.enum('The unit for the temperature.'),
+          ),
       }),
     )
     .describe('Get the current weather in a given location'),
