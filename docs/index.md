@@ -40,60 +40,29 @@ titleTemplate: false
 
 Minimal typescript library for type-safe, testable interactions with LLMs.
 
-Easily validate input/output with extremely strong types. No confusing abstractions, with best practices baked in.
+Easily validate input/output with strong types. No confusing abstractions, with best practices baked in.
 
-```tsx
-import { oa } from "hopfield";
+```ts twoslash
+import hop from "hopfield";
 import { z } from "zod";
 import OpenAI from "openai";
 
-const weatherFunction = z
-  .function()
-  .args(
-    z.object({
-      location: z
-        .string()
-        .describe("The city and state, e.g. San Francisco, CA"),
-      unit: z
-        .enum(["celsius", "fahrenheit"])
-        .describe(oa.template.function.enum("The unit for the temperature.")),
-    })
-  )
-  .describe("Get the current weather in a given location");
-
-const hopfieldFunction = oa.function({
-  schema: weatherFunction,
-  name: "getCurrentWeather",
-});
-
 const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
 
-const messages = [
-  {
-    role: "user",
-    content: "What's the weather in San Francisco?",
-  },
-];
+const chat = hop.provider(openai).chat();
 
-const response = await openai.chat.completions.create({
-  model: "gpt-3.5-turbo-16k-0613",
-  messages,
+const parsed = await chat.get({
+  messages: [
+    {
+      role: "user",
+      content: "What's the weather in Phoenix, AZ?",
+    },
+  ],
   temperature: 0,
-  functions: [hopfieldFunction.input],
 });
 
-const parsed = hopfieldFunction.output.parse(
-  response.choices?.[0]?.message?.function_call
-);
-
-console.log(parsed);
-// {
-//   "arguments": {
-//     "location": "San Francisco, CA",
-//     "unit": "celsius",
-//   },
-//   "name": "getCurrentWeather",
-// }
+const message = parsed.choices[0]?.message;
+//      ^?
 ```
 
 The input function definition will be validated to make sure that:
@@ -105,39 +74,6 @@ The input function definition will be validated to make sure that:
 All of these checks are entirely customizable and can be disabled with the `options` parameter.
 
 You can then use the `HopfieldFunction` with OpenAI:
-
-```tsx
-import OpenAI from "openai";
-
-const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
-
-const messages = [
-  {
-    role: "user",
-    content: "What's the weather in San Francisco?",
-  },
-];
-
-const response = await openai.chat.completions.create({
-  model: "gpt-3.5-turbo-16k-0613",
-  messages,
-  temperature: 0,
-  functions: [hopfieldFunction.input],
-});
-
-const parsed = hopfieldFunction.output.parse(
-  response.choices?.[0]?.message?.function_call
-);
-
-console.log(parsed);
-// {
-//   "arguments": {
-//     "location": "San Francisco, CA",
-//     "unit": "celsius",
-//   },
-//   "name": "getCurrentWeather",
-// }
-```
 
 ## TL;DR
 

@@ -1,5 +1,8 @@
 import { BaseHopfieldSchema } from './base.js';
 
+export const defaultEmbeddingCount = 1;
+export type DefaultEmbeddingCount = typeof defaultEmbeddingCount;
+
 export type BaseHopfieldEmbeddingProps<
   ModelName extends string,
   EmbeddingCount extends number,

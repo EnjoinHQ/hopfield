@@ -6,6 +6,11 @@ it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
       "BaseError",
+      "chat",
+      "embedding",
+      "function",
+      "provider",
+      "template",
       "hop",
       "default",
     ]

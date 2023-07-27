@@ -1,8 +1,7 @@
 import { BaseHopfieldEmbedding } from '../embedding.js';
-import type { Tuple } from '../type-utils.js';
+import type { LimitedTuple, Tuple } from '../type-utils.js';
 import type { Tuple256 } from '../types.js';
 import {
-  type DefaultOpenAIEmbeddingModelName,
   type OpenAIEmbeddingModelName,
   defaultOpenAIEmbeddingModelName,
 } from './models.js';
@@ -23,30 +22,22 @@ export interface EmbeddingLengths
   'text-embedding-ada-002': Tuple1536;
 }
 
-export type OpenAIHopfieldEmbeddingSchemaProps<
+export type OpenAIEmbeddingSchemaProps<
   ModelName extends OpenAIEmbeddingModelName,
   EmbeddingCount extends number,
 > = {
-  model?: ModelName;
-  count?: EmbeddingCount;
+  model: ModelName;
+  count: EmbeddingCount;
 };
 
-export class OpenAIHopfieldEmbeddingSchema<
-  ModelName extends OpenAIEmbeddingModelName = DefaultOpenAIEmbeddingModelName,
-  EmbeddingCount extends number = 1,
-  EmbeddingTuple extends [
-    ZodNumber,
-    ...ZodNumber[],
-  ] = EmbeddingLengths[ModelName],
+export class OpenAIEmbeddingSchema<
+  ModelName extends OpenAIEmbeddingModelName,
+  EmbeddingCount extends number,
 > extends BaseHopfieldEmbedding<ModelName, EmbeddingCount, 1536> {
-  constructor({
-    model = defaultOpenAIEmbeddingModelName as ModelName,
-    count = 1 as EmbeddingCount,
-  }: OpenAIHopfieldEmbeddingSchemaProps<ModelName, EmbeddingCount>) {
+  constructor(props: OpenAIEmbeddingSchemaProps<ModelName, EmbeddingCount>) {
     super({
-      model,
-      length: model === 'text-embedding-ada-002' ? 1536 : 1536,
-      count,
+      ...props,
+      length: props.model === 'text-embedding-ada-002' ? 1536 : 1536,
     });
   }
 
@@ -65,7 +56,7 @@ export class OpenAIHopfieldEmbeddingSchema<
           z.tuple(
             Array(this.count).fill(z.array(z.number())) as Tuple<
               EmbeddingCount,
-              ZodNumber
+              ZodString
             >,
           ),
         ])
@@ -91,7 +82,9 @@ export class OpenAIHopfieldEmbeddingSchema<
     const DataItem = z.object({
       index: z.number().nonnegative(),
       object: z.string(),
-      embedding: z.tuple(Array(this.length).fill(z.number()) as EmbeddingTuple),
+      embedding: z.tuple(
+        Array(this.length).fill(z.number()) as EmbeddingLengths[ModelName],
+      ),
     });
 
     const Usage = z.object({
@@ -103,24 +96,26 @@ export class OpenAIHopfieldEmbeddingSchema<
       object: z.string(),
       model: z.string(),
       data: z.tuple(
-        Array(this.count).fill(DataItem) as Tuple<
+        Array(this.count).fill(DataItem) as LimitedTuple<
           EmbeddingCount,
           typeof DataItem
         >,
       ),
+
+      // data: z.array(DataItem),
       usage: Usage,
     });
   }
 
   static schema<
-    ModelName extends OpenAIEmbeddingModelName = DefaultOpenAIEmbeddingModelName,
-    EmbeddingCount extends number = 1,
-  >(opts: OpenAIHopfieldEmbeddingSchemaProps<ModelName, EmbeddingCount>) {
-    return new OpenAIHopfieldEmbeddingSchema(opts);
+    ModelName extends OpenAIEmbeddingModelName,
+    EmbeddingCount extends number,
+  >(opts: OpenAIEmbeddingSchemaProps<ModelName, EmbeddingCount>) {
+    return new OpenAIEmbeddingSchema(opts);
   }
 }
 
-export type OpenAIHopfieldEmbeddingProps<
+export type OpenAIEmbeddingProps<
   Provider extends OpenAI,
   ModelName extends OpenAIEmbeddingModelName,
   EmbeddingCount extends number,
@@ -130,18 +125,18 @@ export type OpenAIHopfieldEmbeddingProps<
   count?: EmbeddingCount;
 };
 
-export class OpenAIHopfieldEmbedding<
+export class OpenAIEmbedding<
   Provider extends OpenAI,
-  ModelName extends OpenAIEmbeddingModelName = DefaultOpenAIEmbeddingModelName,
-  EmbeddingCount extends number = 1,
-> extends OpenAIHopfieldEmbeddingSchema<ModelName, EmbeddingCount> {
+  ModelName extends OpenAIEmbeddingModelName,
+  EmbeddingCount extends number,
+> extends OpenAIEmbeddingSchema<ModelName, EmbeddingCount> {
   provider: Provider;
 
   constructor({
     provider,
     model = defaultOpenAIEmbeddingModelName as ModelName,
     count = 1 as EmbeddingCount,
-  }: OpenAIHopfieldEmbeddingProps<Provider, ModelName, EmbeddingCount>) {
+  }: OpenAIEmbeddingProps<Provider, ModelName, EmbeddingCount>) {
     super({
       model,
       count,
@@ -164,9 +159,9 @@ export class OpenAIHopfieldEmbedding<
 
   static create<
     Provider extends OpenAI,
-    ModelName extends OpenAIEmbeddingModelName = DefaultOpenAIEmbeddingModelName,
-    EmbeddingCount extends number = 1,
-  >(opts: OpenAIHopfieldEmbeddingProps<Provider, ModelName, EmbeddingCount>) {
-    return new OpenAIHopfieldEmbedding(opts);
+    ModelName extends OpenAIEmbeddingModelName,
+    EmbeddingCount extends number,
+  >(opts: OpenAIEmbeddingProps<Provider, ModelName, EmbeddingCount>) {
+    return new OpenAIEmbedding(opts);
   }
 }

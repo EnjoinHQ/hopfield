@@ -1,5 +1,6 @@
 import type { OneOf, Pretty } from './type-utils.js';
 import { version } from './version.js';
+import type { ZodError } from 'zod';
 
 type DocsPaths = '/api/function';
 
@@ -7,11 +8,13 @@ type BaseErrorArgs = Pretty<
   {
     docsPath?: DocsPaths | undefined;
     metaMessages?: string[] | undefined;
-  } & OneOf<{ details?: string | undefined } | { cause?: BaseError | Error }>
+  } & OneOf<
+    { details?: string | ZodError | undefined } | { cause?: BaseError | Error }
+  >
 >;
 
 export class BaseError extends Error {
-  details: string;
+  details: string | ZodError;
   docsPath?: string | undefined;
   metaMessages?: string[] | undefined;
   shortMessage: string;

@@ -1,6 +1,9 @@
 import type { Tuple, WithError } from './type-utils.js';
 import type { ZodNumber } from 'zod';
 
+export type StringifiedObject = `{${string}}`;
+export type StringifiedArray<T extends string = string> = `[${T}]`;
+
 export type Sentence = `${string}.`;
 
 export type SentenceOrError<T extends string> = T extends Sentence

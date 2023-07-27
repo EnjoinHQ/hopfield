@@ -7,6 +7,7 @@ import * as Exports from './embedding.js';
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
+      "OpenAIHopfieldEmbeddingSchema",
       "OpenAIHopfieldEmbedding",
     ]
   `);
@@ -29,7 +30,7 @@ test('should parse a text embedding response', async () => {
 
   const embedding = await embeddings.returnType.parseAsync(response);
 
-  expect(embedding.data[0].embedding[0]).toMatchInlineSnapshot('-0.0073666335');
+  expect(embedding.data[0].embedding.length).toMatchInlineSnapshot('1536');
   expect(embedding.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
 });
 
@@ -40,6 +41,6 @@ test('should parse a text embedding response', async () => {
     input: 'hopfield',
   });
 
-  expect(embedding.data[0].embedding[0]).toMatchInlineSnapshot('-0.0073666335');
+  expect(embedding.data[0].embedding.length).toMatchInlineSnapshot('1536');
   expect(embedding.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
 });

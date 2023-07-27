@@ -66,5 +66,39 @@ type KeyofUnion<T> = T extends T ? keyof T : never;
 export type Tuple<
   N extends number,
   T,
-  A extends unknown[] = [],
+  A extends unknown[] = [T],
 > = A['length'] extends N ? A : Tuple<N, T, [T, ...A]>;
+
+/**
+ * Makes a limited tuple of length N of type T. This prevents infinite recursion.
+ */
+export type LimitedTuple<N extends number, T> = number extends N
+  ? [T]
+  : N extends 1
+  ? [T]
+  : N extends 2
+  ? [T, T]
+  : N extends 3
+  ? [T, T, T]
+  : N extends 4
+  ? [T, T, T, T]
+  : N extends 5
+  ? [T, T, T, T, T]
+  : N extends 6
+  ? [T, T, T, T, T, T]
+  : N extends 7
+  ? [T, T, T, T, T, T, T]
+  : N extends 8
+  ? [T, T, T, T, T, T, T, T]
+  : N extends 9
+  ? [T, T, T, T, T, T, T, T, T]
+  : N extends 10
+  ? [T, T, T, T, T, T, T, T, T, T]
+  : never;
+
+/**
+ * Gets if the array T is empty.
+ */
+export type IsEmptyArray<T extends any[]> = T extends [infer _X, ...infer _Rest]
+  ? false
+  : true;

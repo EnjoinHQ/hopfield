@@ -2,16 +2,35 @@ import { BaseHopfieldSchema } from './base.js';
 import { BaseError } from './errors.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
-import type { JsonSchema } from './zod-to-json-schema/zodToJsonSchema.js';
+import type { IsEmptyArray } from './type-utils.js';
 import {
+  type AnyZodObject,
   ZodFirstPartyTypeKind,
-  type ZodFunction,
-  type ZodTuple,
-  type ZodTypeAny,
   type ZodTypeDef,
+  z,
 } from 'zod';
 import type { Refs } from 'zod-to-json-schema/src/Refs.js';
 import type { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef.js';
+
+export type AnyBaseHopfieldFunction = BaseHopfieldFunction<
+  any,
+  any,
+  any,
+  any,
+  any
+>;
+
+type FunctionProperty<
+  T extends AnyBaseHopfieldFunction,
+  K extends keyof T,
+> = T extends { [P in K]: infer N } ? N : never;
+
+export type FunctionPropertyOrNever<
+  T extends AnyBaseHopfieldFunction[],
+  K extends keyof T[number],
+> = IsEmptyArray<T> extends true
+  ? never
+  : [FunctionProperty<T[number], K>, ...FunctionProperty<T[number], K>[]];
 
 export type DisabledTypes =
   | ZodFirstPartyTypeKind[]
@@ -25,13 +44,17 @@ export type TypeTemplates =
 export interface JsonSchemaFunction<
   Name extends string,
   Description extends string = string,
-  Target extends Targets = 'jsonSchema7',
 > {
   /**
    * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
    * underscores and dashes, with a maximum length of 64.
    */
   name: Name;
+  /**
+   * A description of what the function does, used by the model to choose when and
+   * how to call the function.
+   */
+  description: Description;
   /**
    * The parameters the functions accepts, described as a JSON Schema object. See the
    * [guide](/docs/guides/gpt/function-calling) for examples, and the
@@ -41,12 +64,7 @@ export interface JsonSchemaFunction<
    * To describe a function that accepts no parameters, provide the value
    * `{"type": "object", "properties": {}}`.
    */
-  parameters: JsonSchema<Target>;
-  /**
-   * A description of what the function does, used by the model to choose when and
-   * how to call the function.
-   */
-  description: Description;
+  parameters: JsonSchema7Type;
 }
 
 const requiredDescriptionTypes: ZodFirstPartyTypeKind[] = [
@@ -84,75 +102,76 @@ export type HopfieldFunctionOptions<
   disabledTypes?: D;
 };
 
-function isValidFunctionName(name: string) {
-  const regex = /^[a-zA-Z0-9_-]{1,64}$/;
-  return regex.test(name);
-}
+const stringToJSONSchema = z.string().transform((str, ctx): object => {
+  try {
+    return JSON.parse(str);
+  } catch (_e) {
+    ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+    return z.NEVER;
+  }
+});
+
+const NameSchema = z
+  .string()
+  .max(64, {
+    message: "Function name can't exceed 64 characters.",
+  })
+  .refine((value) => /^[a-zA-Z0-9_-]+$/.test(value), {
+    message:
+      'Function name can only contain a-z, A-Z, 0-9, underscores and dashes.',
+  });
+
+const DescriptionSchema = z.string().min(1).max(500);
 
 export type BaseHopfieldFunctionProps<
-  Args extends ZodTuple<any, any>,
-  Returns extends ZodTypeAny,
-  ZFunction extends ZodFunction<Args, Returns>,
   FName extends string,
-  D extends DisabledTypes,
-  T extends TypeTemplates,
+  FDescription extends string,
+  FParams extends AnyZodObject,
+  DTypes extends DisabledTypes,
+  TTemplates extends TypeTemplates,
 > = {
-  schema: ZFunction;
   name: FName;
-  options?: HopfieldFunctionOptions<D, T> | undefined;
+  description: FDescription;
+  parameters: FParams;
+  options?: HopfieldFunctionOptions<DTypes, TTemplates>;
 };
 
 export abstract class BaseHopfieldFunction<
-  ZFunctionArgs extends ZodTuple<any, any>,
-  ZFunctionReturns extends ZodTypeAny,
-  ZFunction extends ZodFunction<ZFunctionArgs, ZFunctionReturns>,
   FName extends string,
+  FDescription extends string,
+  FParams extends AnyZodObject,
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
 > extends BaseHopfieldSchema {
-  /**
-   *
-   */
-  _schema: ZFunction;
-  /**
-   *
-   */
   name: FName;
-  /**
-   *
-   */
-  options: HopfieldFunctionOptions<DTypes, TTemplates>;
-  protected _parameters: ZFunction['_def']['args'];
+  description: FDescription;
+
+  parameters: FParams;
+  protected _options: HopfieldFunctionOptions<DTypes, TTemplates>;
 
   constructor({
-    schema,
     name,
+    description,
+    parameters,
     options = {},
   }: BaseHopfieldFunctionProps<
-    ZFunctionArgs,
-    ZFunctionReturns,
-    ZFunction,
     FName,
+    FDescription,
+    FParams,
     DTypes,
     TTemplates
   >) {
     super();
 
-    this._schema = schema;
     this.name = name;
-    this.options = options;
+    this.description = description;
+    this.parameters = parameters;
 
-    const items = this._schema.parameters()?.items ?? [];
-
-    this._parameters =
-      (items?.length ?? 0) === 1 ? items[0] : this._schema.parameters();
-
-    this._defaultTypeTemplates = this._defaultTypeTemplates.bind(this);
-    this._defaultDisabledTypes = this._defaultDisabledTypes.bind(this);
+    this._options = options;
   }
 
-  protected abstract _defaultTypeTemplates(): TypeTemplates;
-  protected abstract _defaultDisabledTypes(): DisabledTypes;
+  protected abstract get _defaultTypeTemplates(): TypeTemplates;
+  protected abstract get _defaultDisabledTypes(): DisabledTypes;
 
   /**
    * Returns a formatted JSON schema function definition for LLM function calling.
@@ -161,24 +180,21 @@ export abstract class BaseHopfieldFunction<
    *
    * @returns @interface JsonSchemaFunction a definition for a valid JSON schema function.
    */
-  format(): JsonSchemaFunction<FName> {
-    if (!isValidFunctionName(this.name)) {
-      throw new BaseError('The function name is invalid.', {
+  get jsonSchema(): JsonSchemaFunction<FName> {
+    const parsedName = NameSchema.safeParse(this.name);
+    const parsedDescription = DescriptionSchema.safeParse(this.description);
+
+    if (!parsedName.success) {
+      throw new BaseError('You must define a valid function name.', {
         docsPath: '/api/function',
-        details:
-          'The function name must be comprised of a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.',
+        details: parsedName.error,
       });
     }
-
-    if (!this._schema.description) {
-      throw new BaseError(
-        'You must define a description for the function schema',
-        {
-          docsPath: '/api/function',
-          details:
-            'There must be a function description provided, to describe what the function does. This is especially important with interacting with tools - the more specificity, the better.',
-        },
-      );
+    if (!parsedDescription.success) {
+      throw new BaseError('You must define a valid function description.', {
+        docsPath: '/api/function',
+        details: parsedDescription.error,
+      });
     }
 
     const onParseDef = (
@@ -189,18 +205,18 @@ export abstract class BaseHopfieldFunction<
       const typeName: ZodFirstPartyTypeKind = (def as any).typeName;
 
       const templates =
-        this.options.templates === false
+        this._options.templates === false
           ? false
           : {
-              ...this._defaultTypeTemplates(),
-              ...this.options.templates,
+              ...this._defaultTypeTemplates,
+              ...this._options.templates,
             };
-      const requireDescriptions = this.options.requireDescriptions ?? true;
-      const disabledTypes = !this.options.disabledTypes
+      const requireDescriptions = this._options.requireDescriptions ?? true;
+      const disabledTypes = !this._options.disabledTypes
         ? false
         : {
-            ...this._defaultDisabledTypes(),
-            ...this.options.disabledTypes,
+            ...this._defaultDisabledTypes,
+            ...this._options.disabledTypes,
           };
 
       // check here for typeName and description being defined
@@ -228,13 +244,10 @@ export abstract class BaseHopfieldFunction<
         schema.description &&
         !schema.description?.endsWith(descriptionEnding)
       ) {
-        throw new BaseError(
-          `It's recommended to template your descriptions - we recommend ending the type ${typeName} with "${descriptionEnding}".`,
-          {
-            docsPath: '/api/function',
-            details: '',
-          },
-        );
+        throw new BaseError('You should template your descriptions.', {
+          docsPath: '/api/function',
+          details: `It's recommended to template your descriptions - we recommend ending the type ${typeName} with "${descriptionEnding}".`,
+        });
       }
 
       // check here for disabled types
@@ -242,27 +255,57 @@ export abstract class BaseHopfieldFunction<
         typeof disabledTypes !== 'boolean' &&
         disabledTypes.includes(typeName)
       ) {
-        throw new BaseError(
-          `You should not use ${typeName} yet - it provides unreliable results from LLMs.`,
-          {
-            docsPath: '/api/function',
-            details: '',
-          },
-        );
+        throw new BaseError(`You should not use ${typeName}.`, {
+          docsPath: '/api/function',
+          details: `You should not use ${typeName} yet - it provides unreliable results from LLMs.`,
+        });
       }
     };
 
     return {
       name: this.name,
-      description: this._schema.description,
-      parameters: zodToJsonSchema(this._parameters, {
+      description: this.description,
+      parameters: zodToJsonSchema(this.parameters, {
         $refStrategy: 'none',
         onParseDef,
       }),
-    };
+    } as const;
   }
 
-  get parameters(): ZFunction['_def']['args'] {
-    return this._parameters;
+  get returnType() {
+    return z.object({
+      name: z.literal(this.name).describe('The name of the function to call.'),
+      arguments: z.lazy(() =>
+        stringToJSONSchema
+          .describe(
+            'The arguments to call the function with, as generated by the model in JSON format and coerced into the provided schema. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema.',
+          )
+          .transform((obj): z.infer<typeof this.parameters> => {
+            const result = this.parameters.safeParse(obj);
+            if (!result.success) {
+              throw result.error;
+            }
+            return result.data;
+          }),
+      ),
+    });
+  }
+
+  get schema() {
+    return z.object({
+      name: z.literal(this.name).describe('The name of the function.'),
+      description: z
+        .literal(this.description)
+        .describe('The description of the function.'),
+      parameters: z
+        .object({
+          type: z.literal('object'),
+          properties: z.record(z.any()).optional(),
+          required: z.array(z.string()).optional(),
+          additionalProperties: z.boolean(),
+          $schema: z.string(),
+        })
+        .passthrough(),
+    });
   }
 }

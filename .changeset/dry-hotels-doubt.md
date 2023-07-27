@@ -10,7 +10,7 @@ Hopfield provides OpenAI validators for the inputs/responses for [OpenAI's Chat 
 
 For instance, you can create an `oa.function` by passing in a Zod function definition (using [`z.function`](https://github.com/colinhacks/zod#functions)) with the args which the function expects, and an enum description with `oa.template`:
 
-```tsx
+```ts
 import { oa } from "hopfield";
 import { z } from "zod";
 
@@ -44,7 +44,7 @@ All of these checks are entirely customizable and can be disabled with the `opti
 
 You can then use the `HopfieldFunction` with OpenAI:
 
-```tsx
+```ts
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
@@ -52,7 +52,7 @@ const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
 const messages = [
   {
     role: "user",
-    content: "What's the weather in San Francisco?",
+    content: "What's the weather in Phoenix, Arizona?",
   },
 ];
 
@@ -83,7 +83,7 @@ Hopfield also provides OpenAI validators for the inputs/responses for [OpenAI's 
 
 For instance, you can create an `oa.embedding` with:
 
-```tsx
+```ts
 import { oa } from "hopfield";
 
 // defaults to `text-embedding-ada-002`
@@ -102,7 +102,7 @@ This is strongly typed with tuples which match the expected input length. In thi
 
 This allows for array access of the returned embeddings with validation of both the embedding count and each embedding vector length:
 
-```tsx
+```ts
 const parsed: {
     object: string;
     data: [{
