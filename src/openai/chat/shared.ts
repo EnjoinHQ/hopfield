@@ -1,8 +1,6 @@
 import { openAIChatModelNames } from '../models.js';
 import { z } from 'zod';
 
-export const ChoiceIndex = z.number().nonnegative();
-
 export const FunctionName = z
   .string()
   .refine((value) => /^[a-zA-Z0-9_]{1,64}$/.test(value), {
@@ -59,8 +57,6 @@ export const Message = z.union([
   MessageFunction,
   MessageSystem,
 ]);
-
-export type OpenAIChatMessage = z.infer<typeof Message>;
 
 export const OpenAIChatBaseInput = z.object({
   /** ID of the model to use. */

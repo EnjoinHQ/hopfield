@@ -106,7 +106,11 @@ const stringToJSONSchema = z.string().transform((str, ctx): object => {
   try {
     return JSON.parse(str);
   } catch (_e) {
-    ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+    ctx.addIssue({
+      code: 'custom',
+      message:
+        'Invalid JSON when parsing - likely the arguments are malformed.',
+    });
     return z.NEVER;
   }
 });

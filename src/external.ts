@@ -1,6 +1,12 @@
 import type OpenAI from 'openai';
 
-import type { InferChatInput, InferStreamingResult } from './chat.js';
+import {
+  type DefaultChatN,
+  type InferInput,
+  type InferInputMessage,
+  type InferResult,
+  defaultChatN,
+} from './chat.js';
 import {
   type DefaultEmbeddingCount,
   defaultEmbeddingCount,
@@ -22,14 +28,26 @@ const template = {
 } as const;
 
 function providerFunction<Provider extends OpenAI>(provider: Provider) {
-  function chat(): OpenAIChat<Provider, DefaultOpenAIChatModelName>;
+  function chat(): OpenAIChat<
+    Provider,
+    DefaultOpenAIChatModelName,
+    DefaultChatN
+  >;
   function chat<ModelName extends OpenAIChatModelName>(
     model: ModelName,
-  ): OpenAIChat<Provider, ModelName>;
-  function chat<ModelName extends OpenAIChatModelName,>(model?: ModelName) {
+  ): OpenAIChat<Provider, ModelName, DefaultChatN>;
+  function chat<ModelName extends OpenAIChatModelName, N extends number>(
+    model: ModelName,
+    n: N,
+  ): OpenAIChat<Provider, ModelName, N>;
+  function chat<ModelName extends OpenAIChatModelName, N extends number>(
+    model?: ModelName,
+    n?: N,
+  ) {
     return new OpenAIChat({
       provider,
       model: model ?? (defaultOpenAIChatModelName as ModelName),
+      n: n ?? (defaultChatN as N),
     });
   }
 
@@ -68,13 +86,21 @@ function providerFunction<Provider extends OpenAI>(provider: Provider) {
   };
 }
 
-function chat(): OpenAIChatSchema<DefaultOpenAIChatModelName>;
+function chat(): OpenAIChatSchema<DefaultOpenAIChatModelName, DefaultChatN>;
 function chat<ModelName extends OpenAIChatModelName>(
   model: ModelName,
-): OpenAIChatSchema<ModelName>;
-function chat<ModelName extends OpenAIChatModelName,>(model?: ModelName) {
+): OpenAIChatSchema<ModelName, DefaultChatN>;
+function chat<ModelName extends OpenAIChatModelName, N extends number>(
+  model: ModelName,
+  n: N,
+): OpenAIChatSchema<ModelName, N>;
+function chat<ModelName extends OpenAIChatModelName, N extends number>(
+  model?: ModelName,
+  n?: N,
+) {
   return new OpenAIChatSchema({
     model: model ?? (defaultOpenAIChatModelName as ModelName),
+    n: n ?? (defaultChatN as N),
   });
 }
 
@@ -113,12 +139,12 @@ export {
 };
 
 export type {
-  InferChatInput as inferChatInput,
-  InferStreamingResult as inferStreamingResult,
+  InferInput as inferInput,
+  InferInputMessage as inferMessageInput,
+  InferResult as inferResult,
 };
 
 export type * from './openai/chat/non-streaming.js';
-export type * from './openai/chat/shared.js';
 export type * from './openai/chat/streaming.js';
 
 export * from './errors.js';

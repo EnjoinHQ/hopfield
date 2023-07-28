@@ -1,5 +1,11 @@
 import { expect, it, test } from 'vitest';
 
+import {
+  openaiBasicEmbedding,
+  openaiTiktokenEmbedding,
+  openaiTiktokenTwoEmbeddings,
+  openaiTwoEmbeddings,
+} from '../_test/openai-embedding.js';
 import { openai } from '../_test/openai.js';
 import hop from '../index.js';
 import * as Exports from './embedding.js';
@@ -7,8 +13,8 @@ import * as Exports from './embedding.js';
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
-      "OpenAIHopfieldEmbeddingSchema",
-      "OpenAIHopfieldEmbedding",
+      "OpenAIEmbeddingSchema",
+      "OpenAIEmbedding",
     ]
   `);
 });
@@ -19,28 +25,120 @@ test('should set a default model name', async () => {
   );
 });
 
-test('should parse a text embedding response', async () => {
-  const embeddings = hop.embedding();
+test('all test messages', async () => {
+  const allTests = [openaiBasicEmbedding, openaiTiktokenEmbedding];
 
-  const response = await openai.embeddings.create(
-    embeddings.parameters.parse({
-      input: 'hopfield',
-    }),
-  );
+  const testChat = hop.embedding();
 
-  const embedding = await embeddings.returnType.parseAsync(response);
+  const allTypes: hop.inferResult<typeof testChat>[] = [];
 
-  expect(embedding.data[0].embedding.length).toMatchInlineSnapshot('1536');
-  expect(embedding.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
+  for (const message of allTests) {
+    const output = testChat.returnType.parse(message);
+    allTypes.push({
+      ...output,
+      data: output.data.map((d) => ({
+        ...d,
+        embedding: `${d.embedding[0]},...,${d.embedding[1535]}`,
+      })) as any,
+    });
+  }
+
+  expect(allTypes).toMatchInlineSnapshot(`
+    [
+      {
+        "data": [
+          {
+            "embedding": "-0.0073538395,...,-0.001287617",
+            "index": 0,
+            "object": "embedding",
+          },
+        ],
+        "model": "text-embedding-ada-002-v2",
+        "object": "list",
+        "usage": {
+          "prompt_tokens": 2,
+          "total_tokens": 2,
+        },
+      },
+      {
+        "data": [
+          {
+            "embedding": "-0.025408603,...,-0.024730118",
+            "index": 0,
+            "object": "embedding",
+          },
+        ],
+        "model": "text-embedding-ada-002-v2",
+        "object": "list",
+        "usage": {
+          "prompt_tokens": 6,
+          "total_tokens": 6,
+        },
+      },
+    ]
+  `);
 });
 
-test('should parse a text embedding response', async () => {
-  const embeddings = hop.provider(openai).embedding();
+test('all n=2 messages', async () => {
+  const allTests = [openaiTwoEmbeddings, openaiTiktokenTwoEmbeddings];
 
-  const embedding = await embeddings.get({
-    input: 'hopfield',
-  });
+  const testChat = hop.embedding('text-embedding-ada-002', 2);
 
-  expect(embedding.data[0].embedding.length).toMatchInlineSnapshot('1536');
-  expect(embedding.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
+  const allTypes: hop.inferResult<typeof testChat>[] = [];
+
+  for (const message of allTests) {
+    const output = testChat.returnType.parse(message);
+    allTypes.push({
+      ...output,
+      data: output.data.map((d) => ({
+        ...d,
+        embedding: `${d.embedding[0]},...,${d.embedding[1535]}`,
+      })) as any,
+    });
+  }
+
+  expect(allTypes).toMatchInlineSnapshot(`
+    [
+      {
+        "data": [
+          {
+            "embedding": "-0.0073666335,...,-0.0013916683",
+            "index": 0,
+            "object": "embedding",
+          },
+          {
+            "embedding": "-0.010871813,...,0.0046854005",
+            "index": 1,
+            "object": "embedding",
+          },
+        ],
+        "model": "text-embedding-ada-002-v2",
+        "object": "list",
+        "usage": {
+          "prompt_tokens": 5,
+          "total_tokens": 5,
+        },
+      },
+      {
+        "data": [
+          {
+            "embedding": "-0.02534904,...,-0.024684511",
+            "index": 0,
+            "object": "embedding",
+          },
+          {
+            "embedding": "-0.01885367,...,-0.027140701",
+            "index": 1,
+            "object": "embedding",
+          },
+        ],
+        "model": "text-embedding-ada-002-v2",
+        "object": "list",
+        "usage": {
+          "prompt_tokens": 12,
+          "total_tokens": 12,
+        },
+      },
+    ]
+  `);
 });

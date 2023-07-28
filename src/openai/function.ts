@@ -10,7 +10,6 @@ import {
   type AnyZodObject,
   ZodArray,
   ZodDefault,
-  ZodDiscriminatedUnion,
   ZodFirstPartyTypeKind,
   ZodUnion,
   z,
@@ -28,7 +27,7 @@ const disallowedTypes = [
 ] as const satisfies readonly ZodFirstPartyTypeKind[];
 
 const openAITypeTemplates = {
-  ZodEnum: (description: string) =>
+  ZodEnum: <D extends string>(description: D) =>
     `${description} This must always be a possible value from the \`enum\` array.` as const,
 } as const satisfies TypeTemplates;
 
@@ -37,7 +36,7 @@ const openAITemplates = {
     openAITypeTemplates.ZodEnum(description),
 } as const;
 
-type FunctionProperties<
+export type FunctionProperties<
   T extends OpenAIFunctionsTuple,
   Key extends keyof OpenAIFunctionSchema,
 > = {
@@ -58,15 +57,6 @@ export type FunctionSchemasArray<T extends OpenAIFunctionsTuple> = ZodDefault<
     >
   >
 >;
-
-export type FunctionReturnTypesUnion<T extends OpenAIFunctionsTuple> =
-  ZodDiscriminatedUnion<
-    'name',
-    [
-      FunctionProperties<T, 'returnType'>[number],
-      ...FunctionProperties<T, 'returnType'>,
-    ]
-  >;
 
 export type OpenAIFunctionProps<
   FName extends string,
@@ -116,6 +106,12 @@ export class OpenAIFunction<
         name: z.literal(this.name),
       }),
     ]);
+  }
+
+  get returnTypeName() {
+    return z.object({
+      name: z.literal(this.name).describe('The name of the function to call.'),
+    });
   }
 
   protected get _defaultTypeTemplates() {

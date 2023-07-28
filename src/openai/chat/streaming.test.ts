@@ -1,19 +1,29 @@
-import { expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import * as Exports from './streaming.js';
 import { test } from 'vitest';
 
 import { weatherFunction } from '../../_test/function.js';
-import { openai } from '../../_test/openai.js';
-import hop, { type OpenAIChatMessage } from '../../index.js';
+import hop from '../../index.js';
+
+import {
+  openaiStreamBasicMessage,
+  openaiStreamFunctionCall,
+  openaiStreamFunctionCallLengthLimited,
+  openaiStreamLengthLimited,
+  openaiStreamTwoResponses,
+} from '../../_test/openai-streaming.js';
+
+const chat = hop.chat().streaming();
+const chatWithFunction = chat.functions([weatherFunction]);
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
-      "EmptyDelta",
+      "AssistantRole",
+      "ChoiceWithRoleDelta",
       "ChoiceWithContentDelta",
       "ChoiceWithContentFilterDelta",
-      "ChoiceWithRoleDelta",
       "ChoiceWithStopReasonDelta",
       "ChoiceWithLengthReasonDelta",
       "OpenAIChatStreamingSchema",
@@ -22,179 +32,533 @@ it('should expose correct exports', () => {
   `);
 });
 
-test('should set a default model name with no provider', async () => {
+test('should set a model name', async () => {
   expect(hop.chat('gpt-3.5-turbo-16k').streaming().model).toMatchInlineSnapshot(
     '"gpt-3.5-turbo-16k"',
   );
 });
 
 test('should set a default model name', async () => {
-  expect(hop.provider(openai).chat().streaming().model).toMatchInlineSnapshot(
+  expect(hop.chat().streaming().model).toMatchInlineSnapshot(
     '"gpt-3.5-turbo-0613"',
   );
 });
 
-test('should get a streaming chat response', async () => {
-  const chat = hop.provider(openai).chat().streaming();
+describe.concurrent('streaming chat', () => {
+  test('all test messages', async () => {
+    const allTests = [openaiStreamBasicMessage, openaiStreamLengthLimited];
 
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content:
-        "What's the better word: banana, or aardvark? Choose one and only say it.",
-    },
-  ];
+    const allTypes: string[] = [];
 
-  const parsed = await chat.get({
-    messages,
-    temperature: 0,
-  });
+    const testChat = hop.chat().streaming();
 
-  const parts: hop.inferStreamingResult<typeof chat>[] = [];
-
-  for await (const part of parsed) {
-    parts.push(part);
-  }
-
-  expect(
-    parts.map((part) => part.choices.map((choice) => choice._type)).join(', '),
-  ).toMatchInlineSnapshot('"ROLE, CONTENT, CONTENT, CONTENT, STOP"');
-  expect(
-    parts
-      .map((part) => part.choices.map((choice) => mapChoiceToString(choice)))
-      .join(', '),
-  ).toMatchInlineSnapshot('"assistant, Ban, ana, ., STOP"');
-}, 5000);
-
-test('should get a streaming chat function call', async () => {
-  const chat = hop
-    .provider(openai)
-    .chat()
-    .streaming()
-    .functions([weatherFunction]);
-
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content: "What's the weather in Phoenix, Arizona?",
-    },
-  ];
-
-  const result = await chat.get({
-    messages,
-    temperature: 0,
-  });
-
-  const parts: hop.inferStreamingResult<typeof chat>[] = [];
-
-  for await (const part of result) {
-    parts.push(part);
-  }
-
-  expect(
-    parts.map((part) => part.choices.map((choice) => choice._type)).join(', '),
-  ).toMatchInlineSnapshot(
-    '"ROLE, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_ARG, FUNCTION_CALL"',
-  );
-
-  expect(
-    parts
-      .map((part) => part.choices.map((choice) => mapChoiceToString(choice)))
-      .join(' '),
-  ).toMatchInlineSnapshot(`
-    "assistant {
-        \\" location \\":  \\" Phoenix ,  Arizona \\",
-        \\" unit \\":  \\" c elsius \\"
-     } function_call"
-  `);
-}, 5000);
-
-test('should parse a chat completions response', async () => {
-  const chat = hop.chat();
-
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content:
-        "What's the better word: banana, or aardvark? Choose one and only say it.",
-    },
-  ];
-
-  const response = await openai.chat.completions.create(
-    chat.parameters.parse({
-      messages,
-      temperature: 0,
-    }),
-  );
-
-  const parsed = await chat.returnType.parseAsync(response);
-
-  expect(parsed?.choices[0]).toMatchInlineSnapshot(
-    `
-    {
-      "finish_reason": "stop",
-      "index": 0,
-      "message": {
-        "content": "Banana.",
-        "role": "assistant",
-      },
+    for (const messages of allTests) {
+      const output = messages.map((m) => testChat.returnType.parse(m));
+      const types = output.map((output) => output.choices[0].__type).join(', ');
+      allTypes.push(types);
     }
-  `,
-  );
-}, 5000);
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        "content, content, content, content, stop",
+        "content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, length",
+      ]
+    `);
+  });
 
-test('should parse a chat completions streaming response', async () => {
-  const chat = hop.chat().streaming();
+  test('two n messages', async () => {
+    const allTests = [openaiStreamTwoResponses];
 
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content:
-        "What's the better word: banana, or aardvark? Choose one and only say it.",
-    },
-  ];
+    const allTypes: string[] = [];
 
-  const response = await openai.chat.completions.create(
-    chat.parameters.parse({
-      messages,
-      temperature: 0,
-    }),
-  );
+    const testChat = hop.chat('gpt-3.5-turbo-0613', 2).streaming();
 
-  const parts: hop.inferStreamingResult<typeof chat>[] = [];
+    for (const messages of allTests) {
+      const output = messages.map((m) => testChat.returnType.parse(m));
+      const types = output
+        .map(
+          (output) => `${output.choices[0].__type}[${output.choices[0].index}]`,
+        )
+        .join(', ');
+      allTypes.push(types);
+    }
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        "content[0], content[0], content[1], content[1], content[0], content[1], content[0], content[1], stop[0], stop[1]",
+      ]
+    `);
+  });
 
-  for await (const part of response) {
-    const parsed = await chat.returnType.parseAsync(part);
-    parts.push(parsed);
-  }
+  test('should parse a streaming role', async () => {
+    const parsed = chat.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            role: 'assistant',
+            content: '',
+          },
+          finish_reason: null,
+        },
+      ],
+    });
 
-  expect(
-    parts
-      .map((part) => part.choices.map((choice) => mapChoiceToString(choice)))
-      .join(', '),
-  ).toMatchInlineSnapshot('"assistant, Ban, ana, ., STOP"');
-}, 5000);
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
 
-const streaming = hop
-  .chat()
-  .streaming()
-  .functions([hop.function(weatherFunction)]);
+  test('should fail on streaming function name', async () => {
+    expect(() =>
+      chat.returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485919,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 0,
+            delta: {
+              role: 'assistant',
+              content: null,
+              function_call: {
+                name: 'getCurrentWeather',
+                arguments: '',
+              },
+            },
+            finish_reason: null,
+          },
+        ],
+      }),
+    ).toThrow();
+  });
 
-const mapChoiceToString = (
-  choice: hop.inferStreamingResult<typeof streaming>['choices'][number],
-) =>
-  choice._type === 'CONTENT'
-    ? choice.delta.content
-    : choice._type === 'FUNCTION_CALL'
-    ? choice.finish_reason
-    : choice._type === 'ROLE'
-    ? choice.delta.role
-    : choice._type === 'FUNCTION_ARG'
-    ? choice.delta.function_call.arguments
-    : choice._type === 'FUNCTION_NAME'
-    ? choice.delta.function_call.name
-    : choice._type === 'CONTENT_FILTER'
-    ? choice.delta.content
-    : choice._type === 'LENGTH_STOP'
-    ? choice.delta.content
-    : choice._type;
+  test('should fail on function args', async () => {
+    expect(() =>
+      chat.returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485893,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 0,
+            delta: {
+              function_call: {
+                arguments: '{\n',
+              },
+            },
+            finish_reason: null,
+          },
+        ],
+      }),
+    ).toThrow();
+  });
+
+  test('should parse a streaming content', async () => {
+    const parsed = chat.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            content: 'Ban',
+          },
+          finish_reason: null,
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
+
+  test('should parse a streaming content with index', async () => {
+    const parsed = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming()
+      .returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485556,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 1,
+            delta: {
+              content: 'Ban',
+            },
+            finish_reason: null,
+          },
+        ],
+      });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
+
+  test('should parse a streaming stop', async () => {
+    const parsed = chat.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {},
+          finish_reason: 'stop',
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"stop"');
+  });
+
+  test('should parse a streaming stop with two indices', async () => {
+    const parsed = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming()
+      .returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485556,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 1,
+            delta: {},
+            finish_reason: 'stop',
+          },
+        ],
+      });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"stop"');
+  });
+
+  test('should parse a streaming function call stop', async () => {
+    expect(() =>
+      chat.returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485919,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 0,
+            delta: {},
+            finish_reason: 'function_call',
+          },
+        ],
+      }),
+    ).toThrow();
+  });
+
+  test('should parse a streaming length limited', async () => {
+    const parsed = chat.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485893,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {},
+          finish_reason: 'length',
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].finish_reason).toMatchInlineSnapshot('"length"');
+  });
+});
+
+describe.concurrent('streaming chat with function', () => {
+  test('all test messages', async () => {
+    const allTests = [
+      openaiStreamBasicMessage,
+      openaiStreamFunctionCall,
+      openaiStreamFunctionCallLengthLimited,
+      openaiStreamLengthLimited,
+    ];
+
+    const allTypes: string[] = [];
+
+    const testChat = hop.chat().streaming().functions([weatherFunction]);
+
+    for (const messages of allTests) {
+      const output = messages.map((m) => testChat.returnType.parse(m));
+      const types = output.map((output) => output.choices[0].__type).join(', ');
+      allTypes.push(types);
+    }
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        "content, content, content, content, stop",
+        "function_name, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_completed",
+        "function_name, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, function_arguments, length",
+        "content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, content, length",
+      ]
+    `);
+  });
+
+  test('two n messages', async () => {
+    const allTests = [openaiStreamTwoResponses];
+
+    const allTypes: string[] = [];
+
+    const testChat = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming()
+      .functions([weatherFunction]);
+
+    for (const messages of allTests) {
+      const output = messages.map((m) => testChat.returnType.parse(m));
+      const types = output
+        .map(
+          (output) => `${output.choices[0].__type}[${output.choices[0].index}]`,
+        )
+        .join(', ');
+      allTypes.push(types);
+    }
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        "content[0], content[0], content[1], content[1], content[0], content[1], content[0], content[1], stop[0], stop[1]",
+      ]
+    `);
+  });
+
+  test('should parse a streaming role', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            role: 'assistant',
+            content: '',
+          },
+          finish_reason: null,
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
+
+  test('should fail with an invalid function name', async () => {
+    expect(() =>
+      chatWithFunction.returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485919,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 0,
+            delta: {
+              role: 'assistant',
+              content: null,
+              function_call: {
+                name: 'someBadName',
+                arguments: '',
+              },
+            },
+            finish_reason: null,
+          },
+        ],
+      }),
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "[
+        {
+          \\"code\\": \\"unrecognized_keys\\",
+          \\"keys\\": [
+            \\"name\\"
+          ],
+          \\"path\\": [
+            \\"choices\\",
+            0,
+            \\"delta\\",
+            \\"function_call\\"
+          ],
+          \\"message\\": \\"Unrecognized key(s) in object: 'name'\\"
+        }
+      ]"
+    `);
+  });
+
+  test('should parse a streaming function name', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485919,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            role: 'assistant',
+            content: null,
+            function_call: {
+              name: 'getCurrentWeather',
+              arguments: '',
+            },
+          },
+          finish_reason: null,
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"function_name"');
+  });
+
+  test('should parse a streaming function args', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485893,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            function_call: {
+              arguments: '{\n',
+            },
+          },
+          finish_reason: null,
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot(
+      '"function_arguments"',
+    );
+  });
+
+  test('should parse a streaming content', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {
+            content: 'Ban',
+          },
+          finish_reason: null,
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
+
+  test('should parse a streaming content with index', async () => {
+    const parsed = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming()
+      .functions([weatherFunction])
+      .returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485556,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 1,
+            delta: {
+              content: 'Ban',
+            },
+            finish_reason: null,
+          },
+        ],
+      });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"content"');
+  });
+
+  test('should parse a streaming stop', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485556,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {},
+          finish_reason: 'stop',
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"stop"');
+  });
+
+  test('should parse a streaming stop with two indices', async () => {
+    const parsed = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming()
+      .functions([weatherFunction])
+      .returnType.parse({
+        id: 'chatcmpl-12345',
+        object: 'chat.completion.chunk',
+        created: 1690485556,
+        model: 'gpt-3.5-turbo-0613',
+        choices: [
+          {
+            index: 1,
+            delta: {},
+            finish_reason: 'stop',
+          },
+        ],
+      });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot('"stop"');
+  });
+
+  test('should parse a streaming function call stop', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485919,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {},
+          finish_reason: 'function_call',
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].__type).toMatchInlineSnapshot(
+      '"function_completed"',
+    );
+  });
+
+  test('should parse a streaming length limited', async () => {
+    const parsed = chatWithFunction.returnType.parse({
+      id: 'chatcmpl-12345',
+      object: 'chat.completion.chunk',
+      created: 1690485893,
+      model: 'gpt-3.5-turbo-0613',
+      choices: [
+        {
+          index: 0,
+          delta: {},
+          finish_reason: 'length',
+        },
+      ],
+    });
+
+    expect(parsed.choices[0].finish_reason).toMatchInlineSnapshot('"length"');
+  });
+});

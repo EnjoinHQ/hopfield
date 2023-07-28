@@ -102,11 +102,12 @@ Simple of example of using simpleaichat in a stateless manner (e.g. AWS Lambda f
 Shoutout to these projects which inspired Hopfield:
 
 - [Zod](https://github.com/colinhacks/zod)
-- [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema) (we had to fork to be able to introspect the zod schema)
+- [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema)
 - [Autochain](https://github.com/Forethought-Technologies/AutoChain)
 - [Langchain.js](https://github.com/hwchase17/langchainjs)
 - [simpleaichat](https://github.com/minimaxir/simpleaichat)
 - [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
+- [abitype](https://github.com/wagmi-dev/abitype)
 
 And many others.
 

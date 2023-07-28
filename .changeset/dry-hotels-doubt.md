@@ -68,6 +68,7 @@ const parsed = hopfieldFunction.output.parse(
 );
 
 console.log(parsed);
+//            ^?
 // {
 //   "arguments": {
 //     "location": "San Francisco, CA",

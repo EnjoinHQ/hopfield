@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
 
-import { openai } from '../_test/openai.js';
-import { type OpenAIChatMessage, hop } from '../index.js';
-import { SupportCategoryEnum } from './test.js';
+import { SupportCategoryEnum } from '../_test/zod.js';
+import { hop } from '../index.js';
 
+import { openai } from '../_test/openai.js';
 import { z } from 'zod';
 
 test('should classify a support request', async () => {
@@ -21,7 +21,7 @@ test('should classify a support request', async () => {
 
   const chat = hop.provider(openai).chat().functions([classifyMessage]);
 
-  const messages: OpenAIChatMessage[] = [
+  const messages: hop.inferMessageInput<typeof chat>[] = [
     {
       role: 'system',
       content: 'You are a helpful classification assistant.',
@@ -40,9 +40,7 @@ test('should classify a support request', async () => {
   });
 
   expect(
-    parsed.choices[0]?.finish_reason === 'stop' &&
-      parsed.choices[0]?.message.content === null &&
-      parsed.choices[0].message.function_call,
+    parsed.choices[0].__type === 'function_call' && parsed.choices[0].message,
   ).toMatchInlineSnapshot(`
     {
       "arguments": {

@@ -1,11 +1,14 @@
 import {
-  BaseHopfieldChatWithFunctions,
-  type InferChatInput,
-  type InferStreamingResult,
+  BaseChatWithFunctions,
+  type InferInput,
+  type InferResult,
   type StreamingResult,
 } from '../../chat.js';
+import type { LimitedTupleWithUnion } from '../../type-utils.js';
+
 import type {
   FunctionConfigsUnion,
+  FunctionProperties,
   FunctionSchemasArray,
   OpenAIFunctionsTuple,
 } from '../function.js';
@@ -13,63 +16,71 @@ import {
   type OpenAIChatModelName,
   defaultOpenAIChatModelName,
 } from '../models.js';
-import { ChoiceIndex, OpenAIChatBaseInput } from './shared.js';
+import { OpenAIChatBaseInput } from './shared.js';
 import {
+  AssistantRole,
   ChoiceWithContentDelta,
   ChoiceWithContentFilterDelta,
   ChoiceWithLengthReasonDelta,
   ChoiceWithRoleDelta,
   ChoiceWithStopReasonDelta,
-  EmptyDelta,
   type OpenAIChatStreamingSchemaProps,
 } from './streaming.js';
 import OpenAI from 'openai';
-import { z } from 'zod';
+import { ZodUnion, z } from 'zod';
 
-const FunctionNameDelta = z.object({
-  function_call: z.object({ name: z.string() }),
-});
+type FunctionReturnTypeNamesUnion<T extends OpenAIFunctionsTuple> = ZodUnion<
+  [
+    FunctionProperties<T, 'returnTypeName'>[number],
+    ...FunctionProperties<T, 'returnTypeName'>,
+  ]
+>;
 
-const FunctionArgsDelta = z.object({
-  function_call: z.object({ arguments: z.string() }),
-});
-
-const ChoiceWithFunctionNameDelta = z.object({
-  _type: z.literal('FUNCTION_NAME').default('FUNCTION_NAME'),
-  delta: FunctionNameDelta,
-  finish_reason: z.null(),
-  index: ChoiceIndex,
-});
-
-const ChoiceWithFunctionArgsDelta = z.object({
-  _type: z.literal('FUNCTION_ARG').default('FUNCTION_ARG'),
-  delta: FunctionArgsDelta,
-  finish_reason: z.null(),
-  index: ChoiceIndex,
-});
-
-const ChoiceWithFunctionCallReasonDelta = z
+/**
+ * `function_completed`: Function call data has completed streaming.
+ */
+const ChoiceWithFunctionCallDelta = z
   .object({
-    _type: z.literal('FUNCTION_CALL').default('FUNCTION_CALL'),
-    delta: EmptyDelta,
+    /**
+     * `function_completed`: Function call data has completed streaming.
+     */
+    __type: z.literal('function_completed').default('function_completed'),
+    delta: z.object({}),
     finish_reason: z.literal('function_call'),
-    index: ChoiceIndex,
   })
-  .describe('The model decided to call a function');
+  .describe('Function call data has completed streaming.');
+
+/**
+ * `function_arguments`: Streaming function arguments data.
+ */
+const ChoiceWithFunctionArgumentsDelta = z
+  .object({
+    /**
+     * `function_arguments`: Streaming function arguments data.
+     */
+    __type: z.literal('function_arguments').default('function_arguments'),
+    delta: z.object({
+      function_call: z.object({ arguments: z.string() }).strict(),
+    }),
+    finish_reason: z.null(),
+  })
+  .describe('Streaming function arguments data.');
 
 export type OpenAIChatWithFunctionsStreamingSchemaProps<
   ModelName extends OpenAIChatModelName,
+  N extends number,
   Functions extends OpenAIFunctionsTuple,
-> = OpenAIChatStreamingSchemaProps<ModelName> & {
+> = OpenAIChatStreamingSchemaProps<ModelName, N> & {
   functions: Functions;
 };
 
 export class OpenAIChatWithFunctionsStreamingSchema<
   ModelName extends OpenAIChatModelName,
+  N extends number,
   Functions extends OpenAIFunctionsTuple,
-> extends BaseHopfieldChatWithFunctions<ModelName, true, Functions> {
+> extends BaseChatWithFunctions<ModelName, N, true, Functions> {
   constructor(
-    props: OpenAIChatWithFunctionsStreamingSchemaProps<ModelName, Functions>,
+    props: OpenAIChatWithFunctionsStreamingSchemaProps<ModelName, N, Functions>,
   ) {
     super({
       ...props,
@@ -97,53 +108,83 @@ export class OpenAIChatWithFunctionsStreamingSchema<
       functions: this.functionSchemas.describe(
         'A list of functions the model may generate JSON inputs for.',
       ),
+      /**
+       * How many chat completion choices to generate for each input message. Defaults to 1.
+       * This cannot be overridden here - use `hop.chat("model-name", 2)`.
+       */
+      n: z
+        .literal(this._n)
+        .default(this._n as N extends undefined ? never : N)
+        .describe(
+          'How many chat completion choices to generate for each input message.',
+        ),
     });
   }
 
-  get functionCall(): FunctionConfigsUnion<Functions> {
+  protected get functionCall(): FunctionConfigsUnion<Functions> {
     return z.union(this._functions.map((fn) => fn.functionConfigSchema) as any);
   }
 
-  get functionSchemas(): FunctionSchemasArray<Functions> {
+  protected get functionSchemas(): FunctionSchemasArray<Functions> {
     return z
       .array(z.union(this._functions.map((fn) => fn.schema) as any))
       .default(this._functions.map((fn) => fn.jsonSchema));
   }
 
-  get functionReturnTypes(): FunctionSchemasArray<Functions> {
-    return z
-      .array(z.union(this._functions.map((fn) => fn.schema) as any))
-      .default(this._functions.map((fn) => fn.jsonSchema));
+  protected get functionReturnTypeNames(): FunctionReturnTypeNamesUnion<Functions> {
+    return z.union(this._functions.map((fn) => fn.returnTypeName) as any);
   }
 
   get returnType() {
-    const Choice = z.union([
-      // role must come before content delta
-      ChoiceWithRoleDelta,
-      ChoiceWithContentDelta,
-      ChoiceWithContentFilterDelta,
-      ChoiceWithStopReasonDelta,
-      ChoiceWithLengthReasonDelta,
-      ChoiceWithFunctionNameDelta,
-      ChoiceWithFunctionArgsDelta,
-      ChoiceWithFunctionCallReasonDelta,
-    ]);
+    /**
+     * `function_name`: The model is calling a function, and the name has been streamed.
+     */
+    const ChoiceWithFunctionNameAndRoleDelta = z
+      .object({
+        /**
+         * `function_name`: The model is calling a function, and the name has been streamed.
+         */
+        __type: z.literal('function_name').default('function_name'),
+        delta: z.object({
+          role: AssistantRole,
+          content: z.null(),
+          function_call: this.functionReturnTypeNames,
+        }),
+        finish_reason: z.literal(null),
+      })
+      .describe(
+        'The model is calling a function, and the name has been streamed.',
+      );
+
+    const Choice = z
+      .union([
+        ChoiceWithFunctionNameAndRoleDelta,
+        ChoiceWithFunctionArgumentsDelta,
+        ChoiceWithFunctionCallDelta,
+        ChoiceWithRoleDelta,
+        ChoiceWithContentDelta,
+        ChoiceWithContentFilterDelta,
+        ChoiceWithStopReasonDelta,
+        ChoiceWithLengthReasonDelta,
+      ])
+      .and(
+        z.object({
+          /** The index of the choice which is being streamed. */
+          index: z.union(
+            Array.from(Array(this._n).keys()).map((value) =>
+              z.literal(value),
+            ) as any,
+          ) as unknown as ZodUnion<LimitedTupleWithUnion<N>>,
+        }),
+      );
 
     return z.object({
       id: z.string(),
-      choices: z.array(Choice),
+      /** The streamed choice returned from the model. */
+      choices: z.tuple([Choice]),
       created: z.number(),
       model: z.string(),
       object: z.literal('chat.completion.chunk'),
-    });
-  }
-
-  functions<NewFunctions extends OpenAIFunctionsTuple,>(
-    functions: NewFunctions,
-  ) {
-    return new OpenAIChatWithFunctionsStreamingSchema({
-      model: this.model,
-      functions: functions,
     });
   }
 }
@@ -151,22 +192,25 @@ export class OpenAIChatWithFunctionsStreamingSchema<
 export type OpenAIChatWithFunctionsStreamingProps<
   Provider,
   ModelName extends OpenAIChatModelName,
+  N extends number,
   Functions extends OpenAIFunctionsTuple,
-> = OpenAIChatWithFunctionsStreamingSchemaProps<ModelName, Functions> & {
+> = OpenAIChatWithFunctionsStreamingSchemaProps<ModelName, N, Functions> & {
   provider: Provider;
 };
 
 export class OpenAIChatWithFunctionsStreaming<
   Provider extends OpenAI,
   ModelName extends OpenAIChatModelName,
+  N extends number,
   Functions extends OpenAIFunctionsTuple,
-> extends OpenAIChatWithFunctionsStreamingSchema<ModelName, Functions> {
+> extends OpenAIChatWithFunctionsStreamingSchema<ModelName, N, Functions> {
   provider: Provider;
 
   constructor(
     props: OpenAIChatWithFunctionsStreamingProps<
       Provider,
       ModelName,
+      N,
       Functions
     >,
   ) {
@@ -175,7 +219,7 @@ export class OpenAIChatWithFunctionsStreaming<
     this.provider = props.provider;
   }
 
-  async get(input: InferChatInput<typeof this>) {
+  async get(input: InferInput<typeof this>) {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.chat.completions.create({
@@ -185,10 +229,9 @@ export class OpenAIChatWithFunctionsStreaming<
 
     const outputSchema = this.returnType;
 
-    const result: StreamingResult<InferStreamingResult<this>> = {
+    const result: StreamingResult<InferResult<this>> = {
       [Symbol.asyncIterator]: async function* () {
         for await (const part of response) {
-          console.log(JSON.stringify(part, null, 2));
           yield outputSchema.parseAsync(part);
         }
       },

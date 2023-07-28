@@ -1,85 +1,120 @@
 import {
-  BaseHopfieldChat,
-  type InferStreamingResult,
+  BaseChat,
+  type InferResult,
   type StreamingResult,
 } from '../../chat.js';
+import type { LimitedTupleWithUnion } from '../../type-utils.js';
 import type { OpenAIFunctionsTuple } from '../function.js';
 import {
   type OpenAIChatModelName,
   defaultOpenAIChatModelName,
 } from '../models.js';
 import type { OpenAIChatSchemaProps } from './non-streaming.js';
-import { ChoiceIndex, OpenAIChatBaseInput } from './shared.js';
+import { OpenAIChatBaseInput } from './shared.js';
 import {
   OpenAIChatWithFunctionsStreaming,
   OpenAIChatWithFunctionsStreamingSchema,
 } from './streaming-with-functions.js';
 import OpenAI from 'openai';
-import { z } from 'zod';
+import { ZodUnion, z } from 'zod';
 
-const RoleDelta = z.object({
-  role: z.enum(['assistant']),
-});
+/** `assistant`: The role of the message. */
+export const AssistantRole = z.literal('assistant');
 
-const ContentDelta = z.object({
-  content: z.string(),
-});
+/**
+ * `role`: The role for the content being streamed.
+ */
+export const ChoiceWithRoleDelta = z
+  .object({
+    /**
+     * `role`: The role for the content being streamed.
+     */
+    __type: z.literal('role').default('role'),
+    delta: z
+      .object({
+        role: AssistantRole,
+      })
+      .strict(),
+    finish_reason: z.null(),
+  })
+  .describe('The role for the content being streamed.');
 
-export const EmptyDelta = z.object({});
+/**
+ * `content`: The content being streamed.
+ */
+export const ChoiceWithContentDelta = z
+  .object({
+    /**
+     * `content`: The content being streamed.
+     */
+    __type: z.literal('content').default('content'),
+    delta: z.object({
+      content: z.string(),
+    }),
+    finish_reason: z.null(),
+  })
+  .describe('The content being streamed.');
 
-export const ChoiceWithContentDelta = z.object({
-  _type: z.literal('CONTENT').default('CONTENT'),
-  delta: ContentDelta,
-  finish_reason: z.null(),
-  index: ChoiceIndex,
-});
-
+/**
+ * `content_filter`: Omitted streaming content due to a flag from our content filters.
+ */
 export const ChoiceWithContentFilterDelta = z
   .object({
-    _type: z.literal('CONTENT_FILTER').default('CONTENT_FILTER'),
-    delta: ContentDelta,
+    /**
+     * `content_filter`: Omitted streaming content due to a flag from our content filters.
+     */
+    __type: z.literal('content_filter').default('content_filter'),
+    delta: z.object({
+      content: z.string(),
+    }),
     finish_reason: z.literal('content_filter'),
-    index: ChoiceIndex,
-  })
-  .describe('Omitted content due to a flag from our content filters');
-
-export const ChoiceWithRoleDelta = z.object({
-  _type: z.literal('ROLE').default('ROLE'),
-  delta: RoleDelta,
-  finish_reason: z.null(),
-  index: ChoiceIndex,
-});
-
-export const ChoiceWithStopReasonDelta = z
-  .object({
-    _type: z.literal('STOP').default('STOP'),
-    delta: EmptyDelta,
-    finish_reason: z.literal('stop'),
-    index: ChoiceIndex,
   })
   .describe(
-    'API returned complete message, or a message terminated by one of the stop sequences provided via the stop parameter',
+    'Omitted streaming content due to a flag from our content filters.',
   );
 
-export const ChoiceWithLengthReasonDelta = z
+/**
+ * `stop`: API has streamed a complete message, or a message terminated by one of the stop sequences provided via the stop parameter.
+ */
+export const ChoiceWithStopReasonDelta = z
   .object({
-    _type: z.literal('LENGTH_STOP').default('LENGTH_STOP'),
-    delta: ContentDelta,
-    finish_reason: z.literal('length'),
-    index: ChoiceIndex,
+    /**
+     * `stop`: API has streamed a complete message, or a message terminated by one of the stop sequences provided via the stop parameter.
+     */
+    __type: z.literal('stop').default('stop'),
+    delta: z.object({}),
+    finish_reason: z.literal('stop'),
   })
   .describe(
-    'Incomplete model output due to max_tokens parameter or token limit',
+    'API has streamed a complete message, or a message terminated by one of the stop sequences provided via the stop parameter.',
+  );
+
+/**
+ * `length`: Incomplete streaming output due to max_tokens parameter or token limit.
+ */
+export const ChoiceWithLengthReasonDelta = z
+  .object({
+    /**
+     * `length`: Incomplete streaming output due to max_tokens parameter or token limit.
+     */
+    __type: z.literal('length').default('length'),
+    delta: z.object({}),
+    finish_reason: z.literal('length'),
+  })
+  .describe(
+    'Incomplete streaming output due to max_tokens parameter or token limit.',
   );
 
 export type OpenAIChatStreamingSchemaProps<
   ModelName extends OpenAIChatModelName,
-> = OpenAIChatSchemaProps<ModelName>;
+  N extends number,
+> = OpenAIChatSchemaProps<ModelName, N>;
 
 export class OpenAIChatStreamingSchema<
   ModelName extends OpenAIChatModelName,
-> extends BaseHopfieldChat<ModelName, true> {
-  constructor(props: OpenAIChatStreamingSchemaProps<ModelName>) {
+  N extends number,
+> extends BaseChat<ModelName, N, true> {
+  constructor(props: OpenAIChatStreamingSchemaProps<ModelName, N>) {
     super({
       ...props,
       stream: true,
@@ -98,22 +133,44 @@ export class OpenAIChatStreamingSchema<
         .literal(true)
         .default(true)
         .describe('If set, partial message deltas will be returned.'),
+      /**
+       * How many chat completion choices to generate for each input message. Defaults to 1.
+       * This cannot be overridden here - use `hop.chat("model-name", 2)`.
+       */
+      n: z
+        .literal(this._n)
+        .default(this._n as N extends undefined ? never : N)
+        .describe(
+          'How many chat completion choices to generate for each input message.',
+        ),
     });
   }
 
   get returnType() {
-    const Choice = z.union([
-      // role must come before content delta
-      ChoiceWithRoleDelta,
-      ChoiceWithContentDelta,
-      ChoiceWithContentFilterDelta,
-      ChoiceWithStopReasonDelta,
-      ChoiceWithLengthReasonDelta,
-    ]);
+    const Choice = z
+      .union([
+        // role must come before content delta
+        ChoiceWithRoleDelta,
+        ChoiceWithContentDelta,
+        ChoiceWithContentFilterDelta,
+        ChoiceWithStopReasonDelta,
+        ChoiceWithLengthReasonDelta,
+      ])
+      .and(
+        z.object({
+          /** The index of the choice which is being streamed. */
+          index: z.union(
+            Array.from(Array(this._n).keys()).map((value) =>
+              z.literal(value),
+            ) as any,
+          ) as unknown as ZodUnion<LimitedTupleWithUnion<N>>,
+        }),
+      );
 
     return z.object({
       id: z.string(),
-      choices: z.array(Choice),
+      /** The streamed choice returned from the model. */
+      choices: z.tuple([Choice]),
       created: z.number(),
       model: z.string(),
       object: z.literal('chat.completion.chunk'),
@@ -125,6 +182,7 @@ export class OpenAIChatStreamingSchema<
   ) {
     return new OpenAIChatWithFunctionsStreamingSchema({
       model: this.model,
+      n: this._n,
       functions: functions,
     });
   }
@@ -133,17 +191,19 @@ export class OpenAIChatStreamingSchema<
 export type OpenAIStreamingChatProps<
   Provider,
   ModelName extends OpenAIChatModelName,
-> = OpenAIChatStreamingSchemaProps<ModelName> & {
+  N extends number,
+> = OpenAIChatStreamingSchemaProps<ModelName, N> & {
   provider: Provider;
 };
 
 export class OpenAIStreamingChat<
   Provider extends OpenAI,
   ModelName extends OpenAIChatModelName,
-> extends OpenAIChatStreamingSchema<ModelName> {
+  N extends number,
+> extends OpenAIChatStreamingSchema<ModelName, N> {
   provider: Provider;
 
-  constructor(props: OpenAIStreamingChatProps<Provider, ModelName>) {
+  constructor(props: OpenAIStreamingChatProps<Provider, ModelName, N>) {
     super(props);
 
     this.provider = props.provider;
@@ -159,10 +219,9 @@ export class OpenAIStreamingChat<
 
     const outputSchema = this.returnType;
 
-    const result: StreamingResult<InferStreamingResult<this>> = {
+    const result: StreamingResult<InferResult<this>> = {
       [Symbol.asyncIterator]: async function* () {
         for await (const part of response) {
-          console.log(JSON.stringify(part, null, 2));
           yield outputSchema.parseAsync(part);
         }
       },
@@ -178,6 +237,7 @@ export class OpenAIStreamingChat<
     return new OpenAIChatWithFunctionsStreaming({
       provider: this.provider,
       model: this.model,
+      n: this._n,
       functions,
     });
   }

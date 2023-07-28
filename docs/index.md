@@ -3,7 +3,7 @@ description: "Minimal typescript library for type-safe, testable interactions wi
 head:
   - - meta
     - name: keywords
-      content: ai, openai, gpt, llm, ai-tools
+      content: ai, openai, zod, gpt, llm, ai-tools
 title: "Hopfield: Minimal typescript library for type-safe, testable interactions with LLMs"
 titleTemplate: false
 ---
@@ -38,64 +38,10 @@ titleTemplate: false
   </a>
 </div>
 
-Minimal typescript library for type-safe, testable interactions with LLMs.
+Hopfield is a minimal typescript library for type-safe, testable interactions with LLMs.
 
-Easily validate input/output with strong types. No confusing abstractions, with best practices baked in.
-
-```ts twoslash
-import hop from "hopfield";
-import { z } from "zod";
-import OpenAI from "openai";
-
-const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
-
-const chat = hop.provider(openai).chat();
-
-const parsed = await chat.get({
-  messages: [
-    {
-      role: "user",
-      content: "What's the weather in Phoenix, AZ?",
-    },
-  ],
-  temperature: 0,
-});
-
-const message = parsed.choices[0]?.message;
-//      ^?
-```
-
-The input function definition will be validated to make sure that:
-
-1. Descriptions are provided for every argument.
-2. No error-prone types are used as args (this includes `ZodTuple`, `ZodBigInt`, and `ZodAny`).
-3. If a type description performs better with a template, it is checked against the template (this currently checks any `ZodEnum`, since enums tend to perform better with a specific description ending).
-
-All of these checks are entirely customizable and can be disabled with the `options` parameter.
-
-You can then use the `HopfieldFunction` with OpenAI:
-
-## TL;DR
-
-Hopfield might be a good fit for your project if:
-
-- 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
-- 🪨 You don't need a heavyweight LLM orchestration framework (that ships with a ton of dependencies you'll never use).
-- 💬 You're building complex LLM interactions which need evaluation.
-- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. using [Zod](https://github.com/colinhacks/zod)).
-- 📝 You want simple and extensible conversational memory.
-
-### Our guiding principles
-
-- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
-- 🤏 We provide a simple interface with common LLM use-cases. This is aligned 1-1 with OpenAI's abstractions.
-- 🪢 We explicitly _don't_ provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
-- 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
-- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (we expect `fetch` to be in the global namespace, as it is in web, edge and modern Node environments, but support also custom `fetch`).
-
-## Install
-
-Read the [Getting Started](/guide/getting-started) guide to learn more how to use Hopfield.
+Easily validate LLM responses and inputs with strong types. Flexible abstractions
+with best practices baked in. Add it to your project:
 
 ::: code-group
 
@@ -113,6 +59,206 @@ yarn add hopfield
 
 :::
 
+### ready, set, `hop`
+
+See how easy LLM interactions are with Hopfield:
+
+::: code-group
+
+```ts twoslash [main.ts]
+// @filename: openai.ts
+import OpenAI from "openai";
+
+export const SupportCategoryEnum = z.enum([
+  "ACCOUNT_ISSUES",
+  "BILLING_AND_PAYMENTS",
+  "TECHNICAL_SUPPORT",
+  "FEATURE_REQUESTS",
+  "BUG_REPORTS",
+  "PRODUCT_INQUIRIES",
+  "PASSWORD_RESET",
+  "SECURITY_ISSUES",
+  "SERVICE_OUTAGES",
+  "SETUP_AND_INSTALLATION",
+  "TROUBLESHOOTING",
+  "USER_GUIDES_AND_MANUALS",
+  "WARRANTY_AND_REPAIRS",
+  "ORDER_TRACKING",
+  "DELIVERY_ISSUES",
+  "RETURN_AND_REFUND",
+  "ACCOUNT_DELETION",
+  "PRIVACY_CONCERNS",
+  "COMPLIANCE_QUERY",
+  "TRAINING_AND_CERTIFICATIONS",
+  "PARTNER_SUPPORT",
+  "DEVELOPER_TOOLS",
+  "API_SUPPORT",
+  "PERFORMANCE_ISSUES",
+  "DATA_ISSUES",
+  "UPGRADE_ISSUES",
+  "MIGRATION_ASSISTANCE",
+  "SYSTEM_COMPATIBILITY",
+  "PAYMENT_GATEWAY_SUPPORT",
+  "SYSTEM_MAINTENANCE",
+  "RELEASE_NOTES",
+  "OTHERS",
+]);
+
+import hop from "hopfield";
+import z from "zod";
+
+const openai = new OpenAI();
+
+const categoryDescription = hop.template.function.enum(
+  "The category of the message."
+);
+
+const classifyMessage = hop.function({
+  name: "classifyMessage",
+  description: "Triage an incoming support message.",
+  parameters: z.object({
+    summary: z.string().describe("The summary of the message."),
+    category: SupportCategoryEnum.describe(categoryDescription),
+  }),
+});
+
+export const chat = hop.provider(openai).chat().functions([classifyMessage]);
+
+// @filename: main.ts
+import z from "zod";
+import { SupportCategoryEnum } from "./openai";
+const handleMessageWithCategory = async (
+  category: z.infer<typeof SupportCategoryEnum>,
+  message: string
+) => {};
+
+// ---cut---
+import hop from "hopfield";
+import { chat } from "./openai";
+
+const incomingUserMessage = "How do I reset my password?";
+
+const messages: hop.inferMessageInput<typeof chat>[] = [
+  {
+    content: incomingUserMessage,
+    role: "user",
+  },
+];
+
+const parsed = await chat.get({
+  messages,
+  function_call: "auto",
+});
+
+if (parsed.choices[0].__type === "function_call") {
+  //                    ^?
+  const category = parsed.choices[0].message.function_call.arguments.category;
+  await handleMessageWithCategory(category, incomingUserMessage);
+  //                                 ^?
+}
+```
+
+```ts twoslash [openai.ts]
+import OpenAI from "openai";
+
+export const SupportCategoryEnum = z.enum([
+  "ACCOUNT_ISSUES",
+  "BILLING_AND_PAYMENTS",
+  "TECHNICAL_SUPPORT",
+  "FEATURE_REQUESTS",
+  "BUG_REPORTS",
+  "PRODUCT_INQUIRIES",
+  "PASSWORD_RESET",
+  "SECURITY_ISSUES",
+  "SERVICE_OUTAGES",
+  "SETUP_AND_INSTALLATION",
+  "TROUBLESHOOTING",
+  "USER_GUIDES_AND_MANUALS",
+  "WARRANTY_AND_REPAIRS",
+  "ORDER_TRACKING",
+  "DELIVERY_ISSUES",
+  "RETURN_AND_REFUND",
+  "ACCOUNT_DELETION",
+  "PRIVACY_CONCERNS",
+  "COMPLIANCE_QUERY",
+  "TRAINING_AND_CERTIFICATIONS",
+  "PARTNER_SUPPORT",
+  "DEVELOPER_TOOLS",
+  "API_SUPPORT",
+  "PERFORMANCE_ISSUES",
+  "DATA_ISSUES",
+  "UPGRADE_ISSUES",
+  "MIGRATION_ASSISTANCE",
+  "SYSTEM_COMPATIBILITY",
+  "PAYMENT_GATEWAY_SUPPORT",
+  "SYSTEM_MAINTENANCE",
+  "RELEASE_NOTES",
+  "OTHERS",
+]);
+
+// ---cut---
+import hop from "hopfield";
+import z from "zod";
+
+const openai = new OpenAI();
+
+const categoryDescription = hop.template.function.enum(
+  "The category of the message."
+);
+
+const classifyMessage = hop.function({
+  name: "classifyMessage",
+  description: "Triage an incoming support message.",
+  parameters: z.object({
+    summary: z.string().describe("The summary of the message."),
+    category: SupportCategoryEnum.describe(categoryDescription),
+    //                                        ^?
+  }),
+});
+
+export const chat = hop.provider(openai).chat().functions([classifyMessage]);
+```
+
+:::
+
+## TL;DR
+
+Hopfield might be a good fit for your project if:
+
+- 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
+- 🪨 You don't need a heavyweight LLM orchestration framework that ships with a ton of dependencies you'll never use.
+- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. validations w/ [Zod](https://github.com/colinhacks/zod)).
+- 💬 You're building complex LLM interactions which use memory & [RAG](https://www.promptingguide.ai/techniques/rag), evaluation, and orchestration (_coming soon™_).
+- 📝 You want best-practice, extensible templates, which use [string literal types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
+  under the hood for transparency.
+
+Oh, and liking Typescript is a nice-to-have.
+
+## Guiding principles
+
+- 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
+- 🤏 We provide a simple, ejectable interface with common LLM use-cases. This is aligned 1-1 with LLM provider abstractions, like OpenAI's.
+- 🪢 We explicitly _don't_ provide a ton of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other frameworks provide these, but when you use them, you soon realize the tool you want is very use-case specific.
+- 🧪 We (will) provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
+- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (oh and even web, if you like giving away API keys).
+
 ## Community
 
-If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions).
+If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
+or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the `🐇-hopfield` channel.
+
+## Learn More
+
+Read the [Getting Started](/guide/getting-started) guide to learn more how to use Hopfield.
+
+Shoutout to these projects which inspired us:
+
+- [Zod](https://github.com/colinhacks/zod)
+- [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema)
+- [Autochain](https://github.com/Forethought-Technologies/AutoChain)
+- [Langchain.js](https://github.com/hwchase17/langchainjs)
+- [simpleaichat](https://github.com/minimaxir/simpleaichat)
+- [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
+- [abitype](https://github.com/wagmi-dev/abitype)
+
+If you like Hopfield, go star them on Github too.

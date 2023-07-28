@@ -1,6 +1,6 @@
 import { BaseHopfieldEmbedding } from '../embedding.js';
-import type { LimitedTuple, Tuple } from '../type-utils.js';
-import type { Tuple256 } from '../types.js';
+import type { LimitedTuple, Tuple, Tuple256 } from '../type-utils.js';
+
 import {
   type OpenAIEmbeddingModelName,
   defaultOpenAIEmbeddingModelName,
@@ -101,8 +101,6 @@ export class OpenAIEmbeddingSchema<
           typeof DataItem
         >,
       ),
-
-      // data: z.array(DataItem),
       usage: Usage,
     });
   }

@@ -11,7 +11,7 @@ export default withTwoslash(
     description:
       'Minimal typescript library for type-safe, testable interactions with LLMs',
     head: [
-      ['meta', { name: 'theme-color', content: '#729b1a' }],
+      ['meta', { name: 'theme-color', content: '#F09922' }],
       ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
       [
         'link',
@@ -26,7 +26,7 @@ export default withTwoslash(
         'meta',
         {
           name: 'keywords',
-          content: 'ai, openai, embeddings',
+          content: 'ai, zod, openai, embeddings',
         },
       ],
       ['meta', { property: 'og:url', content: 'https://hopfield.ai' }],
@@ -112,17 +112,8 @@ export default withTwoslash(
             text: 'API',
             items: [
               {
-                text: 'Zod',
-                link: '/api/zod',
-              },
-            ],
-          },
-          {
-            text: 'Config',
-            items: [
-              {
-                text: 'Reference',
-                link: '/config',
+                text: 'Functions',
+                link: '/api/function',
               },
             ],
           },
@@ -131,6 +122,7 @@ export default withTwoslash(
       siteTitle: false,
       socialLinks: [
         { icon: 'twitter', link: 'https://twitter.com/propology_' },
+        { icon: 'discord', link: 'https://discord.gg/2hag5fc6' },
         { icon: 'github', link: 'https://github.com/propology/hopfield' },
       ],
     },

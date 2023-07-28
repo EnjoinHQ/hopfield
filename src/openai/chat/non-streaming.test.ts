@@ -1,12 +1,17 @@
-import { expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { test } from 'vitest';
 
 import { weatherFunction } from '../../_test/function.js';
-import { openai } from '../../_test/openai.js';
-import hop, { type OpenAIChatMessage } from '../../index.js';
+import {
+  openaiBasicMessage,
+  openaiFunctionCall,
+  openaiFunctionCallLengthLimited,
+  openaiLengthLimited,
+  openaiTwoResponses,
+} from '../../_test/openai-non-streaming.js';
+import hop from '../../index.js';
 import * as Exports from './non-streaming.js';
-import { z } from 'zod';
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
@@ -21,168 +26,395 @@ it('should expose correct exports', () => {
   `);
 });
 
-test('should set a default model name with no provider', async () => {
+test('should set a model name', async () => {
   expect(hop.chat('gpt-3.5-turbo-16k').model).toMatchInlineSnapshot(
     '"gpt-3.5-turbo-16k"',
   );
 });
 
 test('should set a default model name', async () => {
-  expect(hop.provider(openai).chat().model).toMatchInlineSnapshot(
-    '"gpt-3.5-turbo-0613"',
-  );
+  expect(hop.chat().model).toMatchInlineSnapshot('"gpt-3.5-turbo-0613"');
 });
 
-test('should get a chat response', async () => {
-  const chat = hop
-    .provider(openai)
-    .chat()
-    .functions([hop.function(weatherFunction)]);
+describe.concurrent('non-streaming chat', () => {
+  test('all test messages', async () => {
+    const allTests = [openaiBasicMessage, openaiLengthLimited];
 
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content:
-        "What's the better word: banana, or aardvark? Choose one and only say it.",
-    },
-  ];
+    const testChat = hop.chat();
 
-  const parsed = await chat.get({
-    messages,
-    temperature: 0,
-  });
+    const allTypes: hop.inferResult<typeof testChat>[] = [];
 
-  expect(parsed?.choices[0]).toMatchInlineSnapshot(
-    `
-    {
-      "finish_reason": "stop",
-      "index": 0,
-      "message": {
-        "content": "Banana.",
-        "role": "assistant",
-      },
+    for (const message of allTests) {
+      const output = testChat.returnType.parse(message);
+      allTypes.push(output);
     }
-  `,
-  );
-}, 5000);
 
-test('should get a function call response', async () => {
-  const chat = hop
-    .provider(openai)
-    .chat('gpt-3.5-turbo-16k-0613')
-    .functions([weatherFunction]);
-
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content: "What's the weather in Phoenix, AZ?",
-    },
-  ];
-
-  const parsed = await chat.get({
-    messages,
-    temperature: 0,
-  });
-
-  expect(parsed.choices[0]).toMatchInlineSnapshot(
-    `
-    {
-      "finish_reason": "function_call",
-      "index": 0,
-      "message": {
-        "content": null,
-        "function_call": {
-          "arguments": {
-            "location": "Phoenix, AZ",
-            "unit": "celsius",
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        {
+          "choices": [
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Banana.",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690495858,
+          "id": "chatcmpl-8976324",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 3,
+            "prompt_tokens": 28,
+            "total_tokens": 31,
           },
-          "name": "getCurrentWeather",
         },
-        "role": "assistant",
-      },
-    }
-  `,
-  );
-}, 5000);
-
-test('should parse a function call response', async () => {
-  const chat = hop.chat().functions([weatherFunction]);
-
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content: "What's the weather in Phoenix, Arizona?",
-    },
-  ];
-
-  const input = chat.parameters.parse({
-    messages,
-    temperature: 0,
-  });
-
-  const response = await openai.chat.completions.create(input);
-
-  const parsed = await chat.returnType.parseAsync(response);
-
-  expect(parsed?.choices[0]).toMatchInlineSnapshot(
-    `
-    {
-      "finish_reason": "function_call",
-      "index": 0,
-      "message": {
-        "content": null,
-        "function_call": {
-          "arguments": {
-            "location": "Phoenix, Arizona",
-            "unit": "celsius",
+        {
+          "choices": [
+            {
+              "__type": "length",
+              "finish_reason": "length",
+              "index": 0,
+              "message": {
+                "content": "Once upon a time, in a quaint little village",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690495920,
+          "id": "chatcmpl-1230789",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 10,
+            "prompt_tokens": 27,
+            "total_tokens": 37,
           },
-          "name": "getCurrentWeather",
         },
-        "role": "assistant",
-      },
-    }
-  `,
-  );
-}, 5000);
-
-test('should handle two functions correctly', async () => {
-  const otherFunction = hop.provider(openai).function({
-    name: 'otherFunction',
-    description: 'Another description',
-    parameters: z.object({
-      driverName: z.string().describe('The driver'),
-    }),
+      ]
+    `);
   });
 
-  const chat = hop
-    .provider(openai)
-    .chat()
-    .functions([otherFunction, weatherFunction]);
+  test('two n messages', async () => {
+    const allTests = [openaiTwoResponses];
 
-  const messages: OpenAIChatMessage[] = [
-    {
-      role: 'user',
-      content: "What's the weather in Phoenix, AZ?",
-    },
-  ];
+    const testChat = hop.chat('gpt-3.5-turbo-0613', 2);
 
-  const response = await chat.get({
-    messages,
-    temperature: 0,
+    const allTypes: hop.inferResult<typeof testChat>[] = [];
+
+    for (const message of allTests) {
+      const output = testChat.returnType.parse(message);
+      allTypes.push(output);
+    }
+
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        {
+          "choices": [
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Subjective preference.",
+                "role": "assistant",
+              },
+            },
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 1,
+              "message": {
+                "content": "Subjective preference.",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690496163,
+          "id": "chatcmpl-23490823",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 8,
+            "prompt_tokens": 23,
+            "total_tokens": 31,
+          },
+        },
+      ]
+    `);
+  });
+});
+
+describe.concurrent('non-streaming functions chat', () => {
+  test('all test messages', async () => {
+    const allTests = [
+      openaiBasicMessage,
+      openaiFunctionCall,
+      // openaiFunctionCallLengthLimited,
+      openaiLengthLimited,
+    ];
+
+    const testChat = hop.chat().functions([weatherFunction]);
+
+    const allTypes: hop.inferResult<typeof testChat>[] = [];
+
+    for (const message of allTests) {
+      const output = testChat.returnType.parse(message);
+      allTypes.push(output);
+    }
+
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        {
+          "choices": [
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Banana.",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690495858,
+          "id": "chatcmpl-8976324",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 3,
+            "prompt_tokens": 28,
+            "total_tokens": 31,
+          },
+        },
+        {
+          "choices": [
+            {
+              "__type": "function_call",
+              "finish_reason": "function_call",
+              "index": 0,
+              "message": {
+                "content": null,
+                "function_call": {
+                  "arguments": {
+                    "location": "Phoenix, AZ",
+                    "unit": "celsius",
+                  },
+                  "name": "getCurrentWeather",
+                },
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690496097,
+          "id": "chatcmpl-098234",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 25,
+            "prompt_tokens": 102,
+            "total_tokens": 127,
+          },
+        },
+        {
+          "choices": [
+            {
+              "__type": "length",
+              "finish_reason": "length",
+              "index": 0,
+              "message": {
+                "content": "Once upon a time, in a quaint little village",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690495920,
+          "id": "chatcmpl-1230789",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 10,
+            "prompt_tokens": 27,
+            "total_tokens": 37,
+          },
+        },
+      ]
+    `);
   });
 
-  expect(
-    response?.choices[0]?.message.content === null &&
-      response.choices[0].message.function_call,
-  ).toMatchInlineSnapshot(
-    `
-    {
-      "arguments": {
-        "location": "Phoenix, AZ",
-        "unit": "celsius",
-      },
-      "name": "getCurrentWeather",
+  test('two n messages', async () => {
+    const allTests = [openaiTwoResponses];
+
+    const testChat = hop
+      .chat('gpt-3.5-turbo-0613', 2)
+      .functions([weatherFunction]);
+
+    const allTypes: hop.inferResult<typeof testChat>[] = [];
+
+    for (const message of allTests) {
+      const output = testChat.returnType.parse(message);
+      allTypes.push(output);
     }
-  `,
-  );
-}, 5000);
+
+    expect(allTypes).toMatchInlineSnapshot(`
+      [
+        {
+          "choices": [
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "Subjective preference.",
+                "role": "assistant",
+              },
+            },
+            {
+              "__type": "stop",
+              "finish_reason": "stop",
+              "index": 1,
+              "message": {
+                "content": "Subjective preference.",
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690496163,
+          "id": "chatcmpl-23490823",
+          "model": "gpt-3.5-turbo-0613",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 8,
+            "prompt_tokens": 23,
+            "total_tokens": 31,
+          },
+        },
+      ]
+    `);
+  });
+
+  test('should throw on invalid function call arguments', async () => {
+    const testChat = hop.chat().functions([weatherFunction]);
+
+    expect(() =>
+      testChat.returnType.parse(openaiFunctionCallLengthLimited),
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "[
+        {
+          \\"code\\": \\"invalid_union\\",
+          \\"unionErrors\\": [
+            {
+              \\"issues\\": [
+                {
+                  \\"received\\": \\"length\\",
+                  \\"code\\": \\"invalid_literal\\",
+                  \\"expected\\": \\"function_call\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"finish_reason\\"
+                  ],
+                  \\"message\\": \\"Invalid literal value, expected \\\\\\"function_call\\\\\\"\\"
+                },
+                {
+                  \\"code\\": \\"custom\\",
+                  \\"message\\": \\"Invalid JSON when parsing - likely the arguments are malformed.\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"message\\",
+                    \\"function_call\\",
+                    \\"arguments\\"
+                  ]
+                }
+              ],
+              \\"name\\": \\"ZodError\\"
+            },
+            {
+              \\"issues\\": [
+                {
+                  \\"received\\": \\"length\\",
+                  \\"code\\": \\"invalid_literal\\",
+                  \\"expected\\": \\"stop\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"finish_reason\\"
+                  ],
+                  \\"message\\": \\"Invalid literal value, expected \\\\\\"stop\\\\\\"\\"
+                },
+                {
+                  \\"code\\": \\"invalid_type\\",
+                  \\"expected\\": \\"string\\",
+                  \\"received\\": \\"null\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"message\\",
+                    \\"content\\"
+                  ],
+                  \\"message\\": \\"Expected string, received null\\"
+                }
+              ],
+              \\"name\\": \\"ZodError\\"
+            },
+            {
+              \\"issues\\": [
+                {
+                  \\"code\\": \\"invalid_type\\",
+                  \\"expected\\": \\"string\\",
+                  \\"received\\": \\"null\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"message\\",
+                    \\"content\\"
+                  ],
+                  \\"message\\": \\"Expected string, received null\\"
+                }
+              ],
+              \\"name\\": \\"ZodError\\"
+            },
+            {
+              \\"issues\\": [
+                {
+                  \\"received\\": \\"length\\",
+                  \\"code\\": \\"invalid_literal\\",
+                  \\"expected\\": \\"content_filter\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"finish_reason\\"
+                  ],
+                  \\"message\\": \\"Invalid literal value, expected \\\\\\"content_filter\\\\\\"\\"
+                },
+                {
+                  \\"code\\": \\"invalid_type\\",
+                  \\"expected\\": \\"string\\",
+                  \\"received\\": \\"null\\",
+                  \\"path\\": [
+                    \\"choices\\",
+                    0,
+                    \\"message\\",
+                    \\"content\\"
+                  ],
+                  \\"message\\": \\"Expected string, received null\\"
+                }
+              ],
+              \\"name\\": \\"ZodError\\"
+            }
+          ],
+          \\"path\\": [
+            \\"choices\\",
+            0
+          ],
+          \\"message\\": \\"Invalid input\\"
+        }
+      ]"
+    `);
+  });
+});

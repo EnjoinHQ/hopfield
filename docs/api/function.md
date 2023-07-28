@@ -1,11 +1,11 @@
 ---
-description: "Hopfield types as Zod schemas via the `'hopfield/zod'` entrypoint."
-title: "Zod"
+description: "Hopfield handles function calling easily."
+title: "Functions"
 ---
 
-# Zod
+# Functions
 
-Hopfield exports the as [Zod](https://github.com/colinhacks/zod) schemas from the `'hopfield/zod'` entrypoint.
+Hopfield handles function calling easily.
 
 ## Install
 
@@ -63,3 +63,17 @@ const parsed = await chat.get({
 const message = parsed.choices[0]?.message;
 //      ^?
 ```
+
+The input function definition will be validated to make sure that:
+
+1. Descriptions are provided for every argument.
+2. No error-prone types are used as args (this includes `ZodTuple`, `ZodBigInt`, and `ZodAny`).
+3. If a type description performs better with a template, it is checked against the template (this currently checks any `ZodEnum`, since enums tend to perform better with a specific description ending).
+
+All of these checks are entirely customizable and can be disabled with the `options` parameter.
+
+You can then use the `HopfieldFunction` with OpenAI:
+
+::: info
+This is under construction.
+:::
