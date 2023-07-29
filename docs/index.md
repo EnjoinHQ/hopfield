@@ -8,6 +8,24 @@ title: "Hopfield: Typescript-first LLM framework with static type inference, tes
 titleTemplate: false
 ---
 
+<script setup>
+import {
+  VPTeamMembers
+} from 'vitepress/theme'
+
+const members = [
+  {
+    avatar: 'https://avatars.githubusercontent.com/u/32714304?v=4',
+    name: 'Chase Adams',
+    title: 'Creator',
+    links: [
+      { icon: 'github', link: 'https://github.com/0xcadams' },
+      { icon: 'twitter', link: 'https://twitter.com/0xcadams' }
+    ]
+  }
+]
+</script>
+
 <p align="center" style="min-height:60px;width:100%;">
   <img img-dark alt="Hopfield" src="/hopfield-w-text.png" height="60" style="width:auto;">
   <img img-light alt="Hopfield" src="/hopfield-white-w-text.png" height="60" style="width:auto;">
@@ -247,9 +265,15 @@ Oh, and liking Typescript is a nice-to-have.
 If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
 or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the `🐇-hopfield` channel.
 
-## Learn More
+<div align="center" style="width:100%;">
+  <VPTeamMembers :members="members" />
+</div>
+
+## Learn more
 
 Read the [Getting Started](/guide/getting-started) guide to learn more how to use Hopfield.
+
+### Inspiration
 
 Shoutout to these projects which inspired us:
 

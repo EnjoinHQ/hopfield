@@ -74,6 +74,18 @@ All of these checks are entirely customizable and can be disabled with the `opti
 
 You can then use the `HopfieldFunction` with OpenAI:
 
-::: info
-This is under construction.
+### Roadmap
+
+We have more plans for the features we build for function calling.
+
+1. **Streaming arguments validation:** we are working on adding support for validating the arguments which are
+   streamed back from a provider. Currently, streaming responses are not fully validated against the input schema,
+   due to receiving the content in chunks.
+
+::: info Feedback
+
+To influence these features, reach out on [Discord](https://discord.gg/2hag5fc6) or
+[Github Discussions](https://github.com/propology/hopfield/discussions).
+We want your feedback!
+
 :::

@@ -13,7 +13,7 @@ API providers with type guarantees with Zod.
 Use streaming chat models from OpenAI with a few lines of code:
 
 ```ts twoslash
-const takeAction = (message: string) => {};
+const takeAction = async (message: string) => {};
 // ---cut---
 import hop from "hopfield";
 import openai from "hopfield/openai";
@@ -42,8 +42,8 @@ for await (const part of response) {
   if (part.choices[0].__type === "content") {
     //                  ^?
     // action based on the delta for the streaming message content
-    takeAction(part.choices[0].delta.content);
-    //                           ^?
+    await takeAction(part.choices[0].delta.content);
+    //                                  ^?
 
     parts.push(part);
   }

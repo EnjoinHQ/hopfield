@@ -63,6 +63,9 @@ export default withTwoslash(
       //   apiKey: '',
       //   indexName: 'hopfield',
       // },
+      search: {
+        provider: 'local',
+      },
       editLink: {
         pattern: 'https://github.com/propology/hopfield/edit/main/docs/:path',
         text: 'Suggest changes to this page',
@@ -168,7 +171,6 @@ export default withTwoslash(
     title:
       'Hopfield: Typescript-first LLM framework with static type inference, testability, and composability.',
     twoslash: {
-      addTryButton: true,
       defaultCompilerOptions: {
         target: ScriptTarget.ESNext,
       },

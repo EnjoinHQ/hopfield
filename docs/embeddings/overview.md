@@ -8,7 +8,7 @@ title: "Embeddings - Overview"
 Hopfield provides an easy way to get type-safe embeddings. You can use different API providers with type
 guarantees with Zod, and composability across providers.
 
-::: info
+::: info API Providers
 
 We currently only support OpenAI, but are
 working on adding further providers. Reach out on [Discord](https://discord.gg/2hag5fc6) or
