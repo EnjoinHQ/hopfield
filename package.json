@@ -52,26 +52,19 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "./config": {
-      "types": "./dist/types/config.d.ts",
-      "import": "./dist/esm/config.js",
-      "require": "./dist/cjs/config.js"
+    "./openai": {
+      "types": "./dist/types/openai/index.d.ts",
+      "import": "./dist/esm/openai/index.js",
+      "require": "./dist/cjs/openai/index.js"
     },
     "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
-      "config": [
-        "./dist/types/config.d.ts"
-      ]
+      "openai": ["./dist/types/openai/index.d.ts"]
     }
   },
-  "keywords": [
-    "ai",
-    "openai",
-    "gpt",
-    "ai-tools"
-  ],
+  "keywords": ["ai", "openai", "gpt", "ai-tools"],
   "peerDependencies": {
     "openai": ">=4.0.0",
     "typescript": ">=5.0.4",
@@ -116,9 +109,7 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+      "ignoreMissing": ["@algolia/client-search"]
     },
     "patchedDependencies": {
       "zod-to-json-schema@3.21.4": "patches/zod-to-json-schema@3.21.4.patch"

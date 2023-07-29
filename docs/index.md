@@ -38,37 +38,36 @@ titleTemplate: false
   </a>
 </div>
 
-Hopfield is a minimal typescript library for type-safe, testable interactions with LLMs.
-
+Hopfield is a minimal typescript library for type-safe, testable interactions with large language models (LLMs).
 Easily validate LLM responses and inputs with strong types. Flexible abstractions
-with best practices baked in. Add it to your project:
+with best practices baked in.
+
+Add it to your project, along with the `zod` peer dependency:
 
 ::: code-group
 
 ```bash [pnpm]
-pnpm add hopfield
+pnpm add hopfield zod
 ```
 
 ```bash [npm]
-npm i hopfield
+npm i hopfield zod
 ```
 
 ```bash [yarn]
-yarn add hopfield
+yarn add hopfield zod
 ```
 
 :::
 
 ### ready, set, `hop`
 
-See how easy LLM interactions are with Hopfield:
+See how easy it is to add composable, type-safe LLM features with Hopfield:
 
 ::: code-group
 
 ```ts twoslash [main.ts]
 // @filename: openai.ts
-import OpenAI from "openai";
-
 export const SupportCategoryEnum = z.enum([
   "ACCOUNT_ISSUES",
   "BILLING_AND_PAYMENTS",
@@ -105,15 +104,17 @@ export const SupportCategoryEnum = z.enum([
 ]);
 
 import hop from "hopfield";
+import openai from "hopfield/openai";
+import OpenAI from "openai";
 import z from "zod";
 
-const openai = new OpenAI();
+const hopfield = hop.client(openai).provider(new OpenAI());
 
-const categoryDescription = hop.template.function.enum(
-  "The category of the message."
-);
+const categoryDescription = hopfield
+  .template()
+  .enum("The category of the message.");
 
-const classifyMessage = hop.function({
+const classifyMessage = hopfield.function({
   name: "classifyMessage",
   description: "Triage an incoming support message.",
   parameters: z.object({
@@ -122,7 +123,7 @@ const classifyMessage = hop.function({
   }),
 });
 
-export const chat = hop.provider(openai).chat().functions([classifyMessage]);
+export const chat = hopfield.chat().functions([classifyMessage]);
 
 // @filename: main.ts
 import z from "zod";
@@ -159,8 +160,6 @@ if (parsed.choices[0].__type === "function_call") {
 ```
 
 ```ts twoslash [openai.ts]
-import OpenAI from "openai";
-
 export const SupportCategoryEnum = z.enum([
   "ACCOUNT_ISSUES",
   "BILLING_AND_PAYMENTS",
@@ -198,15 +197,17 @@ export const SupportCategoryEnum = z.enum([
 
 // ---cut---
 import hop from "hopfield";
+import openai from "hopfield/openai";
+import OpenAI from "openai";
 import z from "zod";
 
-const openai = new OpenAI();
+const hopfield = hop.client(openai).provider(new OpenAI());
 
-const categoryDescription = hop.template.function.enum(
-  "The category of the message."
-);
+const categoryDescription = hopfield
+  .template()
+  .enum("The category of the message.");
 
-const classifyMessage = hop.function({
+const classifyMessage = hopfield.function({
   name: "classifyMessage",
   description: "Triage an incoming support message.",
   parameters: z.object({
@@ -216,7 +217,7 @@ const classifyMessage = hop.function({
   }),
 });
 
-export const chat = hop.provider(openai).chat().functions([classifyMessage]);
+export const chat = hopfield.chat().functions([classifyMessage]);
 ```
 
 :::

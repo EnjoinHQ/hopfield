@@ -6,9 +6,10 @@ import {
   openaiTiktokenTwoEmbeddings,
   openaiTwoEmbeddings,
 } from '../_test/openai-embedding.js';
-import { openai } from '../_test/openai.js';
 import hop from '../index.js';
 import * as Exports from './embedding.js';
+import openai from './index.js';
+import OpenAI from 'openai';
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
@@ -20,7 +21,7 @@ it('should expose correct exports', () => {
 });
 
 test('should set a default model name', async () => {
-  expect(hop.provider(openai).embedding().model).toMatchInlineSnapshot(
+  expect(hop.client(openai).embedding().model).toMatchInlineSnapshot(
     '"text-embedding-ada-002"',
   );
 });
@@ -28,7 +29,14 @@ test('should set a default model name', async () => {
 test('all test messages', async () => {
   const allTests = [openaiBasicEmbedding, openaiTiktokenEmbedding];
 
-  const testChat = hop.embedding();
+  const testChat = hop
+    .client(openai)
+    .provider(new OpenAI())
+    .embedding('text-embedding-ada-002', 3);
+
+  const response = await testChat.get({ input: ['ready', 'set', 'hop'] });
+
+  response.data.length;
 
   const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -82,7 +90,7 @@ test('all test messages', async () => {
 test('all n=2 messages', async () => {
   const allTests = [openaiTwoEmbeddings, openaiTiktokenTwoEmbeddings];
 
-  const testChat = hop.embedding('text-embedding-ada-002', 2);
+  const testChat = hop.client(openai).embedding('text-embedding-ada-002', 2);
 
   const allTypes: hop.inferResult<typeof testChat>[] = [];
 

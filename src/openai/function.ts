@@ -2,10 +2,14 @@ import {
   BaseHopfieldFunction,
   type DisabledTypes,
   type HopfieldFunctionOptions,
-  type TypeTemplates,
 } from '../function.js';
-import type { SentenceOrError } from '../types.js';
+import type { TypeTemplates } from '../template.js';
 
+import {
+  type DefaultOpenAITypeTemplates,
+  OpenAIChatTemplate,
+  defaultOpenAITypeTemplates,
+} from './template.js';
 import {
   type AnyZodObject,
   ZodArray,
@@ -31,10 +35,10 @@ const openAITypeTemplates = {
     `${description} This must always be a possible value from the \`enum\` array.` as const,
 } as const satisfies TypeTemplates;
 
-const openAITemplates = {
-  enum: <D extends string>(description: SentenceOrError<D>) =>
-    openAITypeTemplates.ZodEnum(description),
-} as const;
+// const openAITemplates = {
+//   enum: <D extends string>(description: SentenceOrError<D>) =>
+//     openAITypeTemplates.ZodEnum(description),
+// } as const;
 
 export type FunctionProperties<
   T extends OpenAIFunctionsTuple,
@@ -63,12 +67,11 @@ export type OpenAIFunctionProps<
   FDescription extends string,
   FParams extends AnyZodObject,
   DTypes extends DisabledTypes,
-  TTemplates extends TypeTemplates,
 > = {
   name: FName;
   description: FDescription;
   parameters: FParams;
-  options?: HopfieldFunctionOptions<DTypes, TTemplates>;
+  options?: HopfieldFunctionOptions<DTypes>;
 };
 
 export class OpenAIFunction<
@@ -76,25 +79,22 @@ export class OpenAIFunction<
   FDescription extends string,
   FParams extends AnyZodObject,
   DTypes extends DisabledTypes = typeof disallowedTypes,
-  TTemplates extends TypeTemplates = typeof openAITypeTemplates,
 > extends BaseHopfieldFunction<
   FName,
   FDescription,
   FParams,
   DTypes,
-  TTemplates
+  DefaultOpenAITypeTemplates,
+  OpenAIChatTemplate<DefaultOpenAITypeTemplates>
 > {
-  constructor({
-    name,
-    description,
-    parameters,
-    options,
-  }: OpenAIFunctionProps<FName, FDescription, FParams, DTypes, TTemplates>) {
+  constructor(
+    props: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>,
+  ) {
     super({
-      name,
-      description,
-      parameters,
-      options,
+      ...props,
+      template: new OpenAIChatTemplate({
+        templates: defaultOpenAITypeTemplates,
+      }),
     });
   }
 
@@ -122,17 +122,12 @@ export class OpenAIFunction<
     return disallowedTypes;
   }
 
-  static templates = openAITemplates;
-
   static function<
     FName extends string,
     FDescription extends string,
     FParams extends AnyZodObject,
     DTypes extends DisabledTypes,
-    TTemplates extends TypeTemplates,
-  >(
-    opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes, TTemplates>,
-  ) {
+  >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
     return new OpenAIFunction(opts);
   }
 }

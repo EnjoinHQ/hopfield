@@ -4,7 +4,7 @@ import { test } from 'vitest';
 
 import { weatherFunction } from '../../_test/function.js';
 
-import { openai } from '../../_test/openai.js';
+import { openai } from '../../_test/openai-client.js';
 import hop, { type OpenAIChatMessage } from '../../index.js';
 
 test('should parse a streaming chat response', async () => {

@@ -4,6 +4,7 @@ import { weatherFunction, weatherFunctionParams } from '../_test/function.js';
 import * as Exports from './function.js';
 
 import hop from '../index.js';
+import openai from './index.js';
 import { z } from 'zod';
 
 it('should expose correct exports', () => {
@@ -17,7 +18,10 @@ it('should expose correct exports', () => {
 describe.concurrent('test functions', () => {
   test('should add enum suffix', () => {
     expect(
-      hop.template.function.enum('The city and state, e.g. San Francisco, CA.'),
+      hop
+        .client(openai)
+        .template()
+        .enum('The city and state, e.g. San Francisco, CA.'),
     ).toMatchInlineSnapshot(
       '"The city and state, e.g. San Francisco, CA. This must always be a possible value from the `enum` array."',
     );
@@ -58,7 +62,7 @@ describe.concurrent('test functions', () => {
   test('should fail with no function description', () => {
     expect(
       () =>
-        hop.function({
+        hop.client(openai).function({
           ...weatherFunctionParams,
           description: undefined as unknown as string,
         }).jsonSchema,
@@ -82,7 +86,7 @@ describe.concurrent('test functions', () => {
   test('should fail with no enum description', () => {
     expect(
       () =>
-        hop.function({
+        hop.client(openai).function({
           ...weatherFunctionParams,
           parameters: z.object({
             location: z
@@ -103,14 +107,17 @@ describe.concurrent('test functions', () => {
   test('should fail with no string description', () => {
     expect(
       () =>
-        hop.function({
+        hop.client(openai).function({
           ...weatherFunctionParams,
           parameters: z.object({
             location: z.string(),
             unit: z
               .enum(['celsius', 'fahrenheit'])
               .describe(
-                hop.template.function.enum('The unit for the temperature.'),
+                hop
+                  .client(openai)
+                  .template()
+                  .enum('The unit for the temperature.'),
               ),
           }),
         }).jsonSchema,
@@ -126,7 +133,7 @@ describe.concurrent('test functions', () => {
   test('should fail with no enum templated description', () => {
     expect(
       () =>
-        hop.function({
+        hop.client(openai).function({
           ...weatherFunctionParams,
           parameters: z.object({
             location: z
@@ -149,7 +156,7 @@ describe.concurrent('test functions', () => {
   test('should fail with an invalid function name', () => {
     expect(
       () =>
-        hop.function({
+        hop.client(openai).function({
           ...weatherFunctionParams,
           name: 'function?',
         }).jsonSchema,

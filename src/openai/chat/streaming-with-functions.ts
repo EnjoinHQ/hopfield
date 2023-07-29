@@ -1,5 +1,5 @@
 import {
-  BaseChatWithFunctions,
+  BaseHopfieldChatWithFunctions,
   type InferInput,
   type InferResult,
   type StreamingResult,
@@ -78,7 +78,7 @@ export class OpenAIChatWithFunctionsStreamingSchema<
   ModelName extends OpenAIChatModelName,
   N extends number,
   Functions extends OpenAIFunctionsTuple,
-> extends BaseChatWithFunctions<ModelName, N, true, Functions> {
+> extends BaseHopfieldChatWithFunctions<ModelName, N, true, Functions> {
   constructor(
     props: OpenAIChatWithFunctionsStreamingSchemaProps<ModelName, N, Functions>,
   ) {

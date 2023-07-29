@@ -1,4 +1,4 @@
-import { BaseChatWithFunctions } from '../../chat.js';
+import { BaseHopfieldChatWithFunctions } from '../../chat.js';
 import type { LimitedTuple, LimitedTupleWithUnion } from '../../type-utils.js';
 import type {
   FunctionConfigsUnion,
@@ -47,7 +47,7 @@ export class OpenAIChatWithFunctionsSchema<
   ModelName extends OpenAIChatModelName,
   N extends number,
   Functions extends OpenAIFunctionsTuple,
-> extends BaseChatWithFunctions<ModelName, N, false, Functions> {
+> extends BaseHopfieldChatWithFunctions<ModelName, N, false, Functions> {
   constructor(
     props: OpenAIChatWithFunctionsSchemaProps<ModelName, N, Functions>,
   ) {
@@ -87,17 +87,17 @@ export class OpenAIChatWithFunctionsSchema<
     return schema;
   }
 
-  get functionCall(): FunctionConfigsUnion<Functions> {
+  protected get functionCall(): FunctionConfigsUnion<Functions> {
     return z.union(this._functions.map((fn) => fn.functionConfigSchema) as any);
   }
 
-  get functionSchemas(): FunctionSchemasArray<Functions> {
+  protected get functionSchemas(): FunctionSchemasArray<Functions> {
     return z
       .array(z.union(this._functions.map((fn) => fn.schema) as any))
       .default(this._functions.map((fn) => fn.jsonSchema));
   }
 
-  get functionReturnTypes(): FunctionReturnTypesUnion<Functions> {
+  protected get functionReturnTypes(): FunctionReturnTypesUnion<Functions> {
     return z.discriminatedUnion(
       'name',
       this._functions.map((fn) => fn.returnType) as any,

@@ -1,4 +1,4 @@
-import { BaseChat, type InferInput } from '../../chat.js';
+import { BaseHopfieldChat, type InferInput } from '../../chat.js';
 import type { LimitedTuple, LimitedTupleWithUnion } from '../../type-utils.js';
 import type { OpenAIFunctionsTuple } from '../function.js';
 import {
@@ -77,7 +77,7 @@ export type OpenAIChatSchemaProps<
 export class OpenAIChatSchema<
   ModelName extends OpenAIChatModelName,
   N extends number,
-> extends BaseChat<ModelName, N, false> {
+> extends BaseHopfieldChat<ModelName, N, false> {
   constructor(props: OpenAIChatSchemaProps<ModelName, N>) {
     super({
       ...props,

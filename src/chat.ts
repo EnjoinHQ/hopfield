@@ -22,14 +22,13 @@ export type InferInput<Chat extends BaseHopfieldSchema> = z.input<
   Chat['parameters']
 >;
 
-export type InferInputMessage<Chat extends BaseChat<any, any, any>> = z.input<
-  Chat['parameters']
->['messages'][number];
+export type InferInputMessage<Chat extends BaseHopfieldChat<any, any, any>> =
+  z.input<Chat['parameters']>['messages'][number];
 
 export const defaultChatN = 1;
 export type DefaultChatN = typeof defaultChatN;
 
-export type BaseChatProps<
+export type BaseHopfieldChatProps<
   ModelName extends string,
   N extends number,
   Stream extends ChatStream,
@@ -39,7 +38,7 @@ export type BaseChatProps<
   stream: Stream;
 };
 
-export abstract class BaseChat<
+export abstract class BaseHopfieldChat<
   ModelName extends string,
   N extends number,
   Stream extends ChatStream,
@@ -49,7 +48,11 @@ export abstract class BaseChat<
   protected _stream: Stream;
   protected _n: N;
 
-  constructor({ model, stream, n }: BaseChatProps<ModelName, N, Stream>) {
+  constructor({
+    model,
+    stream,
+    n,
+  }: BaseHopfieldChatProps<ModelName, N, Stream>) {
     super();
 
     this.model = model;
@@ -58,7 +61,7 @@ export abstract class BaseChat<
   }
 }
 
-export type BaseChatWithFunctionsProps<
+export type BaseHopfieldChatWithFunctionsProps<
   ModelName extends string,
   N extends number,
   Stream extends ChatStream,
@@ -70,16 +73,16 @@ export type BaseChatWithFunctionsProps<
   functions: Functions;
 };
 
-export abstract class BaseChatWithFunctions<
+export abstract class BaseHopfieldChatWithFunctions<
   ModelName extends string,
   N extends number,
   Stream extends ChatStream,
   Functions extends BaseHopfieldFunctionTuple,
-> extends BaseChat<ModelName, N, Stream> {
+> extends BaseHopfieldChat<ModelName, N, Stream> {
   protected _functions: Functions;
 
   constructor(
-    props: BaseChatWithFunctionsProps<ModelName, N, Stream, Functions>,
+    props: BaseHopfieldChatWithFunctionsProps<ModelName, N, Stream, Functions>,
   ) {
     super(props);
 

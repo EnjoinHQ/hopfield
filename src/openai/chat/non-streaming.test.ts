@@ -11,6 +11,7 @@ import {
   openaiTwoResponses,
 } from '../../_test/openai-non-streaming.js';
 import hop from '../../index.js';
+import openai from '../index.js';
 import * as Exports from './non-streaming.js';
 
 it('should expose correct exports', () => {
@@ -27,20 +28,22 @@ it('should expose correct exports', () => {
 });
 
 test('should set a model name', async () => {
-  expect(hop.chat('gpt-3.5-turbo-16k').model).toMatchInlineSnapshot(
-    '"gpt-3.5-turbo-16k"',
-  );
+  expect(
+    hop.client(openai).chat('gpt-3.5-turbo-16k').model,
+  ).toMatchInlineSnapshot('"gpt-3.5-turbo-16k"');
 });
 
 test('should set a default model name', async () => {
-  expect(hop.chat().model).toMatchInlineSnapshot('"gpt-3.5-turbo-0613"');
+  expect(hop.client(openai).chat().model).toMatchInlineSnapshot(
+    '"gpt-3.5-turbo-0613"',
+  );
 });
 
 describe.concurrent('non-streaming chat', () => {
   test('all test messages', async () => {
     const allTests = [openaiBasicMessage, openaiLengthLimited];
 
-    const testChat = hop.chat();
+    const testChat = hop.client(openai).chat();
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -102,7 +105,7 @@ describe.concurrent('non-streaming chat', () => {
   test('two n messages', async () => {
     const allTests = [openaiTwoResponses];
 
-    const testChat = hop.chat('gpt-3.5-turbo-0613', 2);
+    const testChat = hop.client(openai).chat('gpt-3.5-turbo-0613', 2);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -158,7 +161,7 @@ describe.concurrent('non-streaming functions chat', () => {
       openaiLengthLimited,
     ];
 
-    const testChat = hop.chat().functions([weatherFunction]);
+    const testChat = hop.client(openai).chat().functions([weatherFunction]);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -250,6 +253,7 @@ describe.concurrent('non-streaming functions chat', () => {
     const allTests = [openaiTwoResponses];
 
     const testChat = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .functions([weatherFunction]);
 
@@ -298,7 +302,7 @@ describe.concurrent('non-streaming functions chat', () => {
   });
 
   test('should throw on invalid function call arguments', async () => {
-    const testChat = hop.chat().functions([weatherFunction]);
+    const testChat = hop.client(openai).chat().functions([weatherFunction]);
 
     expect(() =>
       testChat.returnType.parse(openaiFunctionCallLengthLimited),

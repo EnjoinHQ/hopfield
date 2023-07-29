@@ -13,8 +13,9 @@ import {
   openaiStreamLengthLimited,
   openaiStreamTwoResponses,
 } from '../../_test/openai-streaming.js';
+import openai from '../index.js';
 
-const chat = hop.chat().streaming();
+const chat = hop.client(openai).chat().streaming();
 const chatWithFunction = chat.functions([weatherFunction]);
 
 it('should expose correct exports', () => {
@@ -33,13 +34,13 @@ it('should expose correct exports', () => {
 });
 
 test('should set a model name', async () => {
-  expect(hop.chat('gpt-3.5-turbo-16k').streaming().model).toMatchInlineSnapshot(
-    '"gpt-3.5-turbo-16k"',
-  );
+  expect(
+    hop.client(openai).chat('gpt-3.5-turbo-16k').streaming().model,
+  ).toMatchInlineSnapshot('"gpt-3.5-turbo-16k"');
 });
 
 test('should set a default model name', async () => {
-  expect(hop.chat().streaming().model).toMatchInlineSnapshot(
+  expect(hop.client(openai).chat().streaming().model).toMatchInlineSnapshot(
     '"gpt-3.5-turbo-0613"',
   );
 });
@@ -50,7 +51,7 @@ describe.concurrent('streaming chat', () => {
 
     const allTypes: string[] = [];
 
-    const testChat = hop.chat().streaming();
+    const testChat = hop.client(openai).chat().streaming();
 
     for (const messages of allTests) {
       const output = messages.map((m) => testChat.returnType.parse(m));
@@ -70,7 +71,10 @@ describe.concurrent('streaming chat', () => {
 
     const allTypes: string[] = [];
 
-    const testChat = hop.chat('gpt-3.5-turbo-0613', 2).streaming();
+    const testChat = hop
+      .client(openai)
+      .chat('gpt-3.5-turbo-0613', 2)
+      .streaming();
 
     for (const messages of allTests) {
       const output = messages.map((m) => testChat.returnType.parse(m));
@@ -178,6 +182,7 @@ describe.concurrent('streaming chat', () => {
 
   test('should parse a streaming content with index', async () => {
     const parsed = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .streaming()
       .returnType.parse({
@@ -219,6 +224,7 @@ describe.concurrent('streaming chat', () => {
 
   test('should parse a streaming stop with two indices', async () => {
     const parsed = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .streaming()
       .returnType.parse({
@@ -286,7 +292,11 @@ describe.concurrent('streaming chat with function', () => {
 
     const allTypes: string[] = [];
 
-    const testChat = hop.chat().streaming().functions([weatherFunction]);
+    const testChat = hop
+      .client(openai)
+      .chat()
+      .streaming()
+      .functions([weatherFunction]);
 
     for (const messages of allTests) {
       const output = messages.map((m) => testChat.returnType.parse(m));
@@ -309,6 +319,7 @@ describe.concurrent('streaming chat with function', () => {
     const allTypes: string[] = [];
 
     const testChat = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .streaming()
       .functions([weatherFunction]);
@@ -462,6 +473,7 @@ describe.concurrent('streaming chat with function', () => {
 
   test('should parse a streaming content with index', async () => {
     const parsed = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .streaming()
       .functions([weatherFunction])
@@ -504,6 +516,7 @@ describe.concurrent('streaming chat with function', () => {
 
   test('should parse a streaming stop with two indices', async () => {
     const parsed = hop
+      .client(openai)
       .chat('gpt-3.5-turbo-0613', 2)
       .streaming()
       .functions([weatherFunction])

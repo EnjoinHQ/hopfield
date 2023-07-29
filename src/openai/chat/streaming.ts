@@ -1,5 +1,5 @@
 import {
-  BaseChat,
+  BaseHopfieldChat,
   type InferResult,
   type StreamingResult,
 } from '../../chat.js';
@@ -113,7 +113,7 @@ export type OpenAIChatStreamingSchemaProps<
 export class OpenAIChatStreamingSchema<
   ModelName extends OpenAIChatModelName,
   N extends number,
-> extends BaseChat<ModelName, N, true> {
+> extends BaseHopfieldChat<ModelName, N, true> {
   constructor(props: OpenAIChatStreamingSchemaProps<ModelName, N>) {
     super({
       ...props,

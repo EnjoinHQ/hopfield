@@ -69,7 +69,8 @@ export default withTwoslash(
       },
       nav: [
         { text: 'Guide', link: '/' },
-        { text: 'API', link: '/api/types' },
+        { text: 'Embeddings', link: '/embeddings/overview' },
+        { text: 'Chat', link: '/chat/overview' },
         {
           text: `v${version}`,
           items: [
@@ -109,11 +110,40 @@ export default withTwoslash(
             ],
           },
           {
-            text: 'API',
+            text: 'Embeddings',
             items: [
               {
+                text: 'Overview',
+                link: '/embeddings/overview',
+              },
+              {
+                text: 'Embeddings',
+                link: '/embeddings/details',
+              },
+            ],
+          },
+          {
+            text: 'Chat',
+            items: [
+              {
+                text: 'Overview',
+                link: '/chat/overview',
+              },
+              {
+                text: 'Non-streaming',
+                link: '/chat/non-streaming',
+              },
+              {
+                text: 'Streaming',
+                link: '/chat/streaming',
+              },
+              {
+                text: 'Prompt Templates',
+                link: '/chat/templates',
+              },
+              {
                 text: 'Functions',
-                link: '/api/function',
+                link: '/chat/functions',
               },
             ],
           },

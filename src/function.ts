@@ -2,6 +2,7 @@ import { BaseHopfieldSchema } from './base.js';
 import { BaseError } from './errors.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
+import type { BaseHopfieldChatTemplate, TypeTemplates } from './template.js';
 import type { IsEmptyArray } from './type-utils.js';
 import {
   type AnyZodObject,
@@ -13,6 +14,7 @@ import type { Refs } from 'zod-to-json-schema/src/Refs.js';
 import type { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef.js';
 
 export type AnyBaseHopfieldFunction = BaseHopfieldFunction<
+  any,
   any,
   any,
   any,
@@ -35,10 +37,6 @@ export type FunctionPropertyOrNever<
 export type DisabledTypes =
   | ZodFirstPartyTypeKind[]
   | readonly ZodFirstPartyTypeKind[]
-  | false;
-
-export type TypeTemplates =
-  | Partial<Record<ZodFirstPartyTypeKind, (input: string) => string>>
   | false;
 
 export interface JsonSchemaFunction<
@@ -78,20 +76,12 @@ const requiredDescriptionTypes: ZodFirstPartyTypeKind[] = [
   ZodFirstPartyTypeKind.ZodString,
 ];
 
-export type HopfieldFunctionOptions<
-  D extends DisabledTypes,
-  T extends TypeTemplates,
-> = {
+export type HopfieldFunctionOptions<D extends DisabledTypes,> = {
   /**
    * Allows you to throw development errors in production. This defaults to `false`
    * for speed/devex when deploying to prod.
    */
   requireDescriptions?: boolean;
-  /**
-   * Allows you to throw development errors in production. This defaults to `false`
-   * for speed/devex when deploying to prod.
-   */
-  templates?: T;
   /**
    * Allows you override or disable "unstable" types, which are types that do not typically
    * produce good results with a given model. These are defined on a per-model basis and
@@ -133,11 +123,13 @@ export type BaseHopfieldFunctionProps<
   FParams extends AnyZodObject,
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
+  Template extends BaseHopfieldChatTemplate<TTemplates>,
 > = {
   name: FName;
   description: FDescription;
   parameters: FParams;
-  options?: HopfieldFunctionOptions<DTypes, TTemplates>;
+  template: Template;
+  options?: HopfieldFunctionOptions<DTypes>;
 };
 
 export abstract class BaseHopfieldFunction<
@@ -146,24 +138,28 @@ export abstract class BaseHopfieldFunction<
   FParams extends AnyZodObject,
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
+  Template extends BaseHopfieldChatTemplate<TTemplates>,
 > extends BaseHopfieldSchema {
   name: FName;
   description: FDescription;
 
   parameters: FParams;
-  protected _options: HopfieldFunctionOptions<DTypes, TTemplates>;
+  protected _template: Template;
+  protected _options: HopfieldFunctionOptions<DTypes>;
 
   constructor({
     name,
     description,
     parameters,
+    template,
     options = {},
   }: BaseHopfieldFunctionProps<
     FName,
     FDescription,
     FParams,
     DTypes,
-    TTemplates
+    TTemplates,
+    Template
   >) {
     super();
 
@@ -171,6 +167,7 @@ export abstract class BaseHopfieldFunction<
     this.description = description;
     this.parameters = parameters;
 
+    this._template = template;
     this._options = options;
   }
 
@@ -209,11 +206,11 @@ export abstract class BaseHopfieldFunction<
       const typeName: ZodFirstPartyTypeKind = (def as any).typeName;
 
       const templates =
-        this._options.templates === false
+        this._template._templates === false
           ? false
           : {
               ...this._defaultTypeTemplates,
-              ...this._options.templates,
+              ...this._template._templates,
             };
       const requireDescriptions = this._options.requireDescriptions ?? true;
       const disabledTypes = !this._options.disabledTypes
@@ -240,7 +237,7 @@ export abstract class BaseHopfieldFunction<
 
       const descriptionEnding =
         typeof templates === 'object'
-          ? templates?.[typeName]?.('') ?? null
+          ? templates?.[typeName]?.('' as any) ?? null
           : null;
 
       if (

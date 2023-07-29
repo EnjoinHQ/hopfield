@@ -3,23 +3,30 @@ import { expect, test } from 'vitest';
 import { SupportCategoryEnum } from '../_test/zod.js';
 import { hop } from '../index.js';
 
-import { openai } from '../_test/openai.js';
+import { openAIClient } from '../_test/openai-client.js';
+import openai from './index.js';
 import { z } from 'zod';
 
 test('should classify a support request', async () => {
-  const classifyMessage = hop.provider(openai).function({
+  const classifyMessage = hop.client(openai).function({
     name: 'classifyMessage',
     description: 'Triage an incoming support message.',
     parameters: z.object({
       summary: z.string().describe('The summary of the message.'),
       category: SupportCategoryEnum.describe('The category of the message.'),
     }),
-    options: {
-      templates: false,
-    },
   });
 
-  const chat = hop.provider(openai).chat().functions([classifyMessage]);
+  const chat = hop
+    .client(openai)
+    .provider(openAIClient)
+    .chat()
+    .functions([classifyMessage]);
+
+  // const response = await chat.get({
+  //   messages: [],
+
+  // })
 
   const messages: hop.inferMessageInput<typeof chat>[] = [
     {
