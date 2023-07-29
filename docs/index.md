@@ -4,7 +4,7 @@ head:
   - - meta
     - name: keywords
       content: ai, openai, zod, gpt, llm, ai-tools
-title: "Hopfield: a Typescript-first LLM framework with static type inference, testability, and composability."
+title: "Hopfield: Typescript-first LLM framework with static type inference, testability, and composability."
 titleTemplate: false
 ---
 
