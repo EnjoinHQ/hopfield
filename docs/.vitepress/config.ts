@@ -44,6 +44,7 @@ export default withTwoslash(
         },
       ],
       ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['script', { defer: '', src: '/_vercel/insights/script.js' }],
     ],
     lang: 'en-US',
     lastUpdated: true,

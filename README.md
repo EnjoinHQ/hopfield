@@ -48,7 +48,7 @@ const categoryDescription = hopfield
   .template()
   .enum("The category of the message.");
 
-// easily define functions for LLMs to call (converted into JSON schema)
+// define functions for LLMs to call, with Zod validations
 const classifyMessage = hopfield.function({
   name: "classifyMessage",
   description: "Triage an incoming support message.",
@@ -65,7 +65,7 @@ const classifyMessage = hopfield.function({
   }),
 });
 
-// create a client with the function we defined
+// create a client with function calling
 const chat = hopfield.chat().functions([classifyMessage]);
 
 const incomingUserMessage = "How do I reset my password?";
@@ -78,12 +78,12 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
   },
 ];
 
-// use the built-in LLM API calls, or just use the input/output Zod validations
+// use the built-in LLM API calls (or just use the input/output Zod validations)
 const parsed = await chat.get({
   messages,
 });
 
-// type-strong responses with `__type` helpers
+// get type-strong responses with `__type` helpers
 if (parsed.choices[0].__type === "function_call") {
   // automatically validate the arguments returned from the LLM
   // we use the Zod schema you passed, for maximum flexibility in validation
