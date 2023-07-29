@@ -9,7 +9,6 @@ import {
 import hop from '../index.js';
 import * as Exports from './embedding.js';
 import openai from './index.js';
-import OpenAI from 'openai';
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
@@ -29,14 +28,7 @@ test('should set a default model name', async () => {
 test('all test messages', async () => {
   const allTests = [openaiBasicEmbedding, openaiTiktokenEmbedding];
 
-  const testChat = hop
-    .client(openai)
-    .provider(new OpenAI())
-    .embedding('text-embedding-ada-002', 3);
-
-  const response = await testChat.get({ input: ['ready', 'set', 'hop'] });
-
-  response.data.length;
+  const testChat = hop.client(openai).embedding('text-embedding-ada-002');
 
   const allTypes: hop.inferResult<typeof testChat>[] = [];
 

@@ -1,16 +1,16 @@
 ---
-description: "Minimal typescript library for type-safe, testable interactions with LLMs"
+description: "Typescript-first LLM framework with static type inference, testability, and composability."
 head:
   - - meta
     - name: keywords
       content: ai, openai, zod, gpt, llm, ai-tools
-title: "Hopfield: Minimal typescript library for type-safe, testable interactions with LLMs"
+title: "Hopfield: a Typescript-first LLM framework with static type inference, testability, and composability."
 titleTemplate: false
 ---
 
 <p align="center" style="min-height:60px;width:100%;">
-  <img img-dark alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-dark.svg" height="60" style="width:auto;">
-  <img img-light alt="Hopfield" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" height="60" style="width:auto;">
+  <img img-dark alt="Hopfield" src="/hopfield-w-text.png" height="60" style="width:auto;">
+  <img img-light alt="Hopfield" src="/hopfield-white-w-text.png" height="60" style="width:auto;">
 </p>
 
 <div style="margin-top:1rem;display:flex;gap:0.5rem;min-height:48px;max-width:350px;flex-wrap:wrap;margin-right:auto;margin-left:auto;justify-content:center;margin-bottom:3rem;">
@@ -38,7 +38,7 @@ titleTemplate: false
   </a>
 </div>
 
-Hopfield is a minimal typescript library for type-safe, testable interactions with large language models (LLMs).
+Hopfield is a Typescript-first large language model framework with static type inference, testability, and composability.
 Easily validate LLM responses and inputs with strong types. Flexible abstractions
 with best practices baked in.
 

@@ -9,17 +9,16 @@ export default withTwoslash(
   defineConfig({
     cleanUrls: true,
     description:
-      'Minimal typescript library for type-safe, testable interactions with LLMs',
+      'Typescript-first LLM framework with static type inference, testability, and composability.',
     head: [
       ['meta', { name: 'theme-color', content: '#F09922' }],
-      ['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }],
       [
         'link',
         {
-          rel: 'alternate icon',
+          rel: 'icon',
           href: '/favicon.png',
           type: 'image/png',
-          sizes: '48x48',
+          sizes: '32x32',
         },
       ],
       [
@@ -30,10 +29,19 @@ export default withTwoslash(
         },
       ],
       ['meta', { property: 'og:url', content: 'https://hopfield.ai' }],
-      ['meta', { property: 'og:image', content: 'https://hopfield.ai/og.png' }],
       [
         'meta',
-        { name: 'twitter:image', content: 'https://hopfield.ai/og.png' },
+        {
+          property: 'og:image',
+          content: 'https://hopfield.ai/hopfield-og.png',
+        },
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:image',
+          content: 'https://hopfield.ai/hopfield-og.png',
+        },
       ],
       ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ],
@@ -63,8 +71,8 @@ export default withTwoslash(
         copyright: 'Copyright © 2023-PRESENT Chase Adams',
       },
       logo: {
-        light: '/logo-light.svg',
-        dark: '/logo-dark.svg',
+        light: '/hopfield-white-w-text.png',
+        dark: '/hopfield-w-text.png',
         alt: 'Hopfield logo',
       },
       nav: [
@@ -157,7 +165,7 @@ export default withTwoslash(
       ],
     },
     title:
-      'Hopfield: Minimal typescript library for type-safe, testable interactions with LLMs',
+      'Hopfield: Typescript-first LLM framework with static type inference, testability, and composability.',
     twoslash: {
       addTryButton: true,
       defaultCompilerOptions: {

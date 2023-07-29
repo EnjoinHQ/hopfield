@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://hopfield.ai">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-dark.svg">
-      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/logo-light.svg" width="auto" height="120">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/propology/hopfield/main/.github/hopfield-w-text.png">
+      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/hopfield-white-w-text.png" width="auto" height="120">
     </picture>
   </a>
 </p>
@@ -32,7 +32,7 @@
 
 ---
 
-Minimal typescript library for type-safe, testable interactions with LLMs.
+Typescript-first LLM framework with static type inference, testability, and composability..
 
 <!-- ```ts
 import type { AbiParametersToPrimitiveTypes, ExtractAbiFunctions, ExtractAbiFunctionNames } from 'hopfield'

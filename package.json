@@ -1,6 +1,6 @@
 {
   "name": "hopfield",
-  "description": "Minimal typescript library for type-safe, testable interactions with LLMs",
+  "description": "Typescript-first LLM framework with static type inference, testability, and composability.",
   "version": "0.0.1",
   "license": "MIT",
   "repository": "propology/hopfield",
