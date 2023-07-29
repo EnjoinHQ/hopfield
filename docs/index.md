@@ -148,7 +148,6 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
 
 const parsed = await chat.get({
   messages,
-  function_call: "auto",
 });
 
 if (parsed.choices[0].__type === "function_call") {

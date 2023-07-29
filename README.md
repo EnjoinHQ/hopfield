@@ -32,39 +32,86 @@
 
 ---
 
-Typescript-first LLM framework with static type inference, testability, and composability..
+Typescript-first LLM framework with static type inference, testability, and composability.
 
-<!-- ```ts
-import type { AbiParametersToPrimitiveTypes, ExtractAbiFunctions, ExtractAbiFunctionNames } from 'hopfield'
-import { erc20Abi } from 'hopfield/test'
+```ts
+import hop from "hopfield";
+import openai from "hopfield/openai";
+import OpenAI from "openai";
+import z from "zod";
 
-type FunctionNames = ExtractAbiFunctionNames<typeof erc20Abi, 'view'>
-//   ^? type FunctionNames = "symbol" | "name" | "allowance" | "balanceOf" | "decimals" | "totalSupply"
+// create an OpenAI hopfield client
+const hopfield = hop.client(openai).provider(new OpenAI());
 
-type TransferInputTypes = AbiParametersToPrimitiveTypes<
-  // ^? type TransferInputTypes = readonly [`0x${string}`, bigint]
-  ExtractAbiFunction<typeof erc20Abi, 'transfer'>['inputs']
->
-``` -->
+// use description templates with Typescript string literal types
+const categoryDescription = hopfield
+  .template()
+  .enum("The category of the message.");
+
+// easily define functions for LLMs to call (converted into JSON schema)
+const classifyMessage = hopfield.function({
+  name: "classifyMessage",
+  description: "Triage an incoming support message.",
+  parameters: z.object({
+    summary: z.string().describe("The summary of the message."),
+    category: z
+      .enum([
+        "ACCOUNT_ISSUES",
+        "BILLING_AND_PAYMENTS",
+        "TECHNICAL_SUPPORT",
+        "OTHERS",
+      ])
+      .describe(categoryDescription),
+  }),
+});
+
+// create a client with the function we defined
+const chat = hopfield.chat().functions([classifyMessage]);
+
+const incomingUserMessage = "How do I reset my password?";
+
+// use utility types to infer inputs for a simple devex
+const messages: hop.inferMessageInput<typeof chat>[] = [
+  {
+    content: incomingUserMessage,
+    role: "user",
+  },
+];
+
+// use the built-in LLM API calls, or just use the input/output Zod validations
+const parsed = await chat.get({
+  messages,
+});
+
+// type-strong responses with `__type` helpers
+if (parsed.choices[0].__type === "function_call") {
+  // automatically validate the arguments returned from the LLM
+  // we use the Zod schema you passed, for maximum flexibility in validation
+  const category = parsed.choices[0].message.function_call.arguments.category;
+  await handleMessageWithCategory(category, incomingUserMessage);
+}
+```
 
 ## TL;DR
 
 Hopfield might be a good fit for your project if:
 
 - 🏗️ You build with Typescript/Javascript, and have your database schemas in these languages (e.g. [Prisma](https://www.prisma.io/) and/or [Next.js](https://nextjs.org/)).
-- 🪨 You don't need a heavyweight LLM orchestration framework (that ships with a ton of dependencies you'll never use).
-- 💬 You're building complex LLM interactions which need evaluation.
-- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. [Zod](https://github.com/colinhacks/zod) as a first-class citizen).
-- 📝 You want simple and extensible conversational memory.
-- 📝 You want simple and extensible conversational memory.
+- 🪨 You don't need a heavyweight LLM orchestration framework that ships with a ton of dependencies you'll never use.
+- 🤙 You're using OpenAI function calling and/or custom tools, and want Typescript-native features for them (e.g. validations w/ [Zod](https://github.com/colinhacks/zod)).
+- 💬 You're building complex LLM interactions which use memory & [RAG](https://www.promptingguide.ai/techniques/rag), evaluation, and orchestration (_coming soon™_).
+- 📝 You want best-practice, extensible templates, which use [string literal types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
+  under the hood for transparency.
 
-### Our guiding principles
+Oh, and liking Typescript is a nice-to-have.
+
+## Guiding principles
 
 - 🌀 We are Typescript-first, and only support TS (or JS) - with services like [Replicate](https://replicate.com/) or [OpenAI](https://platform.openai.com/docs/introduction), why do you need Python?
-- 🤏 We provide a simple interface with common LLM use-cases. This is aligned 1-1 with OpenAI's abstractions.
-- 🪢 We explicitly _don't_ provide tons of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other orchestration frameworks provide many, but when you use them, you soon realize the tool you want is very use-case specific.
-- 🧪 We provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
-- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (we expect `fetch` to be in the global namespace, as it is in web, edge and modern Node environments, but support also custom `fetch`).
+- 🤏 We provide a simple, ejectable interface with common LLM use-cases. This is aligned 1-1 with LLM provider abstractions, like OpenAI's.
+- 🪢 We explicitly _don't_ provide a ton of custom tools (please don't ask for too many 😅) outside of the building blocks and simple examples provided. Other frameworks provide these, but when you use them, you soon realize the tool you want is very use-case specific.
+- 🧪 We (will) provide evaluation frameworks which let you simulate user scenarios and backend interactions with the LLM, including multi-turn conversations and function calling.
+- 🐶 We support Node.js, Vercel Edge Functions, Cloudflare Workers, and more (oh and even web, if you like giving away API keys).
 
 ## Install
 
@@ -86,20 +133,12 @@ For full documentation, visit [hopfield.ai](https://hopfield.ai).
 
 ## Community
 
-If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions).
-
-## Roadmap
-
-- Temp
-
-<!-- PaLM Chat (Bard) and Anthropic Claude support
-More fun/feature-filled CLI chat app based on Textual
-Simple example of using simpleaichat in a webapp
-Simple of example of using simpleaichat in a stateless manner (e.g. AWS Lambda functions) -->
+If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
+or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the `🐇-hopfield` channel.
 
 ## Inspiration
 
-Shoutout to these projects which inspired Hopfield:
+Shoutout to these projects which inspired us:
 
 - [Zod](https://github.com/colinhacks/zod)
 - [zod-to-json-schema](https://github.com/StefanTerdell/zod-to-json-schema)
@@ -109,7 +148,7 @@ Shoutout to these projects which inspired Hopfield:
 - [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
 - [abitype](https://github.com/wagmi-dev/abitype)
 
-And many others.
+If you like Hopfield, go star them on Github too.
 
 ## Contributing
 
