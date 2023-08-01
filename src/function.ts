@@ -78,14 +78,12 @@ const requiredDescriptionTypes: ZodFirstPartyTypeKind[] = [
 
 export type HopfieldFunctionOptions<D extends DisabledTypes,> = {
   /**
-   * Allows you to throw development errors in production. This defaults to `false`
-   * for speed/devex when deploying to prod.
+   * Allows descriptions to not be checked on the function parameters. This defaults to `true`.
    */
   requireDescriptions?: boolean;
   /**
    * Allows you override or disable "unstable" types, which are types that do not typically
-   * produce good results with a given model. These are defined on a per-model basis and
-   * test cases must back up their unreliability.
+   * produce good results with a given model. These are defined on a per-model basis.
    *
    * Set to false to allow all "unstable" types.
    */

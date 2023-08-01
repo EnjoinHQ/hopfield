@@ -38,14 +38,14 @@ const response = await chat.get({
 const parts: hop.inferResult<typeof chat>[] = [];
 
 for await (const part of response) {
+  parts.push(part);
+
   // if the streaming delta contains new text content
   if (part.choices[0].__type === "content") {
     //                  ^?
     // action based on the delta for the streaming message content
     await takeAction(part.choices[0].delta.content);
     //                                  ^?
-
-    parts.push(part);
   }
 }
 ```

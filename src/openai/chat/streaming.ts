@@ -172,8 +172,7 @@ export class OpenAIChatStreamingSchema<
       /** The streamed choice returned from the model. */
       choices: z.tuple([Choice]),
       created: z.number(),
-      model: z.string(),
-      object: z.literal('chat.completion.chunk'),
+      model: z.literal(this.model),
     });
   }
 

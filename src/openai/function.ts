@@ -35,11 +35,6 @@ const openAITypeTemplates = {
     `${description} This must always be a possible value from the \`enum\` array.` as const,
 } as const satisfies TypeTemplates;
 
-// const openAITemplates = {
-//   enum: <D extends string>(description: SentenceOrError<D>) =>
-//     openAITypeTemplates.ZodEnum(description),
-// } as const;
-
 export type FunctionProperties<
   T extends OpenAIFunctionsTuple,
   Key extends keyof OpenAIFunctionSchema,

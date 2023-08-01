@@ -1,79 +1,63 @@
 ---
-description: "Hopfield handles function calling easily."
-title: "Templates"
+description: "An overview of working with chat models in Hopfield."
+title: "Overview of Chat Models"
 ---
 
-# Embeddings
+# Chat
 
-Hopfield handles function calling easily.
+Hopfield also provides simple APIs for interacting with chat models. It has different API providers with type
+guarantees with Zod.
 
-## Install
+::: info API Providers
 
-Install the Zod peer dependency:
-
-::: code-group
-
-```bash [pnpm]
-pnpm add zod
-```
-
-```bash [npm]
-npm i zod
-```
-
-```bash [yarn]
-yarn add zod
-```
+We currently only support OpenAI, but are
+working on adding further providers. Reach out on [Discord](https://discord.gg/2hag5fc6) or
+[Github Discussions](https://github.com/propology/hopfield/discussions) if you have any suggestions!
 
 :::
 
 ## Usage
 
-Import and use schemas:
+Check out how we type responses:
 
 ```ts twoslash
 import hop from "hopfield";
-import { z } from "zod";
+import openai from "hopfield/openai";
 import OpenAI from "openai";
 
-const weatherFunction = hop.function({
-  name: "getCurrentWeather",
-  description: "Get the current weather in a given location",
-  parameters: z.object({
-    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
-    unit: z
-      .enum(["celsius", "fahrenheit"])
-      .describe(hop.template.function.enum("The unit for the temperature.")),
-  }),
-});
-const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
+const hopfield = hop.client(openai).provider(new OpenAI());
 
-const chat = hop.provider(openai).chat().functions([weatherFunction]);
+const chat = hopfield.chat();
 
 const parsed = await chat.get({
   messages: [
     {
+      content: "What's the best pizza restaurant in NYC?",
       role: "user",
-      content: "What's the weather in Phoenix, AZ?",
     },
   ],
-  temperature: 0,
 });
 
-const message = parsed.choices[0]?.message;
-//      ^?
+const choiceType = parsed.choices[0].__type;
+//                                     ^?
 ```
 
-The input function definition will be validated to make sure that:
+You can guarantee that your response is constructed correctly (with no optional accessors)
+and the embedding and outer array uses [the `tuple` type](https://www.typescriptlang.org/docs/handbook/2/objects.html#tuple-types),
+based on the inputs you requested.
 
-1. Descriptions are provided for every argument.
-2. No error-prone types are used as args (this includes `ZodTuple`, `ZodBigInt`, and `ZodAny`).
-3. If a type description performs better with a template, it is checked against the template (this currently checks any `ZodEnum`, since enums tend to perform better with a specific description ending).
+## Composability
 
-All of these checks are entirely customizable and can be disabled with the `options` parameter.
-
-You can then use the `HopfieldFunction` with OpenAI:
+The big unlock is not only that types are guaranteed to be safe - we provide composability to
+allow building complex apps with [RAG](https://www.promptingguide.ai/techniques/rag) and embedding-driven search.
 
 ::: info
-This is under construction.
+
+We are actively working on building a RAG solution - please reach out if you are interested
+in influencing the API for this!
+
 :::
+
+## Learn More
+
+Learn more about the intricacies embeddings in the [Embeddings](/embeddings/details) page.

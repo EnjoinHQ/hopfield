@@ -4,6 +4,7 @@ import { test } from 'vitest';
 
 import { weatherFunction } from '../../_test/function.js';
 import {
+  openaiBasicFunctionCall,
   openaiBasicMessage,
   openaiFunctionCall,
   openaiFunctionCallLengthLimited,
@@ -69,7 +70,6 @@ describe.concurrent('non-streaming chat', () => {
           "created": 1690495858,
           "id": "chatcmpl-8976324",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 3,
             "prompt_tokens": 28,
@@ -91,7 +91,6 @@ describe.concurrent('non-streaming chat', () => {
           "created": 1690495920,
           "id": "chatcmpl-1230789",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 10,
             "prompt_tokens": 27,
@@ -140,7 +139,6 @@ describe.concurrent('non-streaming chat', () => {
           "created": 1690496163,
           "id": "chatcmpl-23490823",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 8,
             "prompt_tokens": 23,
@@ -156,8 +154,8 @@ describe.concurrent('non-streaming functions chat', () => {
   test('all test messages', async () => {
     const allTests = [
       openaiBasicMessage,
+      openaiBasicFunctionCall,
       openaiFunctionCall,
-      // openaiFunctionCallLengthLimited,
       openaiLengthLimited,
     ];
 
@@ -187,11 +185,38 @@ describe.concurrent('non-streaming functions chat', () => {
           "created": 1690495858,
           "id": "chatcmpl-8976324",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 3,
             "prompt_tokens": 28,
             "total_tokens": 31,
+          },
+        },
+        {
+          "choices": [
+            {
+              "__type": "function_call",
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": null,
+                "function_call": {
+                  "arguments": {
+                    "location": "Phoenix, AZ",
+                    "unit": "celsius",
+                  },
+                  "name": "getCurrentWeather",
+                },
+                "role": "assistant",
+              },
+            },
+          ],
+          "created": 1690825708,
+          "id": "chatcmpl-5544332211",
+          "model": "gpt-3.5-turbo-0613",
+          "usage": {
+            "completion_tokens": 26,
+            "prompt_tokens": 72,
+            "total_tokens": 98,
           },
         },
         {
@@ -216,7 +241,6 @@ describe.concurrent('non-streaming functions chat', () => {
           "created": 1690496097,
           "id": "chatcmpl-098234",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 25,
             "prompt_tokens": 102,
@@ -238,7 +262,6 @@ describe.concurrent('non-streaming functions chat', () => {
           "created": 1690495920,
           "id": "chatcmpl-1230789",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 10,
             "prompt_tokens": 27,
@@ -290,7 +313,6 @@ describe.concurrent('non-streaming functions chat', () => {
           "created": 1690496163,
           "id": "chatcmpl-23490823",
           "model": "gpt-3.5-turbo-0613",
-          "object": "chat.completion",
           "usage": {
             "completion_tokens": 8,
             "prompt_tokens": 23,
@@ -315,14 +337,17 @@ describe.concurrent('non-streaming functions chat', () => {
               \\"issues\\": [
                 {
                   \\"received\\": \\"length\\",
-                  \\"code\\": \\"invalid_literal\\",
-                  \\"expected\\": \\"function_call\\",
+                  \\"code\\": \\"invalid_enum_value\\",
+                  \\"options\\": [
+                    \\"stop\\",
+                    \\"function_call\\"
+                  ],
                   \\"path\\": [
                     \\"choices\\",
                     0,
                     \\"finish_reason\\"
                   ],
-                  \\"message\\": \\"Invalid literal value, expected \\\\\\"function_call\\\\\\"\\"
+                  \\"message\\": \\"Invalid enum value. Expected 'stop' | 'function_call', received 'length'\\"
                 },
                 {
                   \\"code\\": \\"custom\\",

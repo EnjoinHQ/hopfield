@@ -1,6 +1,6 @@
 ---
 description: "An overview of working with embeddings in Hopfield."
-title: "Embeddings - Overview"
+title: "Overview of Embeddings"
 ---
 
 # Embeddings
@@ -27,9 +27,9 @@ import OpenAI from "openai";
 
 const hopfield = hop.client(openai).provider(new OpenAI());
 
-const embeddings = hopfield.embedding("text-embedding-ada-002", 2);
+const embeddings = hopfield.embedding();
 
-const response = await hopfield.embedding().get({ input: "hello" });
+const response = await hopfield.embedding().get({ input: ["hello"] });
 const embedding = response.data[0].embedding;
 //      ^?
 ```
@@ -41,7 +41,7 @@ based on the inputs you requested.
 ## Composability
 
 The big unlock is not only that types are guaranteed to be safe - we provide composability to
-allow building complex apps with RAG and embedding-driven search.
+allow building complex apps with [RAG](https://www.promptingguide.ai/techniques/rag) and embedding-driven search.
 
 ::: info
 

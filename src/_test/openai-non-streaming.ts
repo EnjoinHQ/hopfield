@@ -20,6 +20,32 @@ export const openaiBasicMessage = {
   },
 } as const;
 
+export const openaiBasicFunctionCall = {
+  id: 'chatcmpl-5544332211',
+  object: 'chat.completion',
+  created: 1690825708,
+  model: 'gpt-3.5-turbo-0613',
+  choices: [
+    {
+      index: 0,
+      message: {
+        role: 'assistant',
+        content: null,
+        function_call: {
+          name: 'getCurrentWeather',
+          arguments: '{\n  "location": "Phoenix, AZ",\n  "unit": "celsius"\n}',
+        },
+      },
+      finish_reason: 'stop',
+    },
+  ],
+  usage: {
+    prompt_tokens: 72,
+    completion_tokens: 26,
+    total_tokens: 98,
+  },
+} as const;
+
 export const openaiLengthLimited = {
   id: 'chatcmpl-1230789',
   object: 'chat.completion',

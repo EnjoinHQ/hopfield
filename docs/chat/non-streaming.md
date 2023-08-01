@@ -24,7 +24,7 @@ const chat = hopfield.chat();
 const messages: hop.inferMessageInput<typeof chat>[] = [
   {
     role: "user",
-    content: "What's the coolest way to count to ten?",
+    content: "How do you count to ten?",
   },
 ];
 
@@ -73,8 +73,17 @@ import type { OpenAIChatModelName } from "hopfield/openai";
 
 ### Response Count
 
-The count of chat responses to be returned. For all providers, this defaults to `1`.
+The number of chat responses to be returned (this is usually referred to as `n`).
+For all providers, this defaults to `1`.
 This is capped at `20`.
+
+```ts
+const hopfield = hop.client(openai).provider(new OpenAI());
+
+const chat = hopfield.chat("gpt-4-0613", 10); // [!code focus]
+```
+
+The response can then be safely used:
 
 ```ts twoslash
 import hop from "hopfield";
@@ -82,13 +91,13 @@ import openai from "hopfield/openai";
 import OpenAI from "openai";
 
 const hopfield = hop.client(openai).provider(new OpenAI());
-// ---cut---
-const chat = hopfield.chat("gpt-4-0613", 10);
 
+const chat = hopfield.chat("gpt-4-0613", 10);
+// ---cut---
 const messages: hop.inferMessageInput<typeof chat>[] = [
   {
     role: "user",
-    content: "What's the coolest way to get a bunch of chat responses?",
+    content: "What's the best way to get a bunch of chat responses?",
   },
 ];
 

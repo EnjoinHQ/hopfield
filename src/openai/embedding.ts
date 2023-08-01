@@ -6,7 +6,7 @@ import {
   defaultOpenAIEmbeddingModelName,
 } from './models.js';
 import OpenAI from 'openai';
-import { ZodNumber, ZodString, z } from 'zod';
+import { ZodArray, ZodNumber, ZodString, z } from 'zod';
 
 type Tuple1536 = [
   ...Tuple256,
@@ -45,18 +45,16 @@ export class OpenAIEmbeddingSchema<
     return z.object({
       input: z
         .union([
-          z.string(),
           z.tuple(
             Array(this.count).fill(z.string()) as Tuple<
               EmbeddingCount,
               ZodString
             >,
           ),
-          z.array(z.number()),
           z.tuple(
             Array(this.count).fill(z.array(z.number())) as Tuple<
               EmbeddingCount,
-              ZodString
+              ZodArray<ZodNumber>
             >,
           ),
         ])
@@ -81,7 +79,6 @@ export class OpenAIEmbeddingSchema<
   get returnType() {
     const DataItem = z.object({
       index: z.number().nonnegative(),
-      object: z.string(),
       embedding: z.tuple(
         Array(this.length).fill(z.number()) as EmbeddingLengths[ModelName],
       ),
@@ -93,7 +90,6 @@ export class OpenAIEmbeddingSchema<
     });
 
     return z.object({
-      object: z.string(),
       model: z.string(),
       data: z.tuple(
         Array(this.count).fill(DataItem) as LimitedTuple<

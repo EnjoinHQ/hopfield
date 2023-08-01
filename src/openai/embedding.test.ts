@@ -28,12 +28,12 @@ test('should set a default model name', async () => {
 test('all test messages', async () => {
   const allTests = [openaiBasicEmbedding, openaiTiktokenEmbedding];
 
-  const testChat = hop.client(openai).embedding('text-embedding-ada-002');
+  const embeddings = hop.client(openai).embedding('text-embedding-ada-002');
 
-  const allTypes: hop.inferResult<typeof testChat>[] = [];
+  const allTypes: hop.inferResult<typeof embeddings>[] = [];
 
   for (const message of allTests) {
-    const output = testChat.returnType.parse(message);
+    const output = embeddings.returnType.parse(message);
     allTypes.push({
       ...output,
       data: output.data.map((d) => ({
@@ -50,11 +50,9 @@ test('all test messages', async () => {
           {
             "embedding": "-0.0073538395,...,-0.001287617",
             "index": 0,
-            "object": "embedding",
           },
         ],
         "model": "text-embedding-ada-002-v2",
-        "object": "list",
         "usage": {
           "prompt_tokens": 2,
           "total_tokens": 2,
@@ -65,11 +63,9 @@ test('all test messages', async () => {
           {
             "embedding": "-0.025408603,...,-0.024730118",
             "index": 0,
-            "object": "embedding",
           },
         ],
         "model": "text-embedding-ada-002-v2",
-        "object": "list",
         "usage": {
           "prompt_tokens": 6,
           "total_tokens": 6,
@@ -82,12 +78,12 @@ test('all test messages', async () => {
 test('all n=2 messages', async () => {
   const allTests = [openaiTwoEmbeddings, openaiTiktokenTwoEmbeddings];
 
-  const testChat = hop.client(openai).embedding('text-embedding-ada-002', 2);
+  const embeddings = hop.client(openai).embedding('text-embedding-ada-002', 2);
 
-  const allTypes: hop.inferResult<typeof testChat>[] = [];
+  const allTypes: hop.inferResult<typeof embeddings>[] = [];
 
   for (const message of allTests) {
-    const output = testChat.returnType.parse(message);
+    const output = embeddings.returnType.parse(message);
     allTypes.push({
       ...output,
       data: output.data.map((d) => ({
@@ -104,16 +100,13 @@ test('all n=2 messages', async () => {
           {
             "embedding": "-0.0073666335,...,-0.0013916683",
             "index": 0,
-            "object": "embedding",
           },
           {
             "embedding": "-0.010871813,...,0.0046854005",
             "index": 1,
-            "object": "embedding",
           },
         ],
         "model": "text-embedding-ada-002-v2",
-        "object": "list",
         "usage": {
           "prompt_tokens": 5,
           "total_tokens": 5,
@@ -124,16 +117,13 @@ test('all n=2 messages', async () => {
           {
             "embedding": "-0.02534904,...,-0.024684511",
             "index": 0,
-            "object": "embedding",
           },
           {
             "embedding": "-0.01885367,...,-0.027140701",
             "index": 1,
-            "object": "embedding",
           },
         ],
         "model": "text-embedding-ada-002-v2",
-        "object": "list",
         "usage": {
           "prompt_tokens": 12,
           "total_tokens": 12,

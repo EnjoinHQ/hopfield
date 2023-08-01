@@ -1,79 +1,44 @@
 ---
-description: "Hopfield handles function calling easily."
-title: "Templates"
+description: "Learn how Hopfield uses string literal types for prompt templates."
+title: "Chat - Prompt Templates"
 ---
 
-# Templates
+# Prompt Templates
 
-Hopfield handles function calling easily.
-
-## Install
-
-Install the Zod peer dependency:
-
-::: code-group
-
-```bash [pnpm]
-pnpm add zod
-```
-
-```bash [npm]
-npm i zod
-```
-
-```bash [yarn]
-yarn add zod
-```
-
-:::
+Hopfield always uses [string literal types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html)
+for prompt templates, so developers have visibility into the tranformations performed on their inputs.
 
 ## Usage
 
-Import and use schemas:
+Check out how our types look when you use a template:
 
 ```ts twoslash
 import hop from "hopfield";
-import { z } from "zod";
-import OpenAI from "openai";
+import openai from "hopfield/openai";
 
-const weatherFunction = hop.function({
-  name: "getCurrentWeather",
-  description: "Get the current weather in a given location",
-  parameters: z.object({
-    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
-    unit: z
-      .enum(["celsius", "fahrenheit"])
-      .describe(hop.template.function.enum("The unit for the temperature.")),
-  }),
-});
-const openai = new OpenAI({ apiKey: "{OPENAI_API_KEY}" });
+const template = hop.client(openai).template();
 
-const chat = hop.provider(openai).chat().functions([weatherFunction]);
-
-const parsed = await chat.get({
-  messages: [
-    {
-      role: "user",
-      content: "What's the weather in Phoenix, AZ?",
-    },
-  ],
-  temperature: 0,
-});
-
-const message = parsed.choices[0]?.message;
+const description = template.enum("The category of the message.");
 //      ^?
 ```
 
-The input function definition will be validated to make sure that:
+You can see above that the description has type hints to tell you exactly what the
+transformation was. In this case, the template appended
+`This must always be a possible value from the enum array.` to the input string.
 
-1. Descriptions are provided for every argument.
-2. No error-prone types are used as args (this includes `ZodTuple`, `ZodBigInt`, and `ZodAny`).
-3. If a type description performs better with a template, it is checked against the template (this currently checks any `ZodEnum`, since enums tend to perform better with a specific description ending).
+This template is usually used with complex function calls. See the next section for
+more information.
 
-All of these checks are entirely customizable and can be disabled with the `options` parameter.
+## Composability
 
-You can then use the `HopfieldFunction` with OpenAI:
+We will be building on top of the Prompt Templating primitive with features which have more complex transformations.
+Specifically, we will be shipping best practices for few-shot prompting and
+[RAG](https://www.promptingguide.ai/techniques/rag), so chat `messages` are strongly typed and adhere
+to emerging industry standards.
 
 ::: info
-This is under construction.
+
+We are actively working on building this feature further - please reach out if you are interested
+in influencing this!
+
 :::

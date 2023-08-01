@@ -112,10 +112,6 @@ export default withTwoslash(
                 link: '/guide/getting-started',
               },
               {
-                text: 'Walkthrough',
-                link: '/guide/walkthrough',
-              },
-              {
                 text: 'Comparisons',
                 link: '/guide/comparisons',
               },

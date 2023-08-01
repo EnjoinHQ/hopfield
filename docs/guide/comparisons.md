@@ -5,22 +5,25 @@ title: "Comparisons"
 
 # Comparisons
 
-No other library does what Hopfield does (inferring TypeScript types from Zod schemas), but there are some similarities with other libraries. This page compares Hopfield to other libraries.
+No other library does what Hopfield does (inferring static LLM TypeScript types from Zod schemas), but there are some similarities with other libraries. This page compares Hopfield to other libraries.
 
 Comparisons strive to be as accurate and as unbiased as possible. If you use any of these libraries and feel the information could be improved, feel free to suggest changes.
 
 ## Langchain.js
 
-::: info
-This is under construction.
-:::
+[**Langchain.js**](https://github.com/hwchase17/langchainjs) is a framework for developing applications powered by language models
+with Javascript. Developers usually use Langchain to develop apps which connect to internal tools (like internal knowledge bases,
+LLM demos, and generally in trusted environments).
 
-<!-- [**TypeChain**](https://github.com/dethcrypto/TypeChain) is a command-line tool that generates types and runtime wrappers for popular libraries at build time. People often use the generated types to cast values (e.g. `new Contract(…) as TypeChainType`). **Hopfield** is a TypeScript library that infers static types from any ABI using type-level programming. -->
+**Hopfield** is a TypeScript library that provides a subset of Langchain's features,
+prioritizing inferring static types from LLM input, alongside runtime response validation and static typing.
 
-<!-- Below is a comparison of the libraries's type-level features:
+Below is a comparison of the library features:
 
-|                 | TypeChain                                | Hopfield                   |
-| --------------- | ---------------------------------------- | -------------------------- |
-| Lifecycle Step  | Generated at build time                  | Inferred at compile time   |
-| ABI Source      | Path(s) to CLI command                   | Directly reference in code |
-| Type Generation | Iterates through ABIs and builds strings | Static from type-level     | -->
+|                      | **Langchain.js**                            | **Hopfield**                                                             |
+| -------------------- | ------------------------------------------- | ------------------------------------------------------------------------ |
+| **Prompt Templates** | Opaque                                      | Use string template types for type inference                             |
+| **Type Generation**  | Loose types with some Typescript helpers    | Static types with Zod validation                                         |
+| **Function Calling** | Starter templates, with some Zod validation | Validation-driven, composable functions                                  |
+| **Connectors/Tools** | Many, with various integrations             | Only a select few, with examples (actively being developed)              |
+| **Dependencies**     | Many, with non-optional peer dependencies   | Few, with strict bundle splitting to avoid unnecessary peer dependencies |

@@ -114,7 +114,7 @@ export class OpenAIChatWithFunctionsSchema<
          * The model decided to call a function provided.
          */
         __type: z.literal('function_call').default('function_call'),
-        finish_reason: z.literal('function_call'),
+        finish_reason: z.enum(['stop', 'function_call']),
 
         message: z.object({
           role: AssistantRole,
@@ -150,8 +150,7 @@ export class OpenAIChatWithFunctionsSchema<
       id: z.string(),
       choices: ChoicesTuple,
       created: z.number(),
-      model: z.string(),
-      object: z.literal('chat.completion'),
+      model: z.literal(this.model),
       usage: Usage.optional(),
     });
   }
@@ -207,6 +206,8 @@ export class OpenAIChatWithFunctions<
       model: defaultOpenAIChatModelName,
       ...parsedInput,
     });
+
+    console.log(JSON.stringify(response, null, 2));
 
     const parsed = await this.returnType.parseAsync(response);
 

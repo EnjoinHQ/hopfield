@@ -133,8 +133,7 @@ export class OpenAIChatSchema<
       id: z.string(),
       choices: ChoicesTuple,
       created: z.number(),
-      model: z.string(),
-      object: z.literal('chat.completion'),
+      model: z.literal(this.model),
       usage: Usage.optional(),
     });
   }
