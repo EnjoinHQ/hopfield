@@ -207,8 +207,6 @@ export class OpenAIChatWithFunctions<
       ...parsedInput,
     });
 
-    console.log(JSON.stringify(response, null, 2));
-
     const parsed = await this.returnType.parseAsync(response);
 
     return {
