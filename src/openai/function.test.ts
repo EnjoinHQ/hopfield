@@ -67,20 +67,20 @@ describe.concurrent('test functions', () => {
           description: undefined as unknown as string,
         }).jsonSchema,
     ).toThrowErrorMatchingInlineSnapshot(`
-    "You must define a valid function description.
+      "You must define a valid function description.
 
-    Docs: https://hopfield.ai/api/function
-    Details: [
-      {
-        \\"code\\": \\"invalid_type\\",
-        \\"expected\\": \\"string\\",
-        \\"received\\": \\"undefined\\",
-        \\"path\\": [],
-        \\"message\\": \\"Required\\"
-      }
-    ]
-    Version: hopfield@x.y.z"
-  `);
+      Docs: https://hopfield.ai/chat/functions
+      Details: [
+        {
+          \\"code\\": \\"invalid_type\\",
+          \\"expected\\": \\"string\\",
+          \\"received\\": \\"undefined\\",
+          \\"path\\": [],
+          \\"message\\": \\"Required\\"
+        }
+      ]
+      Version: hopfield@x.y.z"
+    `);
   });
 
   test('should fail with no enum description', () => {
@@ -96,12 +96,12 @@ describe.concurrent('test functions', () => {
           }),
         }).jsonSchema,
     ).toThrowErrorMatchingInlineSnapshot(`
-    "You must define a description for the type: ZodEnum
+      "You must define a description for the type: ZodEnum
 
-    Docs: https://hopfield.ai/api/function
-    Details: There must be a description provided for ZodEnum, to describe what the function does for the LLM to infer a value.
-    Version: hopfield@x.y.z"
-  `);
+      Docs: https://hopfield.ai/chat/functions
+      Details: There must be a description provided for ZodEnum, to describe what the function does for the LLM to infer a value.
+      Version: hopfield@x.y.z"
+    `);
   });
 
   test('should fail with no string description', () => {
@@ -122,12 +122,12 @@ describe.concurrent('test functions', () => {
           }),
         }).jsonSchema,
     ).toThrowErrorMatchingInlineSnapshot(`
-    "You must define a description for the type: ZodString
+      "You must define a description for the type: ZodString
 
-    Docs: https://hopfield.ai/api/function
-    Details: There must be a description provided for ZodString, to describe what the function does for the LLM to infer a value.
-    Version: hopfield@x.y.z"
-  `);
+      Docs: https://hopfield.ai/chat/functions
+      Details: There must be a description provided for ZodString, to describe what the function does for the LLM to infer a value.
+      Version: hopfield@x.y.z"
+    `);
   });
 
   test('should fail with no enum templated description', () => {
@@ -145,12 +145,12 @@ describe.concurrent('test functions', () => {
           }),
         }).jsonSchema,
     ).toThrowErrorMatchingInlineSnapshot(`
-    "You should template your descriptions.
+      "You should template your descriptions.
 
-    Docs: https://hopfield.ai/api/function
-    Details: It's recommended to template your descriptions - we recommend ending the type ZodEnum with \\" This must always be a possible value from the \`enum\` array.\\".
-    Version: hopfield@x.y.z"
-  `);
+      Docs: https://hopfield.ai/chat/functions
+      Details: It's recommended to template your descriptions - we recommend ending the type ZodEnum with \\" This must always be a possible value from the \`enum\` array.\\".
+      Version: hopfield@x.y.z"
+    `);
   });
 
   test('should fail with an invalid function name', () => {
@@ -161,18 +161,18 @@ describe.concurrent('test functions', () => {
           name: 'function?',
         }).jsonSchema,
     ).toThrowErrorMatchingInlineSnapshot(`
-    "You must define a valid function name.
+      "You must define a valid function name.
 
-    Docs: https://hopfield.ai/api/function
-    Details: [
-      {
-        \\"code\\": \\"custom\\",
-        \\"message\\": \\"Function name can only contain a-z, A-Z, 0-9, underscores and dashes.\\",
-        \\"path\\": []
-      }
-    ]
-    Version: hopfield@x.y.z"
-  `);
+      Docs: https://hopfield.ai/chat/functions
+      Details: [
+        {
+          \\"code\\": \\"custom\\",
+          \\"message\\": \\"Function name can only contain a-z, A-Z, 0-9, underscores and dashes.\\",
+          \\"path\\": []
+        }
+      ]
+      Version: hopfield@x.y.z"
+    `);
   });
 
   test('should parse a valid return type', () => {
