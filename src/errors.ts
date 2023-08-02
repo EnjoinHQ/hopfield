@@ -2,7 +2,7 @@ import type { OneOf, Pretty } from './type-utils.js';
 import { version } from './version.js';
 import type { ZodError } from 'zod';
 
-type DocsPaths = '/api/function';
+type DocsPaths = '/chat/functions';
 
 type BaseErrorArgs = Pretty<
   {

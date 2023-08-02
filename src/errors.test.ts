@@ -30,34 +30,34 @@ test('BaseError (w/ docsPath)', () => {
   expect(
     new BaseError('An error occurred.', {
       details: 'details',
-      docsPath: '/api/function',
+      docsPath: '/chat/functions',
     }),
   ).toMatchInlineSnapshot(`
     [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/api/function
+    Docs: https://hopfield.ai/chat/functions
     Details: details
     Version: hopfield@x.y.z]
   `);
   expect(
     new BaseError('An error occurred.', {
-      cause: new BaseError('error', { docsPath: '/api/function' }),
+      cause: new BaseError('error', { docsPath: '/chat/functions' }),
     }),
   ).toMatchInlineSnapshot(`
     [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/api/function
+    Docs: https://hopfield.ai/chat/functions
     Version: hopfield@x.y.z]
   `);
   expect(
     new BaseError('An error occurred.', {
       cause: new BaseError('error'),
-      docsPath: '/api/function',
+      docsPath: '/chat/functions',
     }),
   ).toMatchInlineSnapshot(`
     [HopfieldError: An error occurred.
 
-    Docs: https://hopfield.ai/api/function
+    Docs: https://hopfield.ai/chat/functions
     Version: hopfield@x.y.z]
   `);
 });
@@ -82,7 +82,7 @@ test('BaseError (w/ metaMessages)', () => {
 test('inherited BaseError', () => {
   const err = new BaseError('An error occurred.', {
     details: 'details',
-    docsPath: '/api/function',
+    docsPath: '/chat/functions',
   });
   expect(
     new BaseError('An internal error occurred.', {
@@ -91,7 +91,7 @@ test('inherited BaseError', () => {
   ).toMatchInlineSnapshot(`
     [HopfieldError: An internal error occurred.
 
-    Docs: https://hopfield.ai/api/function
+    Docs: https://hopfield.ai/chat/functions
     Details: details
     Version: hopfield@x.y.z]
   `);
@@ -102,12 +102,12 @@ test('inherited Error', () => {
   expect(
     new BaseError('An internal error occurred.', {
       cause: err,
-      docsPath: '/api/function',
+      docsPath: '/chat/functions',
     }),
   ).toMatchInlineSnapshot(`
     [HopfieldError: An internal error occurred.
 
-    Docs: https://hopfield.ai/api/function
+    Docs: https://hopfield.ai/chat/functions
     Details: details
     Version: hopfield@x.y.z]
   `);

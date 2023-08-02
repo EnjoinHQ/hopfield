@@ -7,5 +7,3 @@ What changes are made in this PR? Is it a feature or a bug fix?
 - [ ] I read the [contributing guide](https://github.com/propology/hopfield/blob/main/.github/CONTRIBUTING.md)
 - [ ] I added documentation related to the changes made.
 - [ ] I added or updated tests related to the changes made.
-
-Your ENS/address:

@@ -185,13 +185,13 @@ export abstract class BaseHopfieldFunction<
 
     if (!parsedName.success) {
       throw new BaseError('You must define a valid function name.', {
-        docsPath: '/api/function',
+        docsPath: '/chat/functions',
         details: parsedName.error,
       });
     }
     if (!parsedDescription.success) {
       throw new BaseError('You must define a valid function description.', {
-        docsPath: '/api/function',
+        docsPath: '/chat/functions',
         details: parsedDescription.error,
       });
     }
@@ -227,7 +227,7 @@ export abstract class BaseHopfieldFunction<
         throw new BaseError(
           `You must define a description for the type: ${typeName}`,
           {
-            docsPath: '/api/function',
+            docsPath: '/chat/functions',
             details: `There must be a description provided for ${typeName}, to describe what the function does for the LLM to infer a value.`,
           },
         );
@@ -244,7 +244,7 @@ export abstract class BaseHopfieldFunction<
         !schema.description?.endsWith(descriptionEnding)
       ) {
         throw new BaseError('You should template your descriptions.', {
-          docsPath: '/api/function',
+          docsPath: '/chat/functions',
           details: `It's recommended to template your descriptions - we recommend ending the type ${typeName} with "${descriptionEnding}".`,
         });
       }
@@ -255,7 +255,7 @@ export abstract class BaseHopfieldFunction<
         disabledTypes.includes(typeName)
       ) {
         throw new BaseError(`You should not use ${typeName}.`, {
-          docsPath: '/api/function',
+          docsPath: '/chat/functions',
           details: `You should not use ${typeName} yet - it provides unreliable results from LLMs.`,
         });
       }
