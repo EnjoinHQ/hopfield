@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.1.3
+
+### Patch Changes
+
+- [#6](https://github.com/propology/hopfield/pull/6) [`b2c5b0f`](https://github.com/propology/hopfield/commit/b2c5b0f28d3668dc468d61e15313c5d6a0a889aa) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** update to support latest `openai` version. 
+
 ## 0.1.2
 
 ### Patch Changes
