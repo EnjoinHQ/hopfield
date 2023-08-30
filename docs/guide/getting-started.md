@@ -32,20 +32,20 @@ yarn add hopfield zod
 You'll also need to set up a Hopfield Provider, which is used to interact with the API.
 We currently only support OpenAI (but are working on adding other providers).
 
-To use Hopfield, you will need to install the latest `beta` prerelease version of `openai`.
+To use Hopfield, you will need to install the latest 4+ version of `openai`.
 
 ::: code-group
 
 ```bash [pnpm]
-pnpm add openai@4.0.0-beta.7
+pnpm add openai@4
 ```
 
 ```bash [npm]
-npm i openai@4.0.0-beta.7
+npm i openai@4
 ```
 
 ```bash [yarn]
-yarn add openai@4.0.0-beta.7
+yarn add openai@4
 ```
 
 :::
