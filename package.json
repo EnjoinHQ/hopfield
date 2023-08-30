@@ -1,7 +1,7 @@
 {
   "name": "hopfield",
   "description": "Typescript-first LLM framework with static type inference, testability, and composability.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "repository": "propology/hopfield",
   "scripts": {
@@ -62,17 +62,10 @@
   },
   "typesVersions": {
     "*": {
-      "openai": [
-        "./dist/types/openai/index.d.ts"
-      ]
+      "openai": ["./dist/types/openai/index.d.ts"]
     }
   },
-  "keywords": [
-    "ai",
-    "openai",
-    "gpt",
-    "ai-tools"
-  ],
+  "keywords": ["ai", "openai", "gpt", "ai-tools"],
   "peerDependencies": {
     "openai": ">=4.0.0",
     "typescript": ">=5.1.3",
@@ -117,9 +110,7 @@
       "shiki-twoslash>shiki": "^0.14.1"
     },
     "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
+      "ignoreMissing": ["@algolia/client-search"]
     },
     "patchedDependencies": {
       "zod-to-json-schema@3.21.4": "patches/zod-to-json-schema@3.21.4.patch"

@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.1.2
+
+### Patch Changes
+
+- [#4](https://github.com/propology/hopfield/pull/4) [`d2a02c9`](https://github.com/propology/hopfield/commit/d2a02c977678826557c01f25245d824ae53c249e) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** added further cleanup based on integration tests.
+
 ## 0.1.1
 
 ### Patch Changes
