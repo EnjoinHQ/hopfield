@@ -2,4 +2,4 @@
 "hopfield": patch
 ---
 
-**Fix:** added further cleanup based on integration tests.
+**Fix:** update to support latest `openai` version.
