@@ -1,57 +1,56 @@
-import footNote from 'markdown-it-footnote';
-import { ScriptTarget } from 'typescript';
-import { defineConfig } from 'vitepress';
-import { withTwoslash } from 'vitepress-plugin-shiki-twoslash';
+import footNote from "markdown-it-footnote";
+import { defineConfig } from "vitepress";
+import { withTwoslash } from "vitepress-plugin-shiki-twoslash";
 
-import { version } from '../../package.json';
+import { version } from "../../package.json";
 
 export default withTwoslash(
   defineConfig({
     cleanUrls: true,
     description:
-      'Typescript-first LLM framework with static type inference, testability, and composability.',
+      "Typescript-first LLM framework with static type inference, testability, and composability.",
     head: [
-      ['meta', { name: 'theme-color', content: '#F09922' }],
+      ["meta", { name: "theme-color", content: "#F09922" }],
       [
-        'link',
+        "link",
         {
-          rel: 'icon',
-          href: '/favicon.png',
-          type: 'image/png',
-          sizes: '32x32',
+          rel: "icon",
+          href: "/favicon.png",
+          type: "image/png",
+          sizes: "32x32",
         },
       ],
       [
-        'meta',
+        "meta",
         {
-          name: 'keywords',
-          content: 'ai, zod, openai, embeddings',
+          name: "keywords",
+          content: "ai, zod, openai, embeddings",
         },
       ],
-      ['meta', { property: 'og:url', content: 'https://hopfield.ai' }],
+      ["meta", { property: "og:url", content: "https://hopfield.ai" }],
       [
-        'meta',
+        "meta",
         {
-          property: 'og:image',
-          content: 'https://hopfield.ai/hopfield-og.png',
+          property: "og:image",
+          content: "https://hopfield.ai/hopfield-og.png",
         },
       ],
       [
-        'meta',
+        "meta",
         {
-          name: 'twitter:image',
-          content: 'https://hopfield.ai/hopfield-og.png',
+          name: "twitter:image",
+          content: "https://hopfield.ai/hopfield-og.png",
         },
       ],
-      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-      ['script', { defer: '', src: '/_vercel/insights/script.js' }],
+      ["meta", { name: "twitter:card", content: "summary_large_image" }],
+      ["script", { defer: "", src: "/_vercel/insights/script.js" }],
     ],
-    lang: 'en-US',
+    lang: "en-US",
     lastUpdated: true,
     markdown: {
       theme: {
-        light: 'vitesse-light',
-        dark: 'vitesse-dark',
+        light: "vitesse-light",
+        dark: "vitesse-dark",
       },
       config: (md) => {
         md.use(footNote);
@@ -64,94 +63,94 @@ export default withTwoslash(
       //   indexName: 'hopfield',
       // },
       search: {
-        provider: 'local',
+        provider: "local",
       },
       editLink: {
-        pattern: 'https://github.com/propology/hopfield/edit/main/docs/:path',
-        text: 'Suggest changes to this page',
+        pattern: "https://github.com/propology/hopfield/edit/main/docs/:path",
+        text: "Suggest changes to this page",
       },
       footer: {
-        message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2023-PRESENT Chase Adams',
+        message: "Released under the MIT License.",
+        copyright: "Copyright © 2023-PRESENT Chase Adams",
       },
       logo: {
-        light: '/hopfield-white-w-text.png',
-        dark: '/hopfield-w-text.png',
-        alt: 'Hopfield logo',
+        light: "/hopfield-white-w-text.png",
+        dark: "/hopfield-w-text.png",
+        alt: "Hopfield logo",
       },
       nav: [
-        { text: 'Guide', link: '/' },
-        { text: 'Embeddings', link: '/embeddings/overview' },
-        { text: 'Chat', link: '/chat/overview' },
+        { text: "Guide", link: "/" },
+        { text: "Embeddings", link: "/embeddings/overview" },
+        { text: "Chat", link: "/chat/overview" },
         {
           text: `v${version}`,
           items: [
             {
-              text: 'Release Notes ',
-              link: 'https://github.com/propology/hopfield/releases',
+              text: "Release Notes ",
+              link: "https://github.com/propology/hopfield/releases",
             },
             {
-              text: 'Contributing ',
-              link: 'https://github.com/propology/hopfield/blob/main/.github/CONTRIBUTING.md',
+              text: "Contributing ",
+              link: "https://github.com/propology/hopfield/blob/main/.github/CONTRIBUTING.md",
             },
           ],
         },
       ],
       outline: [2, 3],
       sidebar: {
-        '/': [
+        "/": [
           {
-            text: 'Guide',
+            text: "Guide",
             items: [
               {
-                text: 'What is Hopfield?',
-                link: '/',
+                text: "What is Hopfield?",
+                link: "/",
               },
               {
-                text: 'Getting Started',
-                link: '/guide/getting-started',
+                text: "Getting Started",
+                link: "/guide/getting-started",
               },
               {
-                text: 'Comparisons',
-                link: '/guide/comparisons',
+                text: "Comparisons",
+                link: "/guide/comparisons",
               },
             ],
           },
           {
-            text: 'Embeddings',
+            text: "Embeddings",
             items: [
               {
-                text: 'Overview',
-                link: '/embeddings/overview',
+                text: "Overview",
+                link: "/embeddings/overview",
               },
               {
-                text: 'Embeddings',
-                link: '/embeddings/details',
+                text: "Embeddings",
+                link: "/embeddings/details",
               },
             ],
           },
           {
-            text: 'Chat',
+            text: "Chat",
             items: [
               {
-                text: 'Overview',
-                link: '/chat/overview',
+                text: "Overview",
+                link: "/chat/overview",
               },
               {
-                text: 'Non-streaming',
-                link: '/chat/non-streaming',
+                text: "Non-streaming",
+                link: "/chat/non-streaming",
               },
               {
-                text: 'Streaming',
-                link: '/chat/streaming',
+                text: "Streaming",
+                link: "/chat/streaming",
               },
               {
-                text: 'Prompt Templates',
-                link: '/chat/templates',
+                text: "Prompt Templates",
+                link: "/chat/templates",
               },
               {
-                text: 'Functions',
-                link: '/chat/functions',
+                text: "Functions",
+                link: "/chat/functions",
               },
             ],
           },
@@ -159,22 +158,17 @@ export default withTwoslash(
       },
       siteTitle: false,
       socialLinks: [
-        { icon: 'twitter', link: 'https://twitter.com/propology_' },
-        { icon: 'discord', link: 'https://discord.gg/2hag5fc6' },
-        { icon: 'github', link: 'https://github.com/propology/hopfield' },
+        { icon: "twitter", link: "https://twitter.com/propology_" },
+        { icon: "discord", link: "https://discord.gg/2hag5fc6" },
+        { icon: "github", link: "https://github.com/propology/hopfield" },
       ],
     },
     title:
-      'Hopfield: Typescript-first LLM framework with static type inference, testability, and composability.',
-    twoslash: {
-      defaultCompilerOptions: {
-        target: ScriptTarget.ESNext,
-      },
-    },
+      "Hopfield: Typescript-first LLM framework with static type inference, testability, and composability.",
     vue: {
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.includes('-'),
+          isCustomElement: (tag) => tag.includes("-"),
         },
       },
     },
