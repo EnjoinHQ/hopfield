@@ -4,6 +4,6 @@ import { assertType, test } from 'vitest';
 
 test('align with openai types', () => {
   assertType<
-    readonly OpenAI.Chat.CompletionCreateParams.CreateChatCompletionRequestNonStreaming['model'][]
+    readonly OpenAI.Chat.CompletionCreateParams.CompletionCreateParamsNonStreaming['model'][]
   >(openAIChatModelNames);
 });
