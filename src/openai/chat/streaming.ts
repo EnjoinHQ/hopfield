@@ -208,7 +208,11 @@ export class OpenAIStreamingChat<
     this.provider = props.provider;
   }
 
-  async get(input: z.input<typeof this.parameters>) {
+  async get(
+    input: z.input<typeof this.parameters>,
+  ): Promise<
+    StreamingResult<InferResult<OpenAIStreamingChat<Provider, ModelName, N>>>
+  > {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.chat.completions.create({
@@ -218,7 +222,9 @@ export class OpenAIStreamingChat<
 
     const outputSchema = this.returnType;
 
-    const result: StreamingResult<InferResult<this>> = {
+    const result: StreamingResult<
+      InferResult<OpenAIStreamingChat<Provider, ModelName, N>>
+    > = {
       [Symbol.asyncIterator]: async function* () {
         for await (const part of response) {
           yield outputSchema.parseAsync(part);

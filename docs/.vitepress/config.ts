@@ -3,6 +3,8 @@ import { defineConfig } from 'vitepress';
 import { withTwoslash } from 'vitepress-plugin-shiki-twoslash';
 
 import { version } from '../../package.json';
+import pkg from 'typescript';
+const { ScriptTarget } = pkg;
 
 export default withTwoslash(
   defineConfig({
@@ -165,6 +167,11 @@ export default withTwoslash(
     },
     title:
       'Hopfield: Typescript-first LLM framework with static type inference, testability, and composability.',
+    twoslash: {
+      defaultCompilerOptions: {
+        target: ScriptTarget.ESNext,
+      },
+    },
     vue: {
       template: {
         compilerOptions: {

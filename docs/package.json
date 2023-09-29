@@ -8,7 +8,7 @@
     "serve": "vitepress serve"
   },
   "devDependencies": {
-    "@types/markdown-it-footnote": "^3.0.0",
+    "@types/markdown-it-footnote": "^3.0.1",
     "hopfield": "workspace:*",
     "markdown-it-footnote": "^3.0.3",
     "vitepress": "1.0.0-rc.10",

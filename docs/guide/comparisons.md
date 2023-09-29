@@ -9,6 +9,23 @@ No other library does what Hopfield does (inferring static LLM TypeScript types 
 
 Comparisons strive to be as accurate and as unbiased as possible. If you use any of these libraries and feel the information could be improved, feel free to suggest changes.
 
+## `ai`
+
+[**`ai`**](https://github.com/vercel/ai) is a framework for AI-powered applications with React, Svelte, Vue, and Solid. They provide hooks to easily integrate
+with a streaming text response (`StreamingTextResponse`) and allow a callback for function calling, as well as simple, drop-in components for React and other
+frameworks.
+
+**Hopfield** provides a subset of these features, and focuses solely on the API interactions, and **not** on providing React components.
+
+Below is a comparison of the library features:
+
+|                        | **`ai`**                                  | **Hopfield**                                   |
+| ---------------------- | ----------------------------------------- | ---------------------------------------------- |
+| **React Components**   | Easy, inflexible UI components & hooks    | No UI components or hooks                      |
+| **Typed Functions**    | Streaming function calls with loose types | Strict function call types with Zod validation |
+| **Framework Examples** | Multiple                                  | Multiple                                       |
+| **Chat Providers**     | Multiple                                  | OpenAI, with support for others coming         |
+
 ## Langchain.js
 
 [**Langchain.js**](https://github.com/hwchase17/langchainjs) is a framework for developing applications powered by language models

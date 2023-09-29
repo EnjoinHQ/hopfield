@@ -177,7 +177,7 @@ export class OpenAIChat<
     this.provider = props.provider;
   }
 
-  async get(input: InferInput<typeof this>) {
+  async get(input: InferInput<OpenAIChat<Provider, ModelName, N>>) {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.chat.completions.create({
