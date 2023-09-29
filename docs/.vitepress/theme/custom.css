@@ -4,7 +4,7 @@
 
  :root {
   --vp-c-accent: hsl(39, 90%, 49.8%);
-  --vp-c-brand: hsl(39, 90%, 49.8%);
+  --vp-c-brand-1: hsl(39, 90%, 49.8%);
   --vp-c-brand-light: hsl(31, 91%, 67%);
   --vp-c-brand-lighter: hsl(32, 91%, 73%);
   --vp-c-brand-dark: hsl(30, 75%, 34%);
