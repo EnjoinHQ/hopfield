@@ -9,10 +9,13 @@ export type BaseHopfieldFunctionTuple = [
 
 export type ChatStream = boolean;
 
-export interface StreamingResult<T> {
+export type StreamingResult<T> = {
   [Symbol.asyncIterator](): AsyncIterableIterator<T>;
   streaming: true;
-}
+};
+
+export type InferStreamingResult<Chat extends BaseHopfieldSchema> =
+  StreamingResult<z.infer<Chat['returnType']>>;
 
 export type InferResult<Chat extends BaseHopfieldSchema> = z.infer<
   Chat['returnType']
