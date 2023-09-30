@@ -8,7 +8,7 @@ const tmpPackageJson = readJsonSync(packageJsonPath);
 writeJsonSync(`${packageJsonPath}.tmp`, tmpPackageJson, { spaces: 2 });
 
 const {
-  ['simple-git-hooks']: _sgh,
+  'simple-git-hooks': _sgh,
   devDependencies: _dD,
   packageManager: _pM,
   pnpm: _p,

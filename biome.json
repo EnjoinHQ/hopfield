@@ -1,4 +1,5 @@
 {
+  "$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
   "files": {
     "ignore": [
       "CHANGELOG.md",
@@ -23,7 +24,6 @@
         "noUnusedVariables": "error"
       },
       "nursery": {
-        "noBannedTypes": "off",
         "useExhaustiveDependencies": "error",
         "useGroupedTypeImport": "off"
       },

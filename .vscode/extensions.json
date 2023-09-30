@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "rome.rome",
+    "biomejs.biome",
     "orta.vscode-twoslash-queries",
     "orta.vscode-twoslash"
   ]
