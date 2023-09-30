@@ -156,6 +156,15 @@ export default withTwoslash(
               },
             ],
           },
+          {
+            text: 'API',
+            items: [
+              {
+                text: 'readableFromAsyncIterable',
+                link: '/api/readableFromAsyncIterable',
+              },
+            ],
+          },
         ],
       },
       siteTitle: false,

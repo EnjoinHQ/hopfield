@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import gh from '../../public/github-mark-white.svg';
-import hopfield from '../../public/hopfield-w-text.png';
+import Image from "next/image";
+import gh from "../../public/github-mark-white.svg";
+import hopfield from "../../public/hopfield-w-text.png";
 
 export function Footer() {
   return (
@@ -17,7 +17,7 @@ export function Footer() {
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://github.com/propology/hopfield"
+        href="https://github.com/propology/hopfield/examples/next-13-openai"
         className="relative w-8 h-8"
       >
         <Image src={gh} alt="github logo" fill />
