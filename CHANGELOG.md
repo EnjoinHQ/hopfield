@@ -1,10 +1,16 @@
 # hopfield
 
+## 0.1.4
+
+### Patch Changes
+
+- [#8](https://github.com/propology/hopfield/pull/8) [`24b5bdc`](https://github.com/propology/hopfield/commit/24b5bdcb8f9b3faaceaf99f58fe1e171e4422764) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fixed some missing types to be explicit.
+
 ## 0.1.3
 
 ### Patch Changes
 
-- [#6](https://github.com/propology/hopfield/pull/6) [`b2c5b0f`](https://github.com/propology/hopfield/commit/b2c5b0f28d3668dc468d61e15313c5d6a0a889aa) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** update to support latest `openai` version. 
+- [#6](https://github.com/propology/hopfield/pull/6) [`b2c5b0f`](https://github.com/propology/hopfield/commit/b2c5b0f28d3668dc468d61e15313c5d6a0a889aa) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** update to support latest `openai` version.
 
 ## 0.1.2
 
