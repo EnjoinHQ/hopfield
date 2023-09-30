@@ -1,3 +1,10 @@
+import './globals.css';
+
+import { Inter } from 'next/font/google';
+
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({ subsets: ['latin'] });
+
 export const metadata = {
   title: 'Hopfield with React Server Components on the Edge',
   description: 'Hopfield with Server Components',
@@ -5,7 +12,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Hopfield with Server Components',
     description: 'Hopfield with React Server Components streaming on the Edge',
-    creator: '@nextjs',
+    creator: '@propology_',
   },
   openGraph: {
     type: 'website',
@@ -25,7 +32,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`bg-bg text-white ${inter.className} m-0 p-0`}>
+        {children}
+      </body>
     </html>
   );
 }
