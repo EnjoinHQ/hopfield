@@ -28,7 +28,7 @@
     "test": "vitest",
     "test:cov": "vitest run --config vitest.integration.config.ts --coverage",
     "test:integration": "vitest --config vitest.integration.config.ts",
-    "test:typecheck": "vitest typecheck",
+    "test:typecheck": "vitest typecheck --no-threads",
     "test:update": "vitest --update",
     "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
     "typecheck": "tsc --noEmit",

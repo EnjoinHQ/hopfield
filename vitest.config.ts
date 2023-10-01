@@ -19,7 +19,7 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
     setupFiles: ['./test/setup.ts'],
     typecheck: {
-      exclude: ['examples/**'],
+      exclude: ['examples/**', 'docs/**'],
     },
   },
 });
