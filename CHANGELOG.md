@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.2.0
+
+### Minor Changes
+
+- [`9720598`](https://github.com/propology/hopfield/commit/9720598b115a91203e6674710fa534f834611c16) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added async iterator to readable stream for node integration.
+
 ## 0.1.4
 
 ### Patch Changes
