@@ -1,52 +1,75 @@
 import { headers } from 'next/headers';
+import Image from 'next/image';
 import { Suspense } from 'react';
-import { CityRecs } from './city-recs';
-import { Footer } from './components/footer';
-import { Region } from './components/region';
-import { parseVercelId } from './parse-vercel-id';
+import bgGradient5 from '../../public/bg-gradient.png';
+import { CodeChat } from './code-chat';
+import { Footer } from './footer';
 
+// IMPORTANT! Set the runtime to edge
 export const runtime = 'edge';
 
 export default async function Page() {
   const headersList = headers();
-  const city = decodeURIComponent(
-    headersList.get('X-Vercel-IP-City') || 'Phoenix',
-  );
-
-  const timezone = headersList.get('X-Vercel-IP-Timezone') || 'America/Phoenix';
-
-  const { proxyRegion, computeRegion } = parseVercelId(
-    headersList.get('X-Vercel-Id')!,
-  );
 
   if (headersList.get('user-agent')?.includes('Twitterbot')) {
     return <></>;
   }
 
   return (
-    <>
-      <main>
-        <h1 className="title">
-          <span>What to do in </span>
-          {city}?
+    <div className="relative flex flex-col flex-1 w-full max-h-screen h-screen px-8 overflow-hidden justify-between">
+      <main className="pt-10">
+        <h1 className="text-center font-semibold text-2xl">
+          <span>How could I use </span>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://hopfield.ai"
+            className="text-accent"
+          >
+            Hopfield?
+          </a>
         </h1>
-        <pre className="tokens">
+
+        <div className="text-center max-w-lg mx-auto mt-4 text-text-dark-2">
+          This app is built with React Server Components in{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent font-semibold"
+            href="https://nextjs.org/docs/app/building-your-application/rendering/server-components"
+          >
+            Next.js
+          </a>
+          , using{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent font-semibold"
+            href="https://hopfield.ai"
+          >
+            Hopfield
+          </a>{' '}
+          to easily interact with OpenAI streaming chat responses.
+        </div>
+
+        <div className="max-w-2xl mx-auto shrink-0 mt-8 mb-8 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
+        <div className="max-w-2xl font-mono mx-auto whitespace-pre-wrap max-h-[65vh] flex-1 overflow-y-scroll rounded-lg border border-slate-200 bg-white/5 backdrop-blur-md p-6 shadow-md">
           <Suspense fallback={null}>
-            <CityRecs city={city} timezone={timezone} />
+            <CodeChat />
           </Suspense>
-        </pre>
+        </div>
       </main>
-      <div className="meta">
-        <div className="info">
-          <span>Proxy Region</span>
-          <Region region={proxyRegion} />
-        </div>
-        <div className="info">
-          <span>Compute Region</span>
-          <Region region={computeRegion} />
-        </div>
-      </div>
+
+      <Image
+        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 -rotate-[34deg] transform-gpu opacity-40 blur-md"
+        height={1200}
+        width={1200}
+        src={bgGradient5}
+        placeholder="blur"
+        alt="Large background gradient"
+      />
       <Footer />
-    </>
+    </div>
   );
 }
