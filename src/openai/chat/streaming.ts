@@ -212,11 +212,9 @@ export class OpenAIStreamingChat<
 
   async get(
     input: z.input<typeof this.parameters>,
-    opts?: {
-      callbacks?: StreamingCallbacks<
-        InferResult<OpenAIStreamingChat<Provider, ModelName, N>>
-      >;
-    },
+    opts?: StreamingCallbacks<
+      InferResult<OpenAIStreamingChat<Provider, ModelName, N>>
+    >,
   ): Promise<
     StreamingResult<InferResult<OpenAIStreamingChat<Provider, ModelName, N>>>
   > {
@@ -231,7 +229,8 @@ export class OpenAIStreamingChat<
 
     const asyncIterator = {
       /**
-       * Includes an `onDone` callback which is called when the async iterator has completed, as well as a `onChunk` callback which is called on each value in the stream.
+       * Includes an `onDone` callback which is called when the async iterator has completed, as
+       * well as a `onChunk` callback which is called on each value in the stream.
        */
       [Symbol.asyncIterator]: async function* () {
         const iteratedValues: InferResult<
@@ -239,14 +238,14 @@ export class OpenAIStreamingChat<
         >[] = [];
 
         for await (const part of response) {
-          const chunk = await outputSchema.parseAsync(part);
-          await opts?.callbacks?.onChunk?.(chunk);
-          iteratedValues.push(chunk);
-
+          const chunk = outputSchema.parseAsync(part);
           yield chunk;
+
+          await opts?.onChunk?.(await chunk);
+          iteratedValues.push(await chunk);
         }
 
-        await opts?.callbacks?.onDone?.(iteratedValues);
+        await opts?.onDone?.(iteratedValues);
       },
     };
 
@@ -254,7 +253,7 @@ export class OpenAIStreamingChat<
       InferResult<OpenAIStreamingChat<Provider, ModelName, N>>
     > = {
       ...asyncIterator,
-      readableStream: readableFromAsyncIterable(asyncIterator),
+      readableStream: () => readableFromAsyncIterable(asyncIterator),
       streaming: true,
     };
 

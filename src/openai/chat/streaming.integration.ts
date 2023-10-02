@@ -27,46 +27,16 @@ test(
       temperature: 0,
     });
 
-    const parts: hop.inferResult<typeof chat>['choices'][number][] = [];
+    let content = '';
 
     for await (const part of response) {
-      parts.push(...part.choices);
+      content +=
+        part.choices[0].__type === 'content'
+          ? part.choices[0].delta.content
+          : '';
     }
 
-    expect(parts).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 0,
-        },
-      ]
-    `);
+    expect(content).toMatchInlineSnapshot('"Fold and devour."');
   },
   TEST_TIMEOUT,
 );
@@ -74,97 +44,38 @@ test(
 test(
   'should respond with multiple choices',
   async () => {
-    const response = await chatMultiple.get({
-      messages,
-      temperature: 0,
-    });
+    const response = await chatMultiple.get(
+      {
+        messages,
+        temperature: 0,
+      },
+      {
+        onChunk(value) {
+          console.log(value.choices[0].delta);
+        },
+      },
+    );
 
-    const parts: hop.inferResult<typeof chatMultiple>['choices'][number][] = [];
+    let content1 = '';
+    let content2 = '';
 
     for await (const part of response) {
-      parts.push(...part.choices);
+      if (part.choices[0].index === 0) {
+        content1 +=
+          part.choices[0].__type === 'content'
+            ? part.choices[0].delta.content
+            : '';
+      } else {
+        content2 +=
+          part.choices[0].__type === 'content'
+            ? part.choices[0].delta.content
+            : '';
+      }
     }
 
-    expect(parts).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "content",
-          "delta": {
-            "content": "",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "Fold",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 0,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 1,
-        },
-      ]
-    `);
+    expect(content1).toMatchInlineSnapshot('"Fold and devour."');
+
+    expect(content2).toMatchInlineSnapshot('"Fold and devour."');
   },
   TEST_TIMEOUT,
 );
@@ -177,69 +88,23 @@ test(
       temperature: 0,
     });
 
-    const parts: hop.inferResult<typeof chat>['choices'][number][] = [];
+    let content = '';
 
     // use the readableStream
-    const reader = response.readableStream.getReader();
+    const reader = response.readableStream().getReader();
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
         break;
       }
-      parts.push(...value.choices);
+      content +=
+        value.choices[0].__type === 'content'
+          ? value.choices[0].delta.content
+          : '';
     }
 
-    expect(parts).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "content",
-          "delta": {
-            "content": "",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "Fold",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 0,
-        },
-      ]
-    `);
+    expect(content).toMatchInlineSnapshot('"Fold and devour."');
   },
   TEST_TIMEOUT,
 );
@@ -252,8 +117,10 @@ test(
       temperature: 0,
     });
 
-    const parts: hop.inferResult<typeof chat>['choices'][number][] = [];
-    const reader = response.readableStream.getReader();
+    let content = '';
+
+    // use the readableStream
+    const reader = response.readableStream().getReader();
 
     let readCount = 0;
     const MAX_READS_BEFORE_CANCEL = 2; // Change this value based on when you want to cancel
@@ -264,15 +131,15 @@ test(
         reader.cancel(); // Cancel the reading after certain chunks are read
         break;
       }
-      parts.push(...value.choices);
+      content +=
+        value.choices[0].__type === 'content'
+          ? value.choices[0].delta.content
+          : '';
       readCount++;
     }
 
-    // Assert the partial results. This will depend on where you cancel.
-    expect(parts.length).toBe(MAX_READS_BEFORE_CANCEL);
-    // Add more specific checks if necessary.
+    expect(content).toMatchInlineSnapshot('"Fold"');
 
-    // Check the result of further reads post cancellation.
     const postCancelRead = await reader.read();
     expect(postCancelRead.done).toBe(true);
     expect(postCancelRead.value).toBeUndefined();

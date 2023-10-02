@@ -73,7 +73,7 @@ export async function ChatResponse() {
   );
 
   // pass the `readableStream` to the RSC
-  return <Tokens stream={response.readableStream} />;
+  return <Tokens stream={response.readableStream()} />;
 }
 
 type Props = {

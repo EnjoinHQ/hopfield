@@ -14,6 +14,8 @@ The readableStream from Hopfield's streaming chat provider uses [ReadableStream]
 
 ::: info Backpressure
 
+See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure correctly.
+
 For a detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
 [vercel/ai docs](https://sdk.vercel.ai/docs/concepts/backpressure-and-cancellation).
 
@@ -71,7 +73,7 @@ export async function ChatResponse() {
   );
 
   // pass the readableStream to the RSC
-  return <Tokens stream={response.readableStream} />;
+  return <Tokens stream={response.readableStream()} />;
 }
 
 type Props = {

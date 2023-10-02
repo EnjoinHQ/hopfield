@@ -11,7 +11,7 @@ export type ChatStream = boolean;
 
 export type StreamingResult<T> = {
   [Symbol.asyncIterator](): AsyncIterableIterator<T>;
-  readableStream: ReadableStream<T>;
+  readableStream(): ReadableStream<T>;
   streaming: true;
 };
 

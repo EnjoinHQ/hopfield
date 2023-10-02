@@ -6,10 +6,10 @@ import {
   type StreamingResult,
 } from '../../chat.js';
 import type { LimitedTupleWithUnion } from '../../type-utils.js';
-import { readableFromAsyncIterable } from '../../utils.js';
 
 import OpenAI from 'openai';
 import { ZodUnion, z } from 'zod';
+import { readableFromAsyncIterable } from '../../utils.js';
 import type {
   FunctionConfigsUnion,
   FunctionProperties,
@@ -224,13 +224,11 @@ export class OpenAIChatWithFunctionsStreaming<
     input: InferInput<
       OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
     >,
-    opts?: {
-      callbacks?: StreamingCallbacks<
-        InferResult<
-          OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
-        >
-      >;
-    },
+    opts?: StreamingCallbacks<
+      InferResult<
+        OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
+      >
+    >,
   ): Promise<
     StreamingResult<
       InferResult<
@@ -249,8 +247,8 @@ export class OpenAIChatWithFunctionsStreaming<
 
     const asyncIterator = {
       /**
-       * Includes an `onDone` callback which is called when the async iterator has completed,
-       * as well as a `onChunk` callback which is called on each value in the stream.
+       * Includes an `onDone` callback which is called when the async iterator has completed, as
+       * well as a `onChunk` callback which is called on each value in the stream.
        */
       [Symbol.asyncIterator]: async function* () {
         const iteratedValues: InferResult<
@@ -258,14 +256,14 @@ export class OpenAIChatWithFunctionsStreaming<
         >[] = [];
 
         for await (const part of response) {
-          const chunk = await outputSchema.parseAsync(part);
-          await opts?.callbacks?.onChunk?.(chunk);
-          iteratedValues.push(chunk);
-
+          const chunk = outputSchema.parseAsync(part);
           yield chunk;
+
+          await opts?.onChunk?.(await chunk);
+          iteratedValues.push(await chunk);
         }
 
-        await opts?.callbacks?.onDone?.(iteratedValues);
+        await opts?.onDone?.(iteratedValues);
       },
     };
 
@@ -275,7 +273,7 @@ export class OpenAIChatWithFunctionsStreaming<
       >
     > = {
       ...asyncIterator,
-      readableStream: readableFromAsyncIterable(asyncIterator),
+      readableStream: () => readableFromAsyncIterable(asyncIterator),
       streaming: true,
     };
 

@@ -69,7 +69,7 @@ export async function CodeChat() {
   // Get a streaming chat completion
   const response = await chat.get({ messages: messages }, { callbacks });
 
-  return <Tokens stream={response.readableStream} />;
+  return <Tokens stream={response.readableStream()} />;
 }
 
 type Props = {
