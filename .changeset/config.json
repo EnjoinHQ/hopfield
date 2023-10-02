@@ -11,5 +11,10 @@
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
-  "ignore": ["docs", "next-13-openai"]
+  "ignore": [
+    "docs",
+    "hopfield-next-13",
+    "hopfield-cloudflare-worker",
+    "hopfield-bun"
+  ]
 }

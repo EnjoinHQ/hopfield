@@ -9,21 +9,28 @@ Hopfield empowers developers to seamlessly fetch and stream data directly into N
 
 ## Overview
 
+Hopfield provides a readableStream which can be used to build recursive React Server Components.
+
 The readableStream from Hopfield's streaming chat provider uses [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)
-(available in Node 18+) to easily work with streams. The ReadableStream handles backpressure with a pull-based approach.
+(available in Node 18+) to easily work with recursion. The stream handles backpressure with a pull-based approach.
 
 ::: info Backpressure
 
-See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure correctly.
-
-For a detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
+See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure.
+For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
 [vercel/ai docs](https://sdk.vercel.ai/docs/concepts/backpressure-and-cancellation).
 
 :::
 
 ## Usage
 
-Here's how to use Hopfield within a React Server Component:
+::: danger Node.js
+
+ReadableStream requires Node.js 18+ or polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).
+
+:::
+
+Here's how to use Hopfield with a recursive React Server Component using Suspense:
 
 tsx
 import { Suspense } from "react";
@@ -125,43 +132,13 @@ async function RecursiveTokens({ reader }: RecursiveTokensProps) {
 const LoadingDots = () => <span>...</span>;
 
 
-::: info
-
 See our [Next 13 RSC example](https://next-13.hopfield.ai) for a real-world integration
 using Vercel.
 
-:::
-
-## Parameters
-
-### Iterable
-
-This is the asynchronous iterable you aim to convert - the response from a chat provider.
-
-### onDone
-
-An optional callback triggered upon the exhaustion of the async iterable. It receives a
-compilation of all values extracted from the iterable.
-
 ### Dive Deeper
 
-To gain a more profound understanding of working with readable streams and async iterables, consider perusing the Streams & Async Iterables section.
-
-## Integration with React
-
-::: info
-
-The above code demonstrates the integration of Hopfield within a Next.js React component. The CodeChat function fetches data using Hopfield and streams the response to the Tokens component for rendering.
-
-:::
-
-## Important Note
-
-Remember to install necessary packages, set environment variables, and understand the underlying Hopfield package to ensure smooth integration within your Next.js app. Ensure you handle potential errors and edge cases to maintain a robust application.
-
-### Dive Deeper
-
-To deepen your understanding of how Hopfield works, and how it can be further utilized within your application, refer to the [Hopfield documentation](https://hopfield.ai).
+To deepen your understanding of how Streaming works, and how it can be further utilized within your application,
+refer to the [Streaming Chat](/chat/streaming) section.
 '
 
 '---

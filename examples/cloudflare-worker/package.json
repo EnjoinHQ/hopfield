@@ -1,0 +1,19 @@
+{
+  "name": "hopfield-cloudflare-worker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "start": "wrangler dev",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230419.0",
+    "typescript": "^5.0.4",
+    "vitest": "^0.34.6",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "hopfield": "workspace:*"
+  }
+}

@@ -210,6 +210,12 @@ export class OpenAIStreamingChat<
     this.provider = props.provider;
   }
 
+  /**
+   * Gets a streaming LLM response.
+   *
+   * Options include an `onDone` callback which is called when the async iterator has completed as well as an
+   * `onChunk` callback which is called on each value in the stream.
+   */
   async get(
     input: z.input<typeof this.parameters>,
     opts?: StreamingOptions<
@@ -238,11 +244,12 @@ export class OpenAIStreamingChat<
         >[] = [];
 
         for await (const part of response) {
-          const chunk = outputSchema.parseAsync(part);
-          yield chunk;
+          const chunk = await outputSchema.parseAsync(part);
 
-          await opts?.onChunk?.(await chunk);
-          iteratedValues.push(await chunk);
+          await opts?.onChunk?.(chunk);
+          iteratedValues.push(chunk);
+
+          yield chunk;
         }
 
         await opts?.onDone?.(iteratedValues);

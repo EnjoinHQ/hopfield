@@ -1,5 +1,15 @@
+import type { FunctionProperties, OpenAIFunctionsTuple } from '../function.js';
 import { openAIChatModelNames } from '../models.js';
-import { z } from 'zod';
+import { ZodDiscriminatedUnion, z } from 'zod';
+
+export type FunctionReturnTypesUnion<T extends OpenAIFunctionsTuple> =
+  ZodDiscriminatedUnion<
+    'name',
+    [
+      FunctionProperties<T, 'returnType'>[number],
+      ...FunctionProperties<T, 'returnType'>,
+    ]
+  >;
 
 export const FunctionName = z
   .string()

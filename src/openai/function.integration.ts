@@ -183,10 +183,26 @@ test(
       },
     ];
 
-    const response = await streamingChat.get({
-      messages,
-      temperature: 0,
-    });
+    let functionNameCalled: string | null = null;
+
+    const response = await streamingChat.get(
+      {
+        messages,
+        temperature: 0,
+      },
+      {
+        onFunctionCall(value) {
+          functionNameCalled = value.name;
+
+          expect(value.arguments.category).toMatchInlineSnapshot(
+            '"BILLING_AND_PAYMENTS"',
+          );
+          expect(value.arguments.summary).toMatchInlineSnapshot(
+            '"Credit card charged twice"',
+          );
+        },
+      },
+    );
 
     const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
       [];
@@ -194,6 +210,8 @@ test(
     for await (const part of response) {
       parts.push(...part.choices);
     }
+
+    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
 
     expect(parts).toMatchInlineSnapshot(`
       [
@@ -469,11 +487,27 @@ test(
       },
     ];
 
-    const response = await streamingChat.get({
-      messages,
-      temperature: 0,
-      function_call: { name: classifyMessage.name },
-    });
+    let functionNameCalled: string | null = null;
+
+    const response = await streamingChat.get(
+      {
+        messages,
+        temperature: 0,
+        function_call: { name: classifyMessage.name },
+      },
+      {
+        onFunctionCall(value) {
+          functionNameCalled = value.name;
+
+          expect(value.arguments.category).toMatchInlineSnapshot(
+            '"BILLING_AND_PAYMENTS"',
+          );
+          expect(value.arguments.summary).toMatchInlineSnapshot(
+            '"Credit card charged twice"',
+          );
+        },
+      },
+    );
 
     const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
       [];
@@ -481,6 +515,8 @@ test(
     for await (const part of response) {
       parts.push(...part.choices);
     }
+
+    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
 
     expect(parts).toMatchInlineSnapshot(`
       [

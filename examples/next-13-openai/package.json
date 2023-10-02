@@ -1,6 +1,6 @@
 {
-  "name": "next-13-openai",
-  "version": "0.1.1",
+  "name": "hopfield-next-13",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,17 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/kv": "^0.2.3",
+    "@vercel/kv": "latest",
     "hopfield": "workspace:*",
     "next": "latest",
     "openai": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "swr": "^2.2.4",
     "zod": "latest"
   },
   "devDependencies": {
-    "@types/node": "latest",
+    "@types/node": "^20.8.1",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
