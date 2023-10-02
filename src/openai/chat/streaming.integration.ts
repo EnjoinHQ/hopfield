@@ -22,10 +22,23 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
 test(
   'should respond with streaming',
   async () => {
-    const response = await chat.get({
-      messages,
-      temperature: 0,
-    });
+    const onChunkTypes: string[] = [];
+    const onDoneTypes: string[] = [];
+
+    const response = await chat.get(
+      {
+        messages,
+        temperature: 0,
+      },
+      {
+        onChunk(value) {
+          onChunkTypes.push(value.choices[0].__type);
+        },
+        onDone(values) {
+          onDoneTypes.push(...values.map((value) => value.choices[0].__type));
+        },
+      },
+    );
 
     let content = '';
 
@@ -37,6 +50,7 @@ test(
     }
 
     expect(content).toMatchInlineSnapshot('"Fold and devour."');
+    expect(onChunkTypes).toEqual(onDoneTypes);
   },
   TEST_TIMEOUT,
 );
@@ -44,6 +58,8 @@ test(
 test(
   'should respond with multiple choices',
   async () => {
+    const onChunkTypes: string[] = [];
+
     const response = await chatMultiple.get(
       {
         messages,
@@ -51,7 +67,7 @@ test(
       },
       {
         onChunk(value) {
-          console.log(value.choices[0].delta);
+          onChunkTypes.push(value.choices[0].__type);
         },
       },
     );
@@ -74,8 +90,23 @@ test(
     }
 
     expect(content1).toMatchInlineSnapshot('"Fold and devour."');
-
     expect(content2).toMatchInlineSnapshot('"Fold and devour."');
+    expect(onChunkTypes).toMatchInlineSnapshot(`
+      [
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "stop",
+        "stop",
+      ]
+    `);
   },
   TEST_TIMEOUT,
 );

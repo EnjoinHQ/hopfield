@@ -2,7 +2,7 @@ import {
   BaseHopfieldChatWithFunctions,
   type InferInput,
   type InferResult,
-  type StreamingCallbacks,
+  type StreamingOptions,
   type StreamingResult,
 } from '../../chat.js';
 import type { LimitedTupleWithUnion } from '../../type-utils.js';
@@ -224,7 +224,7 @@ export class OpenAIChatWithFunctionsStreaming<
     input: InferInput<
       OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
     >,
-    opts?: StreamingCallbacks<
+    opts?: StreamingOptions<
       InferResult<
         OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
       >

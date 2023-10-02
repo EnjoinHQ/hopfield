@@ -54,20 +54,18 @@ export async function ChatResponse() {
   const response = await chat.get(
     { messages: messages },
     {
-      callbacks: {
-        onChunk: async (value) => {
-          console.log(Received chunk type: \${value.choices[0].__type});
-          // do something on the server with each individual chunk as it is
-          // streamed in
-        },
-        onDone: async (chunks) => {
-          console.log(Total chunks received: \${chunks.length});
-          // do something on the server when the chat completion is done
-          // this can be caching the response, storing in a database, etc.
-          //
-          // chunks is an array of all the streamed responses, so you
-          // can access the raw content and combine how you'd like
-        },
+      onChunk: async (value) => {
+        console.log(Received chunk type: \${value.choices[0].__type});
+        // do something on the server with each individual chunk as it is
+        // streamed in
+      },
+      onDone: async (chunks) => {
+        console.log(Total chunks received: \${chunks.length});
+        // do something on the server when the chat completion is done
+        // this can be caching the response, storing in a database, etc.
+        //
+        // chunks is an array of all the streamed responses, so you
+        // can access the raw content and combine how you'd like
       },
     }
   );
@@ -164,30 +162,6 @@ Remember to install necessary packages, set environment variables, and understan
 ### Dive Deeper
 
 To deepen your understanding of how Hopfield works, and how it can be further utilized within your application, refer to the [Hopfield documentation](https://hopfield.ai).
-
-tsx
-// we add callbacks on chunk and when the stream is finished
-const callbacks: hop.StreamingCallbacks<hop.inferStreamingChunk<typeof chat>> =
-  {
-    onChunk(value) {
-      console.log(Received chunk type: \${value.choices[0].__type});
-    },
-    onDone: async (data) => {
-      // we map to a string to store in Redis, to save on costs :sweat:
-      const storedResponse = data
-        .map((chunk) =>
-          chunk.choices[0].__type === "content"
-            ? chunk.choices[0].delta.content
-            : ""
-        )
-        .join("");
-
-      await kv.set(promptHash, storedResponse);
-      // expire every ten minutes
-      await kv.expire(promptHash, 60 * 10);
-    },
-  };
-
 '
 
 '---

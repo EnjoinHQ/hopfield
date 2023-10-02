@@ -15,7 +15,7 @@ export type StreamingResult<T> = {
   streaming: true;
 };
 
-export type StreamingCallbacks<T> = {
+export type StreamingOptions<T> = {
   onChunk?: (value: T) => any | Promise<any>;
   onDone?: (values: T[]) => any | Promise<any>;
 };

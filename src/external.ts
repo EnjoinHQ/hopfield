@@ -4,7 +4,7 @@ import {
   type InferResult,
   type InferStreamingChunk,
   type InferStreamingResult,
-  type StreamingCallbacks,
+  type StreamingOptions,
 } from './chat.js';
 import type { BaseHopfield } from './provider.js';
 
@@ -14,7 +14,7 @@ export type {
   InferResult as inferResult,
   InferStreamingChunk as inferStreamingChunk,
   InferStreamingResult as inferStreamingResult,
-  StreamingCallbacks,
+  StreamingOptions,
 };
 
 export * from './errors.js';

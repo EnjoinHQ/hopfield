@@ -3,7 +3,7 @@ import { ZodUnion, z } from 'zod';
 import {
   BaseHopfieldChat,
   type InferResult,
-  type StreamingCallbacks,
+  type StreamingOptions,
   type StreamingResult,
 } from '../../chat.js';
 import type { LimitedTupleWithUnion } from '../../type-utils.js';
@@ -212,7 +212,7 @@ export class OpenAIStreamingChat<
 
   async get(
     input: z.input<typeof this.parameters>,
-    opts?: StreamingCallbacks<
+    opts?: StreamingOptions<
       InferResult<OpenAIStreamingChat<Provider, ModelName, N>>
     >,
   ): Promise<
