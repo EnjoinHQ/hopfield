@@ -9,7 +9,7 @@ No other library does what Hopfield does (inferring static LLM TypeScript types 
 
 Comparisons strive to be as accurate and as unbiased as possible. If you use any of these libraries and feel the information could be improved, feel free to suggest changes.
 
-## `ai`
+## `vercel/ai`
 
 [**`ai`**](https://github.com/vercel/ai) is a framework for AI-powered applications with React, Svelte, Vue, and Solid. They provide hooks to easily integrate
 with a streaming text response (`StreamingTextResponse`) and allow a callback for function calling, as well as simple, drop-in components for React and other

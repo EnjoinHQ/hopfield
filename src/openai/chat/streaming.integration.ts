@@ -11,78 +11,46 @@ const hopfield = hop.client(openai).provider(openAIClient);
 const chat = hopfield.chat('gpt-3.5-turbo-16k-0613').streaming();
 const chatMultiple = hopfield.chat('gpt-3.5-turbo-16k-0613', 2).streaming();
 
+const messages: hop.inferMessageInput<typeof chat>[] = [
+  {
+    role: 'user',
+    content:
+      "What's the coolest way to eat a pizza? Respond in three words or less.",
+  },
+];
+
 test(
   'should respond with streaming',
   async () => {
-    const messages: hop.inferMessageInput<typeof chat>[] = [
+    const onChunkTypes: string[] = [];
+    const onDoneTypes: string[] = [];
+
+    const response = await chat.get(
       {
-        role: 'user',
-        content:
-          "What's the coolest way to eat a pizza? Respond in three words or less.",
+        messages,
+        temperature: 0,
       },
-    ];
+      {
+        onChunk(value) {
+          onChunkTypes.push(value.choices[0].__type);
+        },
+        onDone(values) {
+          onDoneTypes.push(...values.map((value) => value.choices[0].__type));
+        },
+      },
+    );
 
-    const response = await chat.get({
-      messages,
-      temperature: 0,
-    });
-
-    const parts: hop.inferResult<typeof chat>['choices'][number][] = [];
+    let content = '';
 
     for await (const part of response) {
-      parts.push(...part.choices);
+      content +=
+        part.choices[0].__type === 'content'
+          ? part.choices[0].delta.content
+          : '';
     }
 
-    expect(parts).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "content",
-          "delta": {
-            "content": "",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "Fold",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 0,
-        },
-      ]
-    `);
+    expect(content).toMatchInlineSnapshot('"Fold and devour."');
+    expect(onChunkTypes).toEqual(onDoneTypes);
   },
   TEST_TIMEOUT,
 );
@@ -90,121 +58,122 @@ test(
 test(
   'should respond with multiple choices',
   async () => {
-    const messages: hop.inferMessageInput<typeof chatMultiple>[] = [
-      {
-        role: 'user',
-        content:
-          "What's the coolest way to eat a pizza? Respond in three words or less.",
-      },
-    ];
+    const onChunkTypes: string[] = [];
 
-    const response = await chatMultiple.get({
+    const response = await chatMultiple.get(
+      {
+        messages,
+        temperature: 0,
+      },
+      {
+        onChunk(value) {
+          onChunkTypes.push(value.choices[0].__type);
+        },
+      },
+    );
+
+    let content1 = '';
+    let content2 = '';
+
+    for await (const part of response) {
+      if (part.choices[0].index === 0) {
+        content1 +=
+          part.choices[0].__type === 'content'
+            ? part.choices[0].delta.content
+            : '';
+      } else {
+        content2 +=
+          part.choices[0].__type === 'content'
+            ? part.choices[0].delta.content
+            : '';
+      }
+    }
+
+    expect(content1).toMatchInlineSnapshot('"Fold and devour."');
+    expect(content2).toMatchInlineSnapshot('"Fold and devour."');
+    expect(onChunkTypes).toMatchInlineSnapshot(`
+      [
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "content",
+        "stop",
+        "stop",
+      ]
+    `);
+  },
+  TEST_TIMEOUT,
+);
+
+test(
+  'should respond with streaming using readableStream',
+  async () => {
+    const response = await chat.get({
       messages,
       temperature: 0,
     });
 
-    const parts: hop.inferResult<typeof chatMultiple>['choices'][number][] = [];
+    let content = '';
 
-    for await (const part of response) {
-      parts.push(...part.choices);
+    // use the readableStream
+    const reader = response.readableStream().getReader();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      content +=
+        value.choices[0].__type === 'content'
+          ? value.choices[0].delta.content
+          : '';
     }
 
-    expect(parts).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "content",
-          "delta": {
-            "content": "",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "Fold",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": "Fold",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " and",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": " devour",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "content",
-          "delta": {
-            "content": ".",
-          },
-          "finish_reason": null,
-          "index": 1,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 0,
-        },
-        {
-          "__type": "stop",
-          "delta": {},
-          "finish_reason": "stop",
-          "index": 1,
-        },
-      ]
-    `);
+    expect(content).toMatchInlineSnapshot('"Fold and devour."');
+  },
+  TEST_TIMEOUT,
+);
+
+test(
+  'should handle cancellation of readableStream mid-stream',
+  async () => {
+    const response = await chat.get({
+      messages,
+      temperature: 0,
+    });
+
+    let content = '';
+
+    // use the readableStream
+    const reader = response.readableStream().getReader();
+
+    let readCount = 0;
+    const MAX_READS_BEFORE_CANCEL = 2; // Change this value based on when you want to cancel
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done || readCount >= MAX_READS_BEFORE_CANCEL) {
+        reader.cancel(); // Cancel the reading after certain chunks are read
+        break;
+      }
+      content +=
+        value.choices[0].__type === 'content'
+          ? value.choices[0].delta.content
+          : '';
+      readCount++;
+    }
+
+    expect(content).toMatchInlineSnapshot('"Fold"');
+
+    const postCancelRead = await reader.read();
+    expect(postCancelRead.done).toBe(true);
+    expect(postCancelRead.value).toBeUndefined();
   },
   TEST_TIMEOUT,
 );

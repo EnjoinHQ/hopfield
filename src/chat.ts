@@ -11,11 +11,21 @@ export type ChatStream = boolean;
 
 export type StreamingResult<T> = {
   [Symbol.asyncIterator](): AsyncIterableIterator<T>;
+  readableStream(): ReadableStream<T>;
   streaming: true;
 };
 
+export type StreamingOptions<T> = {
+  onChunk?: (value: T) => any | Promise<any>;
+  onDone?: (values: T[]) => any | Promise<any>;
+};
+
 export type InferStreamingResult<Chat extends BaseHopfieldSchema> =
-  StreamingResult<z.infer<Chat['returnType']>>;
+  StreamingResult<InferStreamingChunk<Chat>>;
+
+export type InferStreamingChunk<Chat extends BaseHopfieldSchema> = z.infer<
+  Chat['returnType']
+>;
 
 export type InferResult<Chat extends BaseHopfieldSchema> = z.infer<
   Chat['returnType']

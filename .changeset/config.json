@@ -11,5 +11,5 @@
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
-  "ignore": ["docs"]
+  "ignore": ["docs", "next-13-openai"]
 }

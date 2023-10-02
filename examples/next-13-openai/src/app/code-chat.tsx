@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import hop, { readableFromAsyncIterable } from 'hopfield';
+import hop from 'hopfield';
 import openai from 'hopfield/openai';
 import OpenAI from 'openai';
 import { kv } from '@vercel/kv';
@@ -34,7 +34,7 @@ export async function CodeChat() {
     {
       role: 'system',
       content:
-        'You are a developer evangelist for the Hopfield Typescript npm package. You ALWAYS respond using Markdown.',
+        'You are a developer evangelist for the Hopfield Typescript npm package. You ALWAYS respond using Markdown. The docs for Hopfield are located at https://hopfield.ai.',
     },
     {
       role: 'user',
@@ -42,15 +42,15 @@ export async function CodeChat() {
     },
   ];
 
-  // Get a streaming chat completion
-  const response = await chat.get({
-    messages: messages,
-  });
-
-  // we map to a string to store in Redis, to save on costs :sweat:
-  const stream = readableFromAsyncIterable(response, {
-    onDone: async (data) => {
-      const storedResponse = data
+  // we add callbacks on chunk and when the stream is finished
+  const options: hop.StreamingOptions<hop.inferStreamingChunk<typeof chat>> = {
+    onChunk: async (value) => {
+      console.log(`Received chunk type: ${value.choices[0].__type}`);
+    },
+    onDone: async (chunks) => {
+      console.log(`Total chunks received: ${chunks.length}`);
+      // we map to a string to store in Redis, to save on costs :sweat:
+      const storedResponse = chunks
         .map((chunk) =>
           chunk.choices[0].__type === 'content'
             ? chunk.choices[0].delta.content
@@ -62,9 +62,12 @@ export async function CodeChat() {
       // expire every ten minutes
       await kv.expire(promptHash, 60 * 10);
     },
-  });
+  };
 
-  return <Tokens stream={stream} />;
+  // Get a streaming chat completion
+  const response = await chat.get({ messages: messages }, options);
+
+  return <Tokens stream={response.readableStream()} />;
 }
 
 type Props = {
@@ -89,18 +92,16 @@ async function Tokens(props: Props) {
   );
 }
 
-type InternalProps = {
+type RecursiveTokensProps = {
   reader: ReadableStreamDefaultReader<hop.inferResult<typeof chat>>;
 };
 
-async function RecursiveTokens({ reader }: InternalProps) {
+async function RecursiveTokens({ reader }: RecursiveTokensProps) {
   const { done, value } = await reader.read();
 
   if (done) {
     return null;
   }
-
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return (
     <>
@@ -109,12 +110,16 @@ async function RecursiveTokens({ reader }: InternalProps) {
       ) : (
         <></>
       )}
-      <Suspense fallback={null}>
+      <Suspense fallback={<LoadingDots />}>
         <RecursiveTokens reader={reader} />
       </Suspense>
     </>
   );
 }
+
+// This can be any loading indicator you want, which gets appended to the end
+// of the tokens while waiting for the next token to be streamed
+const LoadingDots = () => <span>...</span>;
 
 const getCachedResponse = async (prompt: string) => {
   const cached = (await kv.get(prompt)) as string | undefined;
