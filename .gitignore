@@ -18,3 +18,4 @@ bench
 .env.test.local
 .env.production.local
 .envrc
+.dev.vars

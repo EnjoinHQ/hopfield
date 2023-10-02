@@ -183,10 +183,19 @@ test(
       },
     ];
 
-    const response = await streamingChat.get({
-      messages,
-      temperature: 0,
-    });
+    let finalFunctionCall: object | null = null;
+
+    const response = await streamingChat.get(
+      {
+        messages,
+        temperature: 0,
+      },
+      {
+        onFunctionCall(value) {
+          finalFunctionCall = value;
+        },
+      },
+    );
 
     const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
       [];
@@ -194,6 +203,16 @@ test(
     for await (const part of response) {
       parts.push(...part.choices);
     }
+
+    expect(finalFunctionCall).toMatchInlineSnapshot(`
+      {
+        "arguments": {
+          "category": "BILLING_AND_PAYMENTS",
+          "summary": "Credit card charged twice",
+        },
+        "name": "classifyMessage",
+      }
+    `);
 
     expect(parts).toMatchInlineSnapshot(`
       [
@@ -469,11 +488,20 @@ test(
       },
     ];
 
-    const response = await streamingChat.get({
-      messages,
-      temperature: 0,
-      function_call: { name: classifyMessage.name },
-    });
+    let finalFunctionCall: object | null = null;
+
+    const response = await streamingChat.get(
+      {
+        messages,
+        temperature: 0,
+        function_call: { name: classifyMessage.name },
+      },
+      {
+        onFunctionCall(value) {
+          finalFunctionCall = value;
+        },
+      },
+    );
 
     const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
       [];
@@ -482,6 +510,15 @@ test(
       parts.push(...part.choices);
     }
 
+    expect(finalFunctionCall).toMatchInlineSnapshot(`
+      {
+        "arguments": {
+          "category": "BILLING_AND_PAYMENTS",
+          "summary": "Credit card charged twice",
+        },
+        "name": "classifyMessage",
+      }
+    `);
     expect(parts).toMatchInlineSnapshot(`
       [
         {

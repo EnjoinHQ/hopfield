@@ -2,7 +2,6 @@ import { BaseHopfieldChatWithFunctions } from '../../chat.js';
 import type { LimitedTuple, LimitedTupleWithUnion } from '../../type-utils.js';
 import type {
   FunctionConfigsUnion,
-  FunctionProperties,
   FunctionSchemasArray,
   OpenAIFunctionsTuple,
 } from '../function.js';
@@ -17,23 +16,17 @@ import {
   type OpenAIChatSchemaProps,
   Usage,
 } from './non-streaming.js';
-import { OpenAIChatBaseInput } from './shared.js';
+import {
+  OpenAIChatBaseInput,
+  type FunctionReturnTypesUnion,
+} from './shared.js';
 import {
   OpenAIChatWithFunctionsStreaming,
   OpenAIChatWithFunctionsStreamingSchema,
 } from './streaming-with-functions.js';
 import { AssistantRole } from './streaming.js';
 import OpenAI from 'openai';
-import { ZodDiscriminatedUnion, ZodUnion, z } from 'zod';
-
-type FunctionReturnTypesUnion<T extends OpenAIFunctionsTuple> =
-  ZodDiscriminatedUnion<
-    'name',
-    [
-      FunctionProperties<T, 'returnType'>[number],
-      ...FunctionProperties<T, 'returnType'>,
-    ]
-  >;
+import { ZodUnion, z } from 'zod';
 
 export type OpenAIChatWithFunctionsSchemaProps<
   ModelName extends OpenAIChatModelName,

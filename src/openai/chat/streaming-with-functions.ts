@@ -2,8 +2,8 @@ import {
   BaseHopfieldChatWithFunctions,
   type InferInput,
   type InferResult,
-  type StreamingOptions,
   type StreamingResult,
+  type StreamingWithFunctionsOptions,
 } from '../../chat.js';
 import type { LimitedTupleWithUnion } from '../../type-utils.js';
 
@@ -20,7 +20,10 @@ import {
   defaultOpenAIChatModelName,
   type OpenAIChatModelName,
 } from '../models.js';
-import { OpenAIChatBaseInput } from './shared.js';
+import {
+  OpenAIChatBaseInput,
+  type FunctionReturnTypesUnion,
+} from './shared.js';
 import {
   AssistantRole,
   ChoiceWithContentDelta,
@@ -137,6 +140,13 @@ export class OpenAIChatWithFunctionsStreamingSchema<
     return z.union(this._functions.map((fn) => fn.returnTypeName) as any);
   }
 
+  protected get functionReturnTypes(): FunctionReturnTypesUnion<Functions> {
+    return z.discriminatedUnion(
+      'name',
+      this._functions.map((fn) => fn.returnType) as any,
+    );
+  }
+
   get returnType() {
     /**
      * `function_name`: The model is calling a function, and the name has been streamed.
@@ -224,18 +234,18 @@ export class OpenAIChatWithFunctionsStreaming<
     input: InferInput<
       OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
     >,
-    opts?: StreamingOptions<
+    opts?: StreamingWithFunctionsOptions<
+      OpenAIChatWithFunctionsStreaming<
+        Provider,
+        ModelName,
+        N,
+        Functions
+      >['functionReturnTypes']['_output'],
       InferResult<
         OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
       >
     >,
-  ): Promise<
-    StreamingResult<
-      InferResult<
-        OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
-      >
-    >
-  > {
+  ) {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.chat.completions.create({
@@ -244,6 +254,7 @@ export class OpenAIChatWithFunctionsStreaming<
     });
 
     const outputSchema = this.returnType;
+    const functionSchema = this.functionReturnTypes;
 
     const asyncIterator = {
       /**
@@ -256,11 +267,53 @@ export class OpenAIChatWithFunctionsStreaming<
         >[] = [];
 
         for await (const part of response) {
-          const chunk = outputSchema.parseAsync(part);
-          yield chunk;
+          const chunk = await outputSchema.parseAsync(part);
 
-          await opts?.onChunk?.(await chunk);
-          iteratedValues.push(await chunk);
+          await opts?.onChunk?.(chunk);
+          iteratedValues.push(chunk);
+
+          if (
+            chunk.choices[0].__type === 'function_completed' ||
+            chunk.choices[0].__type === 'stop'
+          ) {
+            const functionName = iteratedValues
+              .filter((v) => v.choices[0].__type === 'function_name')
+              .map(
+                (v) =>
+                  (
+                    v?.choices?.[0]?.delta as {
+                      function_call?: {
+                        name?: string;
+                      };
+                    }
+                  )?.function_call?.name,
+              )
+              .join('');
+            const functionArguments = iteratedValues
+              .filter((v) => v.choices[0].__type === 'function_arguments')
+              .map(
+                (v) =>
+                  (
+                    v?.choices?.[0]?.delta as {
+                      function_call?: {
+                        arguments?: string;
+                      };
+                    }
+                  )?.function_call?.arguments,
+              )
+              .join('');
+
+            const functionCall = await functionSchema.safeParseAsync({
+              name: functionName,
+              arguments: functionArguments,
+            });
+
+            if (functionCall.success) {
+              await opts?.onFunctionCall?.(functionCall.data);
+            }
+          }
+
+          yield chunk;
         }
 
         await opts?.onDone?.(iteratedValues);

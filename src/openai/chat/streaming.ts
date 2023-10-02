@@ -238,11 +238,12 @@ export class OpenAIStreamingChat<
         >[] = [];
 
         for await (const part of response) {
-          const chunk = outputSchema.parseAsync(part);
-          yield chunk;
+          const chunk = await outputSchema.parseAsync(part);
 
-          await opts?.onChunk?.(await chunk);
-          iteratedValues.push(await chunk);
+          await opts?.onChunk?.(chunk);
+          iteratedValues.push(chunk);
+
+          yield chunk;
         }
 
         await opts?.onDone?.(iteratedValues);

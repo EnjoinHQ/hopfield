@@ -1,6 +1,6 @@
+import type { z } from 'zod';
 import { BaseHopfieldSchema } from './base.js';
 import type { AnyBaseHopfieldFunction } from './function.js';
-import type { z } from 'zod';
 
 export type BaseHopfieldFunctionTuple = [
   AnyBaseHopfieldFunction,
@@ -18,6 +18,10 @@ export type StreamingResult<T> = {
 export type StreamingOptions<T> = {
   onChunk?: (value: T) => any | Promise<any>;
   onDone?: (values: T[]) => any | Promise<any>;
+};
+
+export type StreamingWithFunctionsOptions<F, T> = StreamingOptions<T> & {
+  onFunctionCall?: (value: F) => any | Promise<any>;
 };
 
 export type InferStreamingResult<Chat extends BaseHopfieldSchema> =
