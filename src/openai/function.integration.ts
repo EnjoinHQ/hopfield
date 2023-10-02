@@ -198,29 +198,6 @@ test(
     expect(parts).toMatchInlineSnapshot(`
       [
         {
-          "__type": "function_name",
-          "delta": {
-            "content": null,
-            "function_call": {
-              "name": "classifyMessage",
-            },
-            "role": "assistant",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "function_arguments",
-          "delta": {
-            "function_call": {
-              "arguments": "{
-      ",
-            },
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
           "__type": "function_arguments",
           "delta": {
             "function_call": {
@@ -484,29 +461,6 @@ test(
 
     expect(parts).toMatchInlineSnapshot(`
       [
-        {
-          "__type": "function_name",
-          "delta": {
-            "content": null,
-            "function_call": {
-              "name": "classifyMessage",
-            },
-            "role": "assistant",
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
-        {
-          "__type": "function_arguments",
-          "delta": {
-            "function_call": {
-              "arguments": "{
-      ",
-            },
-          },
-          "finish_reason": null,
-          "index": 0,
-        },
         {
           "__type": "function_arguments",
           "delta": {

@@ -5,7 +5,6 @@ import * as Exports from './index.js';
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
     [
-      "readableFromAsyncIterable",
       "BaseError",
       "client",
       "hop",
