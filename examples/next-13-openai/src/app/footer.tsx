@@ -4,7 +4,7 @@ import hopfield from '../../public/hopfield-w-text.png';
 
 export function Footer() {
   return (
-    <footer className="flex absolute justify-between items-center bottom-0 right-0 left-0 w-full text-center pb-4 px-6">
+    <footer className="flex justify-between items-center w-full text-center pb-2 px-4">
       <a
         target="_blank"
         rel="noopener noreferrer"

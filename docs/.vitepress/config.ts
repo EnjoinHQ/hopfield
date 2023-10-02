@@ -157,11 +157,11 @@ export default withTwoslash(
             ],
           },
           {
-            text: 'API',
+            text: 'Frameworks',
             items: [
               {
-                text: 'readableFromAsyncIterable',
-                link: '/api/readableFromAsyncIterable',
+                text: 'Next.js App Router',
+                link: '/frameworks/next-13',
               },
             ],
           },

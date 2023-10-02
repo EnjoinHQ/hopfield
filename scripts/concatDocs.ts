@@ -33,7 +33,9 @@ const concatenateMarkdownFiles = async (
     let concatenatedContent = '';
     for (const file of markdownFiles) {
       const content = fs.readFileSync(file, 'utf8');
-      concatenatedContent += `${content.replace(/`/g, '')}'\n\n'`;
+      concatenatedContent += `${content
+        .replace(/`/g, '')
+        .replace(/\$\{/g, '\\${')}'\n\n'`;
     }
 
     fs.writeFileSync(
