@@ -183,7 +183,7 @@ test(
       },
     ];
 
-    let finalFunctionCall: object | null = null;
+    let functionNameCalled: string | null = null;
 
     const response = await streamingChat.get(
       {
@@ -192,7 +192,14 @@ test(
       },
       {
         onFunctionCall(value) {
-          finalFunctionCall = value;
+          functionNameCalled = value.name;
+
+          expect(value.arguments.category).toMatchInlineSnapshot(
+            '"BILLING_AND_PAYMENTS"',
+          );
+          expect(value.arguments.summary).toMatchInlineSnapshot(
+            '"Credit card charged twice"',
+          );
         },
       },
     );
@@ -204,15 +211,7 @@ test(
       parts.push(...part.choices);
     }
 
-    expect(finalFunctionCall).toMatchInlineSnapshot(`
-      {
-        "arguments": {
-          "category": "BILLING_AND_PAYMENTS",
-          "summary": "Credit card charged twice",
-        },
-        "name": "classifyMessage",
-      }
-    `);
+    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
 
     expect(parts).toMatchInlineSnapshot(`
       [
@@ -488,7 +487,7 @@ test(
       },
     ];
 
-    let finalFunctionCall: object | null = null;
+    let functionNameCalled: string | null = null;
 
     const response = await streamingChat.get(
       {
@@ -498,7 +497,14 @@ test(
       },
       {
         onFunctionCall(value) {
-          finalFunctionCall = value;
+          functionNameCalled = value.name;
+
+          expect(value.arguments.category).toMatchInlineSnapshot(
+            '"BILLING_AND_PAYMENTS"',
+          );
+          expect(value.arguments.summary).toMatchInlineSnapshot(
+            '"Credit card charged twice"',
+          );
         },
       },
     );
@@ -510,15 +516,8 @@ test(
       parts.push(...part.choices);
     }
 
-    expect(finalFunctionCall).toMatchInlineSnapshot(`
-      {
-        "arguments": {
-          "category": "BILLING_AND_PAYMENTS",
-          "summary": "Credit card charged twice",
-        },
-        "name": "classifyMessage",
-      }
-    `);
+    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
+
     expect(parts).toMatchInlineSnapshot(`
       [
         {

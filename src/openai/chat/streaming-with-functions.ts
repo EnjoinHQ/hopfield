@@ -230,6 +230,13 @@ export class OpenAIChatWithFunctionsStreaming<
     this.provider = props.provider;
   }
 
+  /**
+   * Gets a streaming LLM response.
+   *
+   * Options include an `onDone` callback which is called when the async iterator has completed, an
+   * `onChunk` callback which is called on each value in the stream, as well as an `onFunctionCall`
+   * callback for when valid function call parameters have been streamed in.
+   */
   async get(
     input: InferInput<
       OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
@@ -257,10 +264,6 @@ export class OpenAIChatWithFunctionsStreaming<
     const functionSchema = this.functionReturnTypes;
 
     const asyncIterator = {
-      /**
-       * Includes an `onDone` callback which is called when the async iterator has completed, as
-       * well as a `onChunk` callback which is called on each value in the stream.
-       */
       [Symbol.asyncIterator]: async function* () {
         const iteratedValues: InferResult<
           OpenAIChatWithFunctionsStreaming<Provider, ModelName, N, Functions>
@@ -286,7 +289,7 @@ export class OpenAIChatWithFunctionsStreaming<
                         name?: string;
                       };
                     }
-                  )?.function_call?.name,
+                  )?.function_call?.name ?? '',
               )
               .join('');
             const functionArguments = iteratedValues
@@ -299,17 +302,17 @@ export class OpenAIChatWithFunctionsStreaming<
                         arguments?: string;
                       };
                     }
-                  )?.function_call?.arguments,
+                  )?.function_call?.arguments ?? '',
               )
               .join('');
 
-            const functionCall = await functionSchema.safeParseAsync({
+            const parsedCall = await functionSchema.safeParseAsync({
               name: functionName,
               arguments: functionArguments,
             });
 
-            if (functionCall.success) {
-              await opts?.onFunctionCall?.(functionCall.data);
+            if (parsedCall.success) {
+              await opts?.onFunctionCall?.(parsedCall.data);
             }
           }
 
