@@ -50,6 +50,6 @@ const concatenateMarkdownFiles = async (
 };
 
 const inputFolder = `${process.env.INIT_CWD}/docs`;
-const outputFile = `${process.env.INIT_CWD}/examples/next-13-openai/src/app/docs.ts`;
+const outputFile = `${process.env.INIT_CWD}/examples/next-13/src/app/docs.ts`;
 
 concatenateMarkdownFiles(inputFolder, outputFile);

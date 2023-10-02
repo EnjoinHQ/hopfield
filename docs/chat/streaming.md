@@ -30,9 +30,26 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
   },
 ];
 
-const response = await chat.get({
-  messages,
-});
+const response = await chat.get(
+  {
+    messages,
+  },
+  {
+    onChunk: async (value) => {
+      console.log(`Received chunk type: ${value.choices[0].__type}`);
+      // do something on the server with each individual chunk as it is
+      // streamed in
+    },
+    onDone: async (chunks) => {
+      console.log(`Total chunks received: ${chunks.length}`);
+      // do something on the server when the chat completion is done
+      // this can be caching the response, storing in a database, etc.
+      //
+      // `chunks` is an array of all the streamed responses, so you
+      // can access the raw content and combine how you'd like
+    },
+  }
+);
 
 // store all of the streaming chat chunks
 const parts: hop.inferResult<typeof chat>[] = [];
