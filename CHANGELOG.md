@@ -1,5 +1,12 @@
 # hopfield
 
+## 0.2.1
+
+### Patch Changes
+
+- [#14](https://github.com/propology/hopfield/pull/14) [`5c29dec`](https://github.com/propology/hopfield/commit/5c29dec3ae8f0866513a9648b8f6563df5c48118) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added a `ReadableStream` to the response from the Streaming Chat provider and removed `readableFromAsyncIterable`
+  from the exports, to simplify integration.
+
 ## 0.2.0
 
 ### Minor Changes
