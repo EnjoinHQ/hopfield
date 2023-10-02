@@ -8,7 +8,7 @@ export default defineConfig({
     },
     coverage: {
       exclude: [
-        'src/test/**',
+        'src/_test/**',
         'src/**/*.test.ts',
         'src/**/*.integration.ts',
         'src/**/index.ts',
