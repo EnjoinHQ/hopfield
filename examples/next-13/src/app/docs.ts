@@ -9,26 +9,24 @@ Hopfield empowers developers to seamlessly fetch and stream data directly into N
 
 ## Overview
 
-Hopfield provides a readableStream which can be used to build recursive React Server Components.
+Hopfield streaming chat provides a readableStream() which can be used to build recursive React Server Components.
 
-The readableStream from Hopfield's streaming chat provider uses [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)
-(available in Node 18+) to easily work with recursion. The stream handles backpressure with a pull-based approach.
+The readableStream() from Hopfield's streaming chat provider returns a [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) (available in Node 18+, or it can be polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).).
 
-::: info Backpressure
+::: info Non-streaming
 
-See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure.
-For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
+If you are not interested in using streaming, you can use the non-streaming chat provider easily with a simple RSC
+that awaits the full response from chat.get(). This is not shown below, but is a much simpler integration that does not
+include any custom code for streaming token by token.
+
+:::
+
+### Backpressure
+
+The readable stream handles backpressure with a pull-based approach. See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure. For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
 [vercel/ai docs](https://sdk.vercel.ai/docs/concepts/backpressure-and-cancellation).
 
-:::
-
 ## Usage
-
-::: danger Node.js
-
-ReadableStream requires Node.js 18+ or polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).
-
-:::
 
 Here's how to use Hopfield with a recursive React Server Component using Suspense:
 
@@ -45,7 +43,11 @@ const hopfield = hop.client(openai).provider(openaiClient);
 // Create a streaming chat provider
 const chat = hopfield.chat("gpt-3.5-turbo-16k-0613").streaming();
 
-export async function ChatResponse() {
+export type ChatResponseProps = {
+  prompt: string;
+};
+
+export async function ChatResponse({ prompt }: ChatResponseProps) {
   // construct messages with hop.inferMessageInput
   const messages: hop.inferMessageInput<typeof chat>[] = [
     {
@@ -54,7 +56,7 @@ export async function ChatResponse() {
     },
     {
       role: "user",
-      content: "How do you make pumpkin pie?",
+      content: prompt,
     },
   ];
 
@@ -74,6 +76,8 @@ export async function ChatResponse() {
         // chunks is an array of all the streamed responses, so you
         // can access the raw content and combine how you'd like
       },
+      // if you are using function calling, you can also add a onFunctionCall
+      // here with zod-parsed arguments
     }
   );
 
@@ -132,8 +136,11 @@ async function RecursiveTokens({ reader }: RecursiveTokensProps) {
 const LoadingDots = () => <span>...</span>;
 
 
+We create a recursive React Server Component which uses Suspense boundaries to await each token,
+and show a fallback loading indicator where the next token will be rendered.
+
 See our [Next 13 RSC example](https://next-13.hopfield.ai) for a real-world integration
-using Vercel.
+using Vercel, similar to this quick example.
 
 ### Dive Deeper
 
@@ -780,6 +787,94 @@ const thirdEmbeddingLength = response.data[2].embedding.length;
 '
 
 '---
+description: "Hopfield makes streaming with LLM function calling seamless."
+title: "Chat - Functions with Streaming"
+---
+
+# Functions with Streaming
+
+Hopfield makes it easy to use streaming with function calling.
+You define validation-driven functions which get passed to the LLM.
+
+## Usage
+
+Use streaming function calling like:
+
+ts twoslash
+const takeAction = async (
+  name: string,
+  args: {
+    location: string;
+    unit: "celsius" | "fahrenheit";
+  }
+) => {};
+// ---cut---
+import z from "zod";
+import hop from "hopfield";
+import openai from "hopfield/openai";
+import OpenAI from "openai";
+
+const hopfield = hop.client(openai).provider(new OpenAI());
+
+const weatherFunction = hopfield.function({
+  name: "getCurrentWeather",
+  description: "Get the current weather in a given location",
+  parameters: z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+    unit: z
+      .enum(["celsius", "fahrenheit"])
+      .describe(hopfield.template().enum("The unit for the temperature.")),
+  }),
+});
+
+const chat = hopfield.chat().streaming().functions([weatherFunction]);
+
+const messages: hop.inferMessageInput<typeof chat>[] = [
+  {
+    role: "user",
+    content: "What's the weather in San Jose?",
+  },
+];
+
+const response = await chat.get(
+  {
+    messages,
+  },
+  {
+    onChunk(chunk) {
+      console.log(Received chunk type: \${chunk.choices[0].__type});
+      // do something on the server with each individual chunk as it is
+      // streamed in
+    },
+    onDone(chunks) {
+      console.log(Total chunks received: \${chunks.length});
+      // do something on the server when the chat completion is done
+      // this can be caching the response, storing in a database, etc.
+      //
+      // chunks is an array of all the streamed responses, so you
+      // can access the raw content and combine how you'd like
+    },
+    async onFunctionCall(fn) {
+      // do something based on the function call result - this
+      // is parsed by your function definition with zod, and
+      // the arguments are coerced into the object shape you expect
+      await takeAction(fn.name, fn.arguments);
+      //                              ^?
+    },
+  }
+);
+
+
+::: info Feedback
+
+To influence these features, reach out on [Discord](https://discord.gg/2hag5fc6) or
+[Github Discussions](https://github.com/propology/hopfield/discussions).
+We want your feedback!
+
+:::
+'
+
+'---
 description: "An overview of working with chat models in Hopfield."
 title: "Overview of Chat Models"
 ---
@@ -922,9 +1017,26 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
   },
 ];
 
-const response = await chat.get({
-  messages,
-});
+const response = await chat.get(
+  {
+    messages,
+  },
+  {
+    onChunk: async (value) => {
+      console.log(Received chunk type: \${value.choices[0].__type});
+      // do something on the server with each individual chunk as it is
+      // streamed in
+    },
+    onDone: async (chunks) => {
+      console.log(Total chunks received: \${chunks.length});
+      // do something on the server when the chat completion is done
+      // this can be caching the response, storing in a database, etc.
+      //
+      // chunks is an array of all the streamed responses, so you
+      // can access the raw content and combine how you'd like
+    },
+  }
+);
 
 // store all of the streaming chat chunks
 const parts: hop.inferResult<typeof chat>[] = [];
@@ -1240,22 +1352,6 @@ type HopfieldFunctionOptions = {
   disabledTypes?: ZodFirstPartyTypeKind[] | false;
 };
 
-
-## Roadmap
-
-We have more plans for the features we build for function calling.
-
-**Streaming arguments validation:** we are working on adding support for validating the arguments which are
-streamed back from a provider. Currently, streaming responses are not fully validated against the input schema,
-due to receiving the response content in chunks.
-
-::: info Feedback
-
-To influence these features, reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions).
-We want your feedback!
-
-:::
 '
 
 '`;
