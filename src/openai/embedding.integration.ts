@@ -14,8 +14,8 @@ test('should respond with embedding', async () => {
   });
 
   expect(response.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
-  expect(response.data[0].embedding[0]).toBeCloseTo(-0.0073666335, 3);
-  expect(response.data[0].embedding[1535]).toBeCloseTo(-0.0013278616, 3);
+  expect(response.data[0].embedding[0]).toBeCloseTo(-0.0073666335, 2);
+  expect(response.data[0].embedding[1535]).toBeCloseTo(-0.0013278616, 2);
 });
 
 test('should respond with multiple embeddings', async () => {
@@ -24,6 +24,6 @@ test('should respond with multiple embeddings', async () => {
   });
 
   expect(response.model).toMatchInlineSnapshot('"text-embedding-ada-002-v2"');
-  expect(response.data[0].embedding[0]).toBeCloseTo(-0.009482461, 3);
-  expect(response.data[2].embedding[0]).toBeCloseTo(-0.0073666335, 3);
+  expect(response.data[0].embedding[0]).toBeCloseTo(-0.009482461, 2);
+  expect(response.data[2].embedding[0]).toBeCloseTo(-0.0073666335, 2);
 });

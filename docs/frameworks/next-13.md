@@ -24,6 +24,12 @@ For a more detailed explanation on "backpressure" and how it factors into stream
 
 ## Usage
 
+::: danger Node.js
+
+`ReadableStream` requires Node.js 18+ or polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).
+
+:::
+
 Here's how to use Hopfield with a recursive React Server Component using Suspense:
 
 ```tsx
@@ -126,12 +132,8 @@ async function RecursiveTokens({ reader }: RecursiveTokensProps) {
 const LoadingDots = () => <span>...</span>;
 ```
 
-::: info Next 13 Example
-
 See our [Next 13 RSC example](https://next-13.hopfield.ai) for a real-world integration
 using Vercel.
-
-:::
 
 ### Dive Deeper
 
