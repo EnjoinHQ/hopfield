@@ -1,6 +1,6 @@
-import Image from "next/image";
-import gh from "../../public/github-mark-white.svg";
-import hopfield from "../../public/hopfield-w-text.png";
+import Image from 'next/image';
+import gh from '../../public/github-mark-white.svg';
+import hopfield from '../../public/hopfield-w-text.png';
 
 export function Footer() {
   return (
