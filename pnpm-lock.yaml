@@ -132,7 +132,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
 
-  examples/next-13-openai:
+  examples/next-13:
     dependencies:
       '@vercel/kv':
         specifier: latest

@@ -139,6 +139,10 @@ export default withTwoslash(
                 link: '/chat/overview',
               },
               {
+                text: 'Prompt Templates',
+                link: '/chat/templates',
+              },
+              {
                 text: 'Non-streaming',
                 link: '/chat/non-streaming',
               },
@@ -147,12 +151,12 @@ export default withTwoslash(
                 link: '/chat/streaming',
               },
               {
-                text: 'Prompt Templates',
-                link: '/chat/templates',
-              },
-              {
                 text: 'Functions',
                 link: '/chat/functions',
+              },
+              {
+                text: 'Functions w/ Streaming',
+                link: '/chat/functions-streaming',
               },
             ],
           },

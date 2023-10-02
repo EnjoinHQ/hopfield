@@ -9,26 +9,24 @@ Hopfield empowers developers to seamlessly fetch and stream data directly into N
 
 ## Overview
 
-Hopfield provides a `readableStream` which can be used to build recursive React Server Components.
+Hopfield streaming chat provides a `readableStream()` which can be used to build recursive React Server Components.
 
-The `readableStream` from Hopfield's streaming chat provider uses [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)
-(available in Node 18+) to easily work with recursion. The stream handles backpressure with a pull-based approach.
+The `readableStream()` from Hopfield's streaming chat provider returns a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) (available in Node 18+, or it can be polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).).
 
-::: info Backpressure
+::: info Non-streaming
 
-See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure.
-For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
+If you are not interested in using streaming, you can use the non-streaming chat provider easily with a simple RSC
+that awaits the full response from `chat.get()`. This is not shown below, but is a much simpler integration that does not
+include any custom code for streaming token by token.
+
+:::
+
+### Backpressure
+
+The readable stream handles backpressure with a pull-based approach. See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure. For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
 [`vercel/ai` docs](https://sdk.vercel.ai/docs/concepts/backpressure-and-cancellation).
 
-:::
-
 ## Usage
-
-::: danger Node.js
-
-`ReadableStream` requires Node.js 18+ or polyfilled with a library like [web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill).
-
-:::
 
 Here's how to use Hopfield with a recursive React Server Component using Suspense:
 
@@ -45,7 +43,11 @@ const hopfield = hop.client(openai).provider(openaiClient);
 // Create a streaming chat provider
 const chat = hopfield.chat("gpt-3.5-turbo-16k-0613").streaming();
 
-export async function ChatResponse() {
+export type ChatResponseProps = {
+  prompt: string;
+};
+
+export async function ChatResponse({ prompt }: ChatResponseProps) {
   // construct messages with hop.inferMessageInput
   const messages: hop.inferMessageInput<typeof chat>[] = [
     {
@@ -54,7 +56,7 @@ export async function ChatResponse() {
     },
     {
       role: "user",
-      content: "How do you make pumpkin pie?",
+      content: prompt,
     },
   ];
 
@@ -74,6 +76,8 @@ export async function ChatResponse() {
         // `chunks` is an array of all the streamed responses, so you
         // can access the raw content and combine how you'd like
       },
+      // if you are using function calling, you can also add a onFunctionCall
+      // here with zod-parsed arguments
     }
   );
 
@@ -132,8 +136,11 @@ async function RecursiveTokens({ reader }: RecursiveTokensProps) {
 const LoadingDots = () => <span>...</span>;
 ```
 
+We create a recursive React Server Component which uses Suspense boundaries to `await` each token,
+and show a fallback loading indicator where the next token will be rendered.
+
 See our [Next 13 RSC example](https://next-13.hopfield.ai) for a real-world integration
-using Vercel.
+using Vercel, similar to this quick example.
 
 ### Dive Deeper
 
