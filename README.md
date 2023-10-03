@@ -116,15 +116,7 @@ Oh, and liking Typescript is a nice-to-have.
 ## Install
 
 ```bash
-pnpm add hopfield
-```
-
-```bash
 npm i hopfield
-```
-
-```bash
-yarn add hopfield
 ```
 
 ## Documentation

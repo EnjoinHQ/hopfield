@@ -1,6 +1,7 @@
 name: Verify
 on:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -9,14 +10,16 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
-
       - name: Lint code
-        run: pnpm lint
+        run: bun format && bun lint:fix
+      
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'chore: format'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
 
   build:
     name: Build
@@ -31,7 +34,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Build
-        run: pnpm build
+        run: bun run build
 
   types:
     name: Types
@@ -49,19 +52,13 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Use `typescript@${{ matrix.version }}`
-        run: pnpm add -D -w typescript@${{ matrix.version }}
-
-      - name: Build
-        run: pnpm build
+        run: bun i -d typescript@${{ matrix.typescript-version }}
         
       - name: Check types
-        run: pnpm typecheck
-
-      - name: Check types (--exactOptionalPropertyTypes false)
-        run: pnpm typecheck:propertyTypes
+        run: bun run typecheck
           
       - name: Test types
-        run: pnpm test:typecheck
+        run: bun run test:typecheck
 
   test:
     name: Test

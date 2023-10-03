@@ -1,7 +1,7 @@
-diff --git a/src/Options.d.ts b/src/Options.d.ts
-index abfb7a23b94e2244d3529eb92ce540b7778f27c2..ca546fcc2b54d447a32f4c51abccdbbdddea55a2 100644
---- a/src/Options.d.ts
-+++ b/src/Options.d.ts
+diff --git a/node_modules/zod-to-json-schema/src/Options.d.ts b/node_modules/zod-to-json-schema/src/Options.d.ts
+index abfb7a2..ca546fc 100644
+--- a/node_modules/zod-to-json-schema/src/Options.d.ts
++++ b/node_modules/zod-to-json-schema/src/Options.d.ts
 @@ -1,4 +1,6 @@
 -import { ZodSchema } from "zod";
 +import { ZodSchema, type ZodTypeDef } from "zod";
@@ -18,10 +18,10 @@ index abfb7a23b94e2244d3529eb92ce540b7778f27c2..ca546fcc2b54d447a32f4c51abccdbbd
  };
  export declare const defaultOptions: Options;
  export declare const getDefaultOptions: <Target extends Targets>(options: string | Partial<Options<Target>> | undefined) => Options<Target>;
-diff --git a/src/Options.js b/src/Options.js
-index 8b680c494e08a7b068cd505eef9c37a19be40523..ed84e25390fbd99f0c0f8f233dd43f219b8e1234 100644
---- a/src/Options.js
-+++ b/src/Options.js
+diff --git a/node_modules/zod-to-json-schema/src/Options.js b/node_modules/zod-to-json-schema/src/Options.js
+index 8b680c4..ed84e25 100644
+--- a/node_modules/zod-to-json-schema/src/Options.js
++++ b/node_modules/zod-to-json-schema/src/Options.js
 @@ -15,6 +15,7 @@ exports.defaultOptions = {
      errorMessages: false,
      markdownDescription: false,
@@ -30,10 +30,10 @@ index 8b680c494e08a7b068cd505eef9c37a19be40523..ed84e25390fbd99f0c0f8f233dd43f21
  };
  const getDefaultOptions = (options) => (typeof options === "string"
      ? Object.assign(Object.assign({}, exports.defaultOptions), { name: options }) : Object.assign(Object.assign({}, exports.defaultOptions), options));
-diff --git a/src/parseDef.js b/src/parseDef.js
-index 4f33785322590999d31593cdcbdb174175930799..26748a81097c8264835ea3e059bc8440fae00d54 100644
---- a/src/parseDef.js
-+++ b/src/parseDef.js
+diff --git a/node_modules/zod-to-json-schema/src/parseDef.js b/node_modules/zod-to-json-schema/src/parseDef.js
+index 4f33785..26748a8 100644
+--- a/node_modules/zod-to-json-schema/src/parseDef.js
++++ b/node_modules/zod-to-json-schema/src/parseDef.js
 @@ -45,6 +45,7 @@ function parseDef(def, refs, forceResolution = false // Forces a new schema to b
      const jsonSchema = selectParser(def, def.typeName, refs);
      if (jsonSchema) {

@@ -1,4 +1,4 @@
-import { expect, test } from 'bun:test';
+import { expect, test } from 'vitest';
 
 import hop from 'hopfield';
 import openai from 'hopfield/openai';

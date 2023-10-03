@@ -1,94 +1,31 @@
 {
-  "name": "hopfield",
-  "description": "Typescript-first LLM framework with static type inference, testability, and composability.",
-  "version": "0.2.3",
-  "license": "MIT",
-  "repository": "propology/hopfield",
-  "scripts": {
-    "bench": "vitest bench",
-    "build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
-    "build:cjs": "tsc --project tsconfig.build.json --module nodenext --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm": "tsc --project tsconfig.build.json --module es2015 --moduleResolution bundler --outDir ./dist/esm --removeComments && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
-    "build:types": "tsc --project tsconfig.build.json --module esnext --moduleResolution bundler --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
-    "changeset": "changeset",
-    "changeset:release": "pnpm build && changeset publish",
-    "changeset:version": "changeset version && pnpm install --lockfile-only && pnpm bun scripts/updateVersion.ts",
-    "clean": "rimraf dist *.tsbuildinfo",
-    "docs:dev": "pnpm -r --filter docs dev",
-    "docs:build": "pnpm -r --filter docs build",
-    "docs:preview": "pnpm -r --filter docs preview",
-    "format": "biome format . --write",
-    "generate": "pnpm bun scripts/concatDocs.ts",
-    "lint": "biome check .",
-    "lint:fix": "pnpm lint --apply",
-    "postinstall": "pnpm generate",
-    "preinstall": "npx only-allow pnpm",
-    "prepare": "npx simple-git-hooks",
-    "prepublishOnly": "pnpm bun scripts/prepublishOnly.ts",
-    "test": "vitest",
-    "test:cov": "vitest run --config vitest.integration.config.ts --coverage",
-    "test:integration": "vitest --config vitest.integration.config.ts",
-    "test:typecheck": "vitest typecheck --no-threads",
-    "test:update": "vitest --update",
-    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
-    "typecheck": "tsc --noEmit",
-    "typecheck:propertyTypes": "tsc --noEmit --exactOptionalPropertyTypes false"
-  },
-  "files": [
-    "dist",
-    "!dist/**/*.tsbuildinfo",
-    "src/**/*.ts",
-    "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts",
-    "!src/**/*.bench.ts"
-  ],
-  "sideEffects": false,
+  "workspaces": ["examples/*", "docs", "src", "test"],
+  "private": true,
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
-  "typings": "./dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    },
-    "./openai": {
-      "types": "./dist/types/openai/index.d.ts",
-      "import": "./dist/esm/openai/index.js",
-      "require": "./dist/cjs/openai/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "typesVersions": {
-    "*": {
-      "openai": [
-        "./dist/types/openai/index.d.ts"
-      ]
-    }
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "keywords": [
-    "ai",
-    "openai",
-    "gpt",
-    "ai-tools"
-  ],
-  "peerDependencies": {
-    "openai": ">=4.0.0",
-    "typescript": ">=5.1.3",
-    "zod": "^3 >=3.21.4"
-  },
-  "peerDependenciesMeta": {
-    "openai": {
-      "optional": true
-    },
-    "typescript": {
-      "optional": true
-    }
+  "scripts": {
+    "build": "bun run clean && bun run build:cjs && bun run build:esm && bun run build:types",
+    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./src/_cjs --removeComments --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./src/_cjs/package.json",
+    "build:esm": "tsc --project ./tsconfig.build.json --module es2022 --outDir ./src/_esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./src/_esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./src/_types --emitDeclarationOnly --declaration --declarationMap",
+    "changeset": "changeset",
+    "changeset:release": "bun run build && bun run prepublishOnly && changeset publish",
+    "changeset:version": "changeset version && bun scripts/updateVersion.ts && bun install --lockfile-only",
+    "clean": "rimraf src/_esm src/_cjs src/_types *.tsbuildinfo",
+    "docs:dev": "cd docs && bun run dev",
+    "format": "biome format . --write",
+    "generate": "bun scripts/concatDocs.ts",
+    "lint": "biome check .",
+    "lint:fix": "bun run lint --apply",
+    "postinstall": "bun run generate",
+    "preinstall": "bun ./scripts/preinstall.ts",
+    "prepare": "bun x simple-git-hooks",
+    "prepublishOnly": "bun scripts/prepublishOnly.ts",
+    "test": "vitest -c ./test/vitest.config.ts dev",
+    "test:cov": "vitest run -c ./test/vitest.integration.config.ts --coverage",
+    "test:integration": "vitest -c ./test/vitest.integration.config.ts",
+    "test:typecheck": "vitest typecheck -c ./test/vitest.config.ts --no-threads",
+    "trace": "tsc --noEmit --generateTrace ./trace --incremental false --project playground/tsconfig.json",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",
@@ -97,7 +34,6 @@
     "@types/fs-extra": "^11.0.2",
     "@types/json-schema": "^7.0.13",
     "@types/node": "20.8.1",
-    "@vitest/coverage-v8": "^0.34.6",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "bun": "^1.0.3",
@@ -107,29 +43,11 @@
     "openai": "4.11.0",
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.9.0",
-    "typescript": "5.2.2",
-    "vitest": "^0.34.6",
+    "typescript": "5.1.3",
+    "which-pm-runs": "1.1.0",
     "zod": "^3.22.2"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm format && pnpm lint:fix"
-  },
-  "packageManager": "pnpm@8.6.5",
-  "pnpm": {
-    "overrides": {
-      "remark-shiki-twoslash>shiki": "^0.14.1",
-      "shiki-twoslash>shiki": "^0.14.1"
-    },
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@algolia/client-search"
-      ]
-    },
-    "patchedDependencies": {
-      "zod-to-json-schema@3.21.4": "patches/zod-to-json-schema@3.21.4.patch"
-    }
-  },
-  "dependencies": {
-    "zod-to-json-schema": "^3.21.4"
+    "pre-commit": "bun run format && bun run lint:fix"
   }
 }

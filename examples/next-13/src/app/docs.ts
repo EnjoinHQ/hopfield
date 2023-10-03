@@ -219,8 +219,8 @@ bash [npm]
 npm i hopfield zod
 
 
-bash [yarn]
-yarn add hopfield zod
+bash [bun]
+bun i hopfield zod
 
 
 :::
@@ -395,8 +395,8 @@ bash [npm]
 npm i hopfield zod
 
 
-bash [yarn]
-yarn add hopfield zod
+bash [bun]
+bun i hopfield zod
 
 
 :::

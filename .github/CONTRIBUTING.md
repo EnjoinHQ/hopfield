@@ -15,7 +15,7 @@ If you want to contribute, but aren't sure where to start, you can create a [new
 This guide is intended to help you get started with contributing. By following these steps, you will understand the development process and workflow.
 
 1. [Cloning the repository](#cloning-the-repository)
-2. [Installing Node.js and pnpm](#installing-nodejs-and-pnpm)
+2. [Installing Node.js and Bun](#installing-nodejs-and-bun)
 3. [Installing dependencies](#installing-dependencies)
 4. [Running tests](#running-tests)
 5. [Writing documentation](#writing-documentation)
@@ -51,21 +51,21 @@ gh repo clone propology/hopfield
   <a href="#basic-guide">&uarr; back to top</a></b>
 </div>
 
-## Installing Node.js and pnpm
+### Installing Node.js and Bun
 
-Hopfield uses [pnpm](https://pnpm.io) as its package manager. You need to install **Node.js v16 or higher** and **pnpm v7 or higher**.
+wagmi uses [Bun workspaces](https://bun.sh/docs/install/workspaces) to manage multiple projects. You need to install **Node.js v18 or higher** and **Bun v1 or higher**.
 
-You can run the following commands in your terminal to check your local Node.js and npm versions:
+You can run the following commands in your terminal to check your local Node.js and Bun versions:
 
 ```bash
 node -v
-pnpm -v
+bun -v
 ```
 
-If the versions are not correct or you don't have Node.js or pnpm installed, download and follow their setup instructions:
+If the versions are not correct or you don't have Node.js or Bun installed, download and follow their setup instructions:
 
 - Install Node.js using [fnm](https://github.com/Schniz/fnm) or from the [official website](https://nodejs.org)
-- Install [pnpm](https://pnpm.io/installation)
+- Install [Bun](https://bun.sh/docs/installation)
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -76,10 +76,10 @@ If the versions are not correct or you don't have Node.js or pnpm installed, dow
 Once in the project's root directory, run the following command to install the project's dependencies:
 
 ```bash
-pnpm install
+bun install
 ```
 
-After the install completes, pnpm links packages across the project for development and [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
+After the install completes, Bun links packages across the project for development and [git hooks](https://github.com/toplenboren/simple-git-hooks) are set up.
 
 <div align="right">
   <a href="#basic-guide">&uarr; back to top</a></b>
@@ -87,11 +87,10 @@ After the install completes, pnpm links packages across the project for developm
 
 ## Running tests
 
-Tests are run with [Vitest](https://vitest.dev/guide/testing-types.html):
+Tests are run with bun test:
 
 ```bash
-pnpm test
-pnpm test:typecheck
+bun run test
 ```
 
 <div align="right">
@@ -103,7 +102,7 @@ pnpm test:typecheck
 Documentation lives in the `docs` directory and in code using [TSDoc](https://tsdoc.org). If you think something is unclear or could be explained better, you are welcome to open a pull request. To run the docs site, run the following command:
 
 ```bash
-pnpm docs:dev
+bun run docs:dev
 ```
 
 <div align="right">
@@ -143,7 +142,7 @@ When adding new features or fixing bugs, we'll need to bump the package versions
 
 Each changeset defines which package(s) should be published and whether the change should be a major/minor/patch release, as well as providing release notes that will be added to the changelog upon release.
 
-To create a new changeset, run `pnpm changeset`. This will run the Changesets CLI, prompting you for details about the change. You’ll be able to edit the file after it’s created — don’t worry about getting everything perfect up front.
+To create a new changeset, run `bun run changeset`. This will run the Changesets CLI, prompting you for details about the change. You’ll be able to edit the file after it’s created — don’t worry about getting everything perfect up front.
 
 Even though you can technically use any markdown formatting you like, headings should be avoided since each changeset will ultimately be nested within a bullet list. Instead, bold text should be used as section headings.
 
