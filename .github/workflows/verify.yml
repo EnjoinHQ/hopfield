@@ -82,10 +82,10 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Use `typescript@${{ matrix.version }}`
-        run: pnpm add -D -w typescript@${{ matrix.version }}
+        run: bun add -D -w typescript@${{ matrix.version }}
 
       - name: Run tests
-        run: pnpm test:cov
+        run: bun run test:cov
         env:
           VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
 
