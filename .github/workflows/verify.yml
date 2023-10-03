@@ -82,7 +82,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Use `typescript@${{ matrix.version }}`
-        run: bun add -D -w typescript@${{ matrix.version }}
+        run: bun i -D -w typescript@${{ matrix.version }}
 
       - name: Run tests
         run: bun run test:cov
