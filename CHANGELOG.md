@@ -1,10 +1,16 @@
 # hopfield
 
+## 0.2.3
+
+### Patch Changes
+
+- [`ebab940`](https://github.com/propology/hopfield/commit/ebab9405d231677ce8d0a8d0dbf8f7e92e8bbaed) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fixing issue with latest changeset release.
+
 ## 0.2.2
 
 ### Patch Changes
 
-- [#16](https://github.com/propology/hopfield/pull/16) [`5e27e92`](https://github.com/propology/hopfield/commit/5e27e9236bd12860da6f5e9824c13ae0e12daebe) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added `onFunctionCall` to streaming function provider to enable workflows that validate final function calls while also streaming responses. 
+- [#16](https://github.com/propology/hopfield/pull/16) [`5e27e92`](https://github.com/propology/hopfield/commit/5e27e9236bd12860da6f5e9824c13ae0e12daebe) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added `onFunctionCall` to streaming function provider to enable workflows that validate final function calls while also streaming responses.
 
 ## 0.2.1
 
