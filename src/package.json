@@ -24,7 +24,9 @@
   },
   "description": "Typescript-first LLM framework with static type inference, testability, and composability.",
   "files": [
-    "*",
+    "_esm",
+    "_cjs",
+    "_types",
     "!**/*.tsbuildinfo",
     "!**/*.test.ts",
     "!**/*.test-d.ts",
