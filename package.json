@@ -16,7 +16,7 @@
     "generate": "bun scripts/concatDocs.ts",
     "lint": "biome check .",
     "lint:fix": "bun run lint --apply",
-    "postinstall": "bun run generate",
+    "postinstall": "bun run generate && bun x patch-package",
     "preinstall": "bun ./scripts/preinstall.ts",
     "prepare": "bun x simple-git-hooks",
     "prepublishOnly": "bun scripts/prepublishOnly.ts",
