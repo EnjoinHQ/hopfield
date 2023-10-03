@@ -118,6 +118,10 @@ export type Tuple1536 = [
   ...Tuple32,
   ...Tuple32,
   ...Tuple32,
+  ...Tuple32,
+  ...Tuple32,
+  ...Tuple32,
+  ...Tuple32,
 ];
 
 /**
