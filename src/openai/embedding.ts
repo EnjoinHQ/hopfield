@@ -1,5 +1,5 @@
 import { BaseHopfieldEmbedding } from '../embedding.js';
-import type { LimitedTuple, Tuple, Tuple256 } from '../type-utils.js';
+import type { LimitedTuple, Tuple, Tuple1536 } from '../type-utils.js';
 
 import {
   type OpenAIEmbeddingModelName,
@@ -7,15 +7,6 @@ import {
 } from './models.js';
 import OpenAI from 'openai';
 import { ZodArray, ZodNumber, ZodString, z } from 'zod';
-
-type Tuple1536 = [
-  ...Tuple256,
-  ...Tuple256,
-  ...Tuple256,
-  ...Tuple256,
-  ...Tuple256,
-  ...Tuple256,
-];
 
 export interface EmbeddingLengths
   extends Record<OpenAIEmbeddingModelName, ZodNumber[]> {

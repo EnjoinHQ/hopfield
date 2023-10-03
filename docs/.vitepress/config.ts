@@ -2,7 +2,7 @@ import footNote from 'markdown-it-footnote';
 import { defineConfig } from 'vitepress';
 import { withTwoslash } from 'vitepress-plugin-shiki-twoslash';
 
-import { version } from '../../package.json';
+import { version } from '../../src/package.json';
 import pkg from 'typescript';
 const { ScriptTarget } = pkg;
 

@@ -147,7 +147,7 @@ export class OpenAIChatSchema<
 
   functions<NewFunctions extends OpenAIFunctionsTuple,>(
     functions: NewFunctions,
-  ) {
+  ): OpenAIChatWithFunctionsSchema<ModelName, N, NewFunctions> {
     return new OpenAIChatWithFunctionsSchema({
       model: this.model,
       n: this._n,
@@ -203,7 +203,7 @@ export class OpenAIChat<
 
   override functions<NewFunctions extends OpenAIFunctionsTuple,>(
     functions: NewFunctions,
-  ) {
+  ): OpenAIChatWithFunctions<Provider, ModelName, N, NewFunctions> {
     return new OpenAIChatWithFunctions({
       provider: this.provider,
       model: this.model,
