@@ -25,11 +25,7 @@ export type StreamingWithFunctionsOptions<F, T> = StreamingOptions<T> & {
 };
 
 export type InferStreamingResult<Chat extends BaseHopfieldSchema> =
-  StreamingResult<InferStreamingChunk<Chat>>;
-
-export type InferStreamingChunk<Chat extends BaseHopfieldSchema> = z.infer<
-  Chat['returnType']
->;
+  StreamingResult<InferResult<Chat>>;
 
 export type InferResult<Chat extends BaseHopfieldSchema> = z.infer<
   Chat['returnType']

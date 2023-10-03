@@ -2,9 +2,9 @@ import {
   type InferInput,
   type InferInputMessage,
   type InferResult,
-  type InferStreamingChunk,
   type InferStreamingResult,
   type StreamingOptions,
+  type StreamingWithFunctionsOptions,
 } from './chat.js';
 import type { BaseHopfield } from './provider.js';
 
@@ -12,9 +12,9 @@ export type {
   InferInput as inferInput,
   InferInputMessage as inferMessageInput,
   InferResult as inferResult,
-  InferStreamingChunk as inferStreamingChunk,
   InferStreamingResult as inferStreamingResult,
   StreamingOptions,
+  StreamingWithFunctionsOptions,
 };
 
 export * from './errors.js';

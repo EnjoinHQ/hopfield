@@ -43,7 +43,7 @@ export async function CodeChat() {
   ];
 
   // we add callbacks on chunk and when the stream is finished
-  const options: hop.StreamingOptions<hop.inferStreamingChunk<typeof chat>> = {
+  const options: hop.StreamingOptions<hop.inferResult<typeof chat>> = {
     onChunk: async (value) => {
       console.log(`Received chunk type: ${value.choices[0].__type}`);
     },
