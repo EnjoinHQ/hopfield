@@ -17,15 +17,7 @@ jobs:
         uses: ./.github/actions/install-dependencies
 
       - name: Lint code
-        run: bun format && bun lint:fix
-      
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commit_message: 'chore: format'
-          commit_user_name: 'github-actions[bot]'
-          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+        run: bun format && bun lint
 
   build:
     name: Build
