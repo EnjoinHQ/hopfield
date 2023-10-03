@@ -55,12 +55,27 @@
   },
   "size-limit": [
     {
-      "path": "src/_esm/*.js",
-      "limit": "50 kB"
+      "name": "hopfield (esm)",
+      "path": "src/_esm/index.js",
+      "limit": "1 KB",
+      "import": "*"
     },
     {
-      "path": "src/_cjs/*.js",
-      "limit": "50 kB"
+      "name": "hopfield (cjs)",
+      "path": "src/_cjs/index.js",
+      "limit": "1 KB"
+    },
+    {
+      "name": "hop (esm)",
+      "import": "{ hop }",
+      "path": "src/_esm/index.js",
+      "limit": "600 B"
+    },
+    {
+      "name": "hop (cjs)",
+      "import": "{ hop }",
+      "path": "src/_cjs/index.js",
+      "limit": "600 B"
     }
   ]
 }
