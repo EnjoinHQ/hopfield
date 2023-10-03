@@ -132,7 +132,7 @@ export class OpenAIEmbedding<
 
   async get(
     input: Omit<z.input<typeof this.parameters>, 'model'>,
-  ): Promise<z.infer<typeof this.returnType>> {
+  ): Promise<typeof this.returnType['_output']> {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.embeddings.create(

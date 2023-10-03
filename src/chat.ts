@@ -1,4 +1,3 @@
-import type { z } from 'zod';
 import { BaseHopfieldSchema } from './base.js';
 import type { AnyBaseHopfieldFunction } from './function.js';
 
@@ -27,16 +26,14 @@ export type StreamingWithFunctionsOptions<F, T> = StreamingOptions<T> & {
 export type InferStreamingResult<Chat extends BaseHopfieldSchema> =
   StreamingResult<InferResult<Chat>>;
 
-export type InferResult<Chat extends BaseHopfieldSchema> = z.infer<
-  Chat['returnType']
->;
+export type InferResult<Chat extends BaseHopfieldSchema> =
+  Chat['returnType']['_output'];
 
-export type InferInput<Chat extends BaseHopfieldSchema> = z.input<
-  Chat['parameters']
->;
+export type InferInput<Chat extends BaseHopfieldSchema> =
+  Chat['parameters']['_input'];
 
 export type InferInputMessage<Chat extends BaseHopfieldChat<any, any, any>> =
-  z.input<Chat['parameters']>['messages'][number];
+  Chat['parameters']['_input']['messages'][number];
 
 export const defaultChatN = 1;
 export type DefaultChatN = typeof defaultChatN;
