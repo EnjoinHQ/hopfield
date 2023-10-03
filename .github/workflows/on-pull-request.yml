@@ -13,8 +13,8 @@ jobs:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
 
-  # bench:
-  #   name: Benchmark
+  # size:
+  #   name: Size
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 5
 
@@ -24,23 +24,14 @@ jobs:
 
   #     - name: Install dependencies
   #       uses: ./.github/actions/install-dependencies
+      
+  #     - name: Set up pnpm
+  #       uses: pnpm/action-setup@v2
+  #       with:
+  #         version: latest
 
-  #     - name: Run benchmarks
-  #       run: pnpm bench
-
-  size:
-    name: Size
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
-
-      - name: Report build size
-        uses: preactjs/compressed-size-action@v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Report bundle size
+  #       uses: andresz1/size-limit-action@master
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         package_manager: pnpm

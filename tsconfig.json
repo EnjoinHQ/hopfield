@@ -3,5 +3,5 @@
   "extends": "./tsconfig.base.json",
   "include": ["src"],
   "exclude": [],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./scripts/tsconfig.json" }]
 }

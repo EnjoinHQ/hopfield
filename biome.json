@@ -2,11 +2,17 @@
   "$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
   "files": {
     "ignore": [
+      "_cjs",
+      "_esm",
+      "_types",
+      "**/node_modules",
       "CHANGELOG.md",
-      "pnpm-lock.yaml",
-      "trace/**",
+      "cache",
+      "test/contracts",
+      "coverage",
       "tsconfig.json",
-      "tsconfig.*.json"
+      "tsconfig.*.json",
+      "generated.ts"
     ]
   },
   "formatter": {

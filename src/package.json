@@ -1,0 +1,58 @@
+{
+  "name": "hopfield",
+  "version": "0.2.2",
+  "repository": "propology/hopfield",
+  "main": "./_cjs/index.js",
+  "module": "./_esm/index.js",
+  "peerDependencies": {
+    "openai": ">=4.0.0",
+    "typescript": ">=5.1.3",
+    "zod": "^3 >=3.21.4"
+  },
+  "exports": {
+    ".": {
+      "types": "./_types/index.d.ts",
+      "import": "./_esm/index.js",
+      "default": "./_cjs/index.js"
+    },
+    "./openai": {
+      "types": "./_types/openai/index.d.ts",
+      "import": "./_esm/openai/index.js",
+      "default": "./_cjs/openai/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "description": "Typescript-first LLM framework with static type inference, testability, and composability.",
+  "files": [
+    "_esm",
+    "_cjs",
+    "_types",
+    "!**/*.tsbuildinfo",
+    "!**/*.test.ts",
+    "!**/*.test-d.ts",
+    "!**/*.bench.ts",
+    "!tsconfig.build.json"
+  ],
+  "keywords": ["ai", "llm", "openai", "gpt", "ai-tools"],
+  "license": "MIT",
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "sideEffects": false,
+  "type": "module",
+  "types": "./_types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "openai": ["./_types/openai/index.d.ts"]
+    }
+  },
+  "typings": "./_types/index.d.ts",
+  "dependencies": {
+    "zod-to-json-schema": "^3.21.4"
+  }
+}

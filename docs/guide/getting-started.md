@@ -21,8 +21,8 @@ pnpm add hopfield zod
 npm i hopfield zod
 ```
 
-```bash [yarn]
-yarn add hopfield zod
+```bash [bun]
+bun i hopfield zod
 ```
 
 :::

@@ -13,6 +13,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "hopfield": "*"
+    "hopfield": "workspace:*"
   }
 }

@@ -1,7 +1,6 @@
 *.local
 .DS_Store
 .next
-.pnpm-debug.log*
 cache
 coverage
 dist
@@ -19,3 +18,8 @@ bench
 .env.production.local
 .envrc
 .dev.vars
+
+# build output
+_cjs
+_esm
+_types
