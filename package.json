@@ -20,6 +20,7 @@
     "preinstall": "bun ./scripts/preinstall.ts",
     "prepare": "bun x simple-git-hooks",
     "prepublishOnly": "bun scripts/prepublishOnly.ts",
+    "size": "size-limit",
     "test": "vitest -c ./test/vitest.config.ts dev",
     "test:cov": "vitest run -c ./test/vitest.integration.config.ts --coverage",
     "test:integration": "vitest -c ./test/vitest.integration.config.ts",
@@ -51,5 +52,15 @@
   },
   "simple-git-hooks": {
     "pre-commit": "bun run format && bun run lint:fix"
-  }
+  },
+  "size-limit": [
+    {
+      "path": "src/_esm/*.js",
+      "limit": "50 kB"
+    },
+    {
+      "path": "src/_cjs/*.js",
+      "limit": "50 kB"
+    }
+  ]
 }
