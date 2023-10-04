@@ -9,20 +9,20 @@ This section will help you start using Hopfield in your TypeScript project.
 
 ## Install
 
-First, you will need to install Hopfield, and a peer dependency, [Zod](https://github.com/colinhacks/zod).
+First, you will need to install Hopfield.
 
 ::: code-group
 
+```bash [bun]
+bun i hopfield
+```
+
 ```bash [pnpm]
-pnpm add hopfield zod
+pnpm add hopfield
 ```
 
 ```bash [npm]
-npm i hopfield zod
-```
-
-```bash [bun]
-bun i hopfield zod
+npm i hopfield
 ```
 
 :::

@@ -60,20 +60,20 @@ Hopfield is a Typescript-first large language model framework with static type i
 Easily validate LLM responses and inputs with strong types. Flexible abstractions
 with best practices baked in.
 
-Add it to your project, along with the `zod` peer dependency:
+Add it to your project, along with any peer dependencies:
 
 ::: code-group
 
+```bash [bun]
+bun i hopfield
+```
+
 ```bash [pnpm]
-pnpm add hopfield zod
+pnpm add hopfield
 ```
 
 ```bash [npm]
-npm i hopfield zod
-```
-
-```bash [bun]
-bun i hopfield zod
+npm i hopfield
 ```
 
 :::
