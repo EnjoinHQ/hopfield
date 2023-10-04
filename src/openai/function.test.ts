@@ -1,6 +1,9 @@
 import { describe, expect, it, test } from 'vitest';
 
-import { weatherFunction, weatherFunctionParams } from '../_test/function.js';
+import {
+  weatherFunction,
+  weatherFunctionParams,
+} from '../_test/openai-function.js';
 import * as Exports from './function.js';
 
 import hop from '../index.js';

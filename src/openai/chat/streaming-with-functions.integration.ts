@@ -1,10 +1,10 @@
-import { expect, test } from 'vitest';
+import { describe, test } from 'vitest';
 
-import { SupportCategoryEnum } from '../_test/zod.js';
-import { hop } from '../index.js';
+import { SupportCategoryEnum } from '../../_test/zod.js';
+import { hop } from '../../index.js';
 
-import { openAIClient } from '../_test/openai-client.js';
-import openai from './index.js';
+import { openAIClient } from '../../_test/openai-client.js';
+import openai from '../index.js';
 import { z } from 'zod';
 
 const TEST_TIMEOUT = 8_000;
@@ -22,198 +22,55 @@ const classifyMessage = hopfield.function({
   }),
 });
 
-const chat = hopfield.chat().functions([classifyMessage]);
+const streamingChat = hopfield.chat().functions([classifyMessage]).streaming();
 
-const streamingChat = chat.streaming();
+describe.concurrent('streaming with functions', () => {
+  test(
+    'should classify a support request',
+    async ({ expect }) => {
+      const messages: hop.inferMessageInput<typeof streamingChat>[] = [
+        {
+          role: 'system',
+          content: 'You are a helpful classification assistant.',
+        },
+        {
+          role: 'user',
+          content:
+            'I have an urgent problem with my credit card being charged twice and need help.',
+        },
+      ];
 
-test(
-  'should classify a support request',
-  async () => {
-    const messages: hop.inferMessageInput<typeof chat>[] = [
-      {
-        role: 'system',
-        content: 'You are a helpful classification assistant.',
-      },
-      {
-        role: 'user',
-        content:
-          'I have an urgent problem with my credit card being charged twice and need help.',
-      },
-    ];
+      let functionNameCalled: string | null = null;
 
-    const parsed = await chat.get({
-      messages,
-      temperature: 0,
-    });
+      const response = await streamingChat.get(
+        {
+          messages,
+          temperature: 0,
+        },
+        {
+          onFunctionCall(value) {
+            functionNameCalled = value.name;
 
-    expect(parsed.choices[0]).toMatchInlineSnapshot(`
-      {
-        "__type": "function_call",
-        "finish_reason": "function_call",
-        "index": 0,
-        "message": {
-          "content": null,
-          "function_call": {
-            "arguments": {
-              "category": "BILLING_AND_PAYMENTS",
-              "summary": "Credit card charged twice",
-            },
-            "name": "classifyMessage",
+            expect(value.arguments.category).toMatchInlineSnapshot(
+              '"BILLING_AND_PAYMENTS"',
+            );
+            expect(value.arguments.summary).toMatchInlineSnapshot(
+              '"Credit card charged twice"',
+            );
           },
-          "role": "assistant",
         },
+      );
+
+      const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
+        [];
+
+      for await (const part of response) {
+        parts.push(...part.choices);
       }
-    `);
-  },
-  TEST_TIMEOUT,
-);
 
-test(
-  'should classify a support request w/ forced function call',
-  async () => {
-    const messages: hop.inferMessageInput<typeof chat>[] = [
-      {
-        role: 'system',
-        content: 'You are a helpful classification assistant.',
-      },
-      {
-        role: 'user',
-        content:
-          'I have an urgent problem with my credit card being charged twice and need help.',
-      },
-    ];
+      expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
 
-    const parsed = await chat.get({
-      messages,
-      temperature: 0,
-      function_call: { name: classifyMessage.name },
-    });
-
-    expect(parsed.choices[0]).toMatchInlineSnapshot(`
-      {
-        "__type": "function_call",
-        "finish_reason": "stop",
-        "index": 0,
-        "message": {
-          "content": null,
-          "function_call": {
-            "arguments": {
-              "category": "BILLING_AND_PAYMENTS",
-              "summary": "Credit card charged twice",
-            },
-            "name": "classifyMessage",
-          },
-          "role": "assistant",
-        },
-      }
-    `);
-  },
-  TEST_TIMEOUT,
-);
-
-test(
-  'should classify a support request with no required descriptions',
-  async () => {
-    const classifyMessage = hopfield.function({
-      name: 'classifyMessage',
-      description: 'Triage an incoming support message.',
-      parameters: z.object({
-        summary: z.string().describe('The summary of the message.'),
-        category: SupportCategoryEnum,
-      }),
-      options: {
-        requireDescriptions: false,
-      },
-    });
-
-    const chat = hopfield.chat().functions([classifyMessage]);
-
-    const messages: hop.inferMessageInput<typeof chat>[] = [
-      {
-        role: 'system',
-        content: 'You are a helpful classification assistant.',
-      },
-      {
-        role: 'user',
-        content:
-          'I have an urgent problem with my credit card being charged twice and need help.',
-      },
-    ];
-
-    const parsed = await chat.get({
-      messages,
-      temperature: 0,
-      function_call: { name: classifyMessage.name },
-    });
-
-    expect(parsed.choices[0]).toMatchInlineSnapshot(`
-      {
-        "__type": "function_call",
-        "finish_reason": "stop",
-        "index": 0,
-        "message": {
-          "content": null,
-          "function_call": {
-            "arguments": {
-              "category": "BILLING_AND_PAYMENTS",
-              "summary": "Credit card charged twice",
-            },
-            "name": "classifyMessage",
-          },
-          "role": "assistant",
-        },
-      }
-    `);
-  },
-  TEST_TIMEOUT,
-);
-
-test(
-  'should classify a support request (streaming)',
-  async () => {
-    const messages: hop.inferMessageInput<typeof chat>[] = [
-      {
-        role: 'system',
-        content: 'You are a helpful classification assistant.',
-      },
-      {
-        role: 'user',
-        content:
-          'I have an urgent problem with my credit card being charged twice and need help.',
-      },
-    ];
-
-    let functionNameCalled: string | null = null;
-
-    const response = await streamingChat.get(
-      {
-        messages,
-        temperature: 0,
-      },
-      {
-        onFunctionCall(value) {
-          functionNameCalled = value.name;
-
-          expect(value.arguments.category).toMatchInlineSnapshot(
-            '"BILLING_AND_PAYMENTS"',
-          );
-          expect(value.arguments.summary).toMatchInlineSnapshot(
-            '"Credit card charged twice"',
-          );
-        },
-      },
-    );
-
-    const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
-      [];
-
-    for await (const part of response) {
-      parts.push(...part.choices);
-    }
-
-    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
-
-    expect(parts).toMatchInlineSnapshot(`
+      expect(parts).toMatchInlineSnapshot(`
       [
         {
           "__type": "function_name",
@@ -468,57 +325,57 @@ test(
         },
       ]
     `);
-  },
-  TEST_TIMEOUT,
-);
+    },
+    TEST_TIMEOUT,
+  );
 
-test(
-  'should classify a support request w/ forced function call (streaming)',
-  async () => {
-    const messages: hop.inferMessageInput<typeof chat>[] = [
-      {
-        role: 'system',
-        content: 'You are a helpful classification assistant.',
-      },
-      {
-        role: 'user',
-        content:
-          'I have an urgent problem with my credit card being charged twice and need help.',
-      },
-    ];
-
-    let functionNameCalled: string | null = null;
-
-    const response = await streamingChat.get(
-      {
-        messages,
-        temperature: 0,
-        function_call: { name: classifyMessage.name },
-      },
-      {
-        onFunctionCall(value) {
-          functionNameCalled = value.name;
-
-          expect(value.arguments.category).toMatchInlineSnapshot(
-            '"BILLING_AND_PAYMENTS"',
-          );
-          expect(value.arguments.summary).toMatchInlineSnapshot(
-            '"Credit card charged twice"',
-          );
+  test(
+    'should classify a support request w/ forced function call (streaming)',
+    async ({ expect }) => {
+      const messages: hop.inferMessageInput<typeof streamingChat>[] = [
+        {
+          role: 'system',
+          content: 'You are a helpful classification assistant.',
         },
-      },
-    );
+        {
+          role: 'user',
+          content:
+            'I have an urgent problem with my credit card being charged twice and need help.',
+        },
+      ];
 
-    const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
-      [];
+      let functionNameCalled: string | null = null;
 
-    for await (const part of response) {
-      parts.push(...part.choices);
-    }
+      const response = await streamingChat.get(
+        {
+          messages,
+          temperature: 0,
+          function_call: { name: classifyMessage.name },
+        },
+        {
+          onFunctionCall(value) {
+            functionNameCalled = value.name;
 
-    expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
+            expect(value.arguments.category).toMatchInlineSnapshot(
+              '"BILLING_AND_PAYMENTS"',
+            );
+            expect(value.arguments.summary).toMatchInlineSnapshot(
+              '"Credit card charged twice"',
+            );
+          },
+        },
+      );
 
-    expect(parts).toMatchInlineSnapshot(`
+      const parts: hop.inferResult<typeof streamingChat>['choices'][number][] =
+        [];
+
+      for await (const part of response) {
+        parts.push(...part.choices);
+      }
+
+      expect(functionNameCalled).toMatchInlineSnapshot('"classifyMessage"');
+
+      expect(parts).toMatchInlineSnapshot(`
       [
         {
           "__type": "function_name",
@@ -773,6 +630,7 @@ test(
         },
       ]
     `);
-  },
-  TEST_TIMEOUT,
-);
+    },
+    TEST_TIMEOUT,
+  );
+});

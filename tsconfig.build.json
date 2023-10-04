@@ -4,6 +4,7 @@
   "include": ["src"],
   "exclude": [
     "src/**/*.test.ts",
+    "src/**/_test/**",
     "src/**/*.test-d.ts",
     "src/**/*.bench.ts",
     "src/**/*.benchmark.ts",

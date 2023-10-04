@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import * as Exports from './streaming.js';
 import { test } from 'vitest';
 
-import { weatherFunction } from '../../_test/function.js';
+import { weatherFunction } from '../../_test/openai-function.js';
 import hop from '../../index.js';
 
 import {

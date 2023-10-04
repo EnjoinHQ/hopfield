@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { test } from 'vitest';
 
-import { weatherFunction } from '../../_test/function.js';
+import { weatherFunction } from '../../_test/openai-function.js';
 import {
   openaiBasicFunctionCall,
   openaiBasicMessage,

@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest';
+import { test, describe } from 'vitest';
 
 import { openAIClient } from '../../_test/openai-client.js';
 import hop from '../../index.js';
@@ -19,79 +19,80 @@ const messages: hop.inferMessageInput<typeof chat>[] = [
   },
 ];
 
-test(
-  'should respond with streaming',
-  async () => {
-    const onChunkTypes: string[] = [];
-    const onDoneTypes: string[] = [];
+describe.concurrent('streaming', () => {
+  test(
+    'should respond with streaming',
+    async ({ expect }) => {
+      const onChunkTypes: string[] = [];
+      const onDoneTypes: string[] = [];
 
-    const response = await chat.get(
-      {
-        messages,
-        temperature: 0,
-      },
-      {
-        onChunk(value) {
-          onChunkTypes.push(value.choices[0].__type);
+      const response = await chat.get(
+        {
+          messages,
+          temperature: 0,
         },
-        onDone(values) {
-          onDoneTypes.push(...values.map((value) => value.choices[0].__type));
+        {
+          onChunk(value) {
+            onChunkTypes.push(value.choices[0].__type);
+          },
+          onDone(values) {
+            onDoneTypes.push(...values.map((value) => value.choices[0].__type));
+          },
         },
-      },
-    );
+      );
 
-    let content = '';
+      let content = '';
 
-    for await (const part of response) {
-      content +=
-        part.choices[0].__type === 'content'
-          ? part.choices[0].delta.content
-          : '';
-    }
-
-    expect(content).toMatchInlineSnapshot('"Fold and devour."');
-    expect(onChunkTypes).toEqual(onDoneTypes);
-  },
-  TEST_TIMEOUT,
-);
-
-test(
-  'should respond with multiple choices',
-  async () => {
-    const onChunkTypes: string[] = [];
-
-    const response = await chatMultiple.get(
-      {
-        messages,
-        temperature: 0,
-      },
-      {
-        onChunk(value) {
-          onChunkTypes.push(value.choices[0].__type);
-        },
-      },
-    );
-
-    let content1 = '';
-    let content2 = '';
-
-    for await (const part of response) {
-      if (part.choices[0].index === 0) {
-        content1 +=
-          part.choices[0].__type === 'content'
-            ? part.choices[0].delta.content
-            : '';
-      } else {
-        content2 +=
+      for await (const part of response) {
+        content +=
           part.choices[0].__type === 'content'
             ? part.choices[0].delta.content
             : '';
       }
-    }
 
-    expect(content1).toMatchInlineSnapshot('"Fold and devour."');
-    expect(content2).toMatchInlineSnapshot('"Fold and devour."');
-    expect(onChunkTypes).toMatchInlineSnapshot(`
+      expect(content).toMatchInlineSnapshot('"Fold and devour."');
+      expect(onChunkTypes).toEqual(onDoneTypes);
+    },
+    TEST_TIMEOUT,
+  );
+
+  test(
+    'should respond with multiple choices',
+    async ({ expect }) => {
+      const onChunkTypes: string[] = [];
+
+      const response = await chatMultiple.get(
+        {
+          messages,
+          temperature: 0,
+        },
+        {
+          onChunk(value) {
+            onChunkTypes.push(value.choices[0].__type);
+          },
+        },
+      );
+
+      let content1 = '';
+      let content2 = '';
+
+      for await (const part of response) {
+        if (part.choices[0].index === 0) {
+          content1 +=
+            part.choices[0].__type === 'content'
+              ? part.choices[0].delta.content
+              : '';
+        } else {
+          content2 +=
+            part.choices[0].__type === 'content'
+              ? part.choices[0].delta.content
+              : '';
+        }
+      }
+
+      expect(content1).toMatchInlineSnapshot('"Fold and devour."');
+      expect(content2).toMatchInlineSnapshot('"Fold and devour."');
+      expect(onChunkTypes).toMatchInlineSnapshot(`
       [
         "content",
         "content",
@@ -107,73 +108,74 @@ test(
         "stop",
       ]
     `);
-  },
-  TEST_TIMEOUT,
-);
+    },
+    TEST_TIMEOUT,
+  );
 
-test(
-  'should respond with streaming using readableStream',
-  async () => {
-    const response = await chat.get({
-      messages,
-      temperature: 0,
-    });
+  test(
+    'should respond with streaming using readableStream',
+    async ({ expect }) => {
+      const response = await chat.get({
+        messages,
+        temperature: 0,
+      });
 
-    let content = '';
+      let content = '';
 
-    // use the readableStream
-    const reader = response.readableStream().getReader();
+      // use the readableStream
+      const reader = response.readableStream().getReader();
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        break;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+        content +=
+          value.choices[0].__type === 'content'
+            ? value.choices[0].delta.content
+            : '';
       }
-      content +=
-        value.choices[0].__type === 'content'
-          ? value.choices[0].delta.content
-          : '';
-    }
 
-    expect(content).toMatchInlineSnapshot('"Fold and devour."');
-  },
-  TEST_TIMEOUT,
-);
+      expect(content).toMatchInlineSnapshot('"Fold and devour."');
+    },
+    TEST_TIMEOUT,
+  );
 
-test(
-  'should handle cancellation of readableStream mid-stream',
-  async () => {
-    const response = await chat.get({
-      messages,
-      temperature: 0,
-    });
+  test(
+    'should handle cancellation of readableStream mid-stream',
+    async ({ expect }) => {
+      const response = await chat.get({
+        messages,
+        temperature: 0,
+      });
 
-    let content = '';
+      let content = '';
 
-    // use the readableStream
-    const reader = response.readableStream().getReader();
+      // use the readableStream
+      const reader = response.readableStream().getReader();
 
-    let readCount = 0;
-    const MAX_READS_BEFORE_CANCEL = 2; // Change this value based on when you want to cancel
+      let readCount = 0;
+      const MAX_READS_BEFORE_CANCEL = 2; // Change this value based on when you want to cancel
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done || readCount >= MAX_READS_BEFORE_CANCEL) {
-        reader.cancel(); // Cancel the reading after certain chunks are read
-        break;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done || readCount >= MAX_READS_BEFORE_CANCEL) {
+          reader.cancel(); // Cancel the reading after certain chunks are read
+          break;
+        }
+        content +=
+          value.choices[0].__type === 'content'
+            ? value.choices[0].delta.content
+            : '';
+        readCount++;
       }
-      content +=
-        value.choices[0].__type === 'content'
-          ? value.choices[0].delta.content
-          : '';
-      readCount++;
-    }
 
-    expect(content).toMatchInlineSnapshot('"Fold"');
+      expect(content).toMatchInlineSnapshot('"Fold"');
 
-    const postCancelRead = await reader.read();
-    expect(postCancelRead.done).toBe(true);
-    expect(postCancelRead.value).toBeUndefined();
-  },
-  TEST_TIMEOUT,
-);
+      const postCancelRead = await reader.read();
+      expect(postCancelRead.done).toBe(true);
+      expect(postCancelRead.value).toBeUndefined();
+    },
+    TEST_TIMEOUT,
+  );
+});
