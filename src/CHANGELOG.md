@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.3.0
+
+### Minor Changes
+
+- [`43ea622`](https://github.com/propology/hopfield/commit/43ea6223b94bffce70a2d9400a000bb880825aeb) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fixed output types by bundling Zod.
+
 ## 0.2.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "hopfield",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "repository": "propology/hopfield",
   "main": "./_cjs/index.js",
   "module": "./_esm/index.js",
@@ -32,7 +32,13 @@
     "!**/*.bench.ts",
     "!tsconfig.build.json"
   ],
-  "keywords": ["ai", "llm", "openai", "gpt", "ai-tools"],
+  "keywords": [
+    "ai",
+    "llm",
+    "openai",
+    "gpt",
+    "ai-tools"
+  ],
   "license": "MIT",
   "peerDependenciesMeta": {
     "openai": {
@@ -47,7 +53,9 @@
   "types": "./_types/index.d.ts",
   "typesVersions": {
     "*": {
-      "openai": ["./_types/openai/index.d.ts"]
+      "openai": [
+        "./_types/openai/index.d.ts"
+      ]
     }
   },
   "typings": "./_types/index.d.ts",
