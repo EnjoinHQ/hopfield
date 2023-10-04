@@ -1,7 +1,6 @@
 import { hop } from '../index.js';
 
 import openai from '../openai/index.js';
-// import OpenAI from 'openai';
 import { z } from 'zod';
 
 const template = hop.client(openai).template();

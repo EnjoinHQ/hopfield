@@ -1,5 +1,5 @@
 ---
-"hopfield": patch
+"hopfield": minor
 ---
 
-**Fix:** moved to fix output types.
+**Fix:** fixed output types by bundling Zod.
