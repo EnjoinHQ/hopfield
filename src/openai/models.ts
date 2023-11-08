@@ -1,8 +1,13 @@
 export const openAIChatModelNames = [
-  'gpt-3.5-turbo-0613',
-  'gpt-3.5-turbo-16k-0613',
+  'gpt-4-0314' /** @deprecated Legacy model, to be discontinued Jun 13, 2024 */,
   'gpt-4-0613',
+  'gpt-4-32k-0314' /** @deprecated Legacy model, to be discontinued Jun 13, 2024 */,
   'gpt-4-32k-0613',
+  'gpt-3.5-turbo-0301' /** @deprecated Legacy model, to be discontinued Jun 13, 2024 */,
+  'gpt-3.5-turbo-0613' /** @deprecated Legacy model, will be replaced by gpt-3.5-turbo-1106 on Dec 11, 2023 */,
+  'gpt-3.5-turbo-1106',
+  'gpt-3.5-turbo-16k-0613' /** @deprecated Will be replaced by gpt-3.5-turbo-1106 on Dec 11, 2023 */,
+  'gpt-4-1106-preview',
 ] as const;
 
 /**
@@ -13,8 +18,9 @@ export const openAIChatModelNames = [
 export type OpenAIChatModelName = typeof openAIChatModelNames[number];
 
 export const openAIChatModelNamesWithFunctionCalling = [
-  'gpt-3.5-turbo-0613',
   'gpt-4-0613',
+  'gpt-4-32k-0613',
+  'gpt-3.5-turbo-1106',
 ] as const;
 
 export const defaultOpenAIChatModelName =

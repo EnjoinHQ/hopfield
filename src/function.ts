@@ -25,7 +25,7 @@ export type AnyBaseHopfieldFunction = BaseHopfieldFunction<
 type FunctionProperty<
   T extends AnyBaseHopfieldFunction,
   K extends keyof T,
-> = T extends { [P in K]: infer N } ? N : never;
+> = T extends { [_P in K]: infer N } ? N : never;
 
 export type FunctionPropertyOrNever<
   T extends AnyBaseHopfieldFunction[],
@@ -264,7 +264,7 @@ export abstract class BaseHopfieldFunction<
     return {
       name: this.name,
       description: this.description,
-      parameters: zodToJsonSchema(this.parameters, {
+      parameters: zodToJsonSchema(this.parameters as any, {
         $refStrategy: 'none',
         onParseDef,
       }),

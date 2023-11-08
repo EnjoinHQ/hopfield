@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "hopfield": "workspace:*"
+    "hopfield": "workspace:*",
+    "openai": "4.16.1"
   }
 }

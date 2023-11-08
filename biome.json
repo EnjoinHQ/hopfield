@@ -19,7 +19,7 @@
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
-    "indentSize": 2,
+    "indentWidth": 2,
     "lineWidth": 80
   },
   "linter": {
@@ -30,7 +30,6 @@
         "noUnusedVariables": "error"
       },
       "nursery": {
-        "useExhaustiveDependencies": "error",
         "useGroupedTypeImport": "off"
       },
       "performance": {

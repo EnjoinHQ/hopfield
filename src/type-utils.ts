@@ -58,7 +58,7 @@ export type OneOf<
   Union extends object,
   AllKeys extends KeyofUnion<Union> = KeyofUnion<Union>,
 > = Union extends infer Item
-  ? Pretty<Item & { [K in Exclude<AllKeys, keyof Item>]?: never }>
+  ? Pretty<Item & { [_K in Exclude<AllKeys, keyof Item>]?: never }>
   : never;
 type KeyofUnion<T> = T extends T ? keyof T : never;
 
