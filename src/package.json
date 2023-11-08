@@ -1,6 +1,6 @@
 {
   "name": "hopfield",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "repository": "propology/hopfield",
   "main": "./_cjs/index.js",
   "module": "./_esm/index.js",
