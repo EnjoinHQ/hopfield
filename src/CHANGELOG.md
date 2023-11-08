@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [`2d1cb18`](https://github.com/propology/hopfield/commit/2d1cb183e81bb03df791b357802b5df0457a5ccb) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added new model versions from latest OpenAI release.
+- [`2d1cb18`](https://github.com/propology/hopfield/commit/2d1cb183e81bb03df791b357802b5df0457a5ccb) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:** added new model versions from latest OpenAI release. 
 
 ## 0.3.0
 
