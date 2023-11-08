@@ -7,7 +7,7 @@ import { openAIClient } from '../../_test/openai-client.js';
 import openai from '../index.js';
 import { z } from 'zod';
 
-const TEST_TIMEOUT = 8_000;
+const TEST_TIMEOUT = 12_000;
 
 const hopfield = hop.client(openai).provider(openAIClient);
 
