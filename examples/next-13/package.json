@@ -12,7 +12,7 @@
     "@vercel/kv": "latest",
     "hopfield": "workspace:*",
     "next": "latest",
-    "openai": "4.16.1",
+    "openai": "latest",
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest"
