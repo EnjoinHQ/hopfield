@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [`16516f8`](https://github.com/propology/hopfield/commit/16516f8d2c40c705ea0d77a5027e4d535fc04f2b) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fix types with removing lazy.
+- [`16516f8`](https://github.com/propology/hopfield/commit/16516f8d2c40c705ea0d77a5027e4d535fc04f2b) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fix types with removing lazy. 
 
 ## 0.3.3
 
