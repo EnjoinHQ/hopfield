@@ -267,7 +267,7 @@ export abstract class BaseHopfieldFunction<
       parameters: zodToJsonSchema(this.parameters as any, {
         $refStrategy: 'none',
         onParseDef,
-      }),
+      }) as object,
     } as const;
   }
 
