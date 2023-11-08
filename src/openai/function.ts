@@ -6,18 +6,18 @@ import {
 import type { TypeTemplates } from '../template.js';
 
 import {
-  type DefaultOpenAITypeTemplates,
-  OpenAIChatTemplate,
-  defaultOpenAITypeTemplates,
-} from './template.js';
-import {
-  type AnyZodObject,
   ZodArray,
   ZodDefault,
   ZodFirstPartyTypeKind,
+  ZodType,
   ZodUnion,
   z,
 } from 'zod';
+import {
+  OpenAIChatTemplate,
+  defaultOpenAITypeTemplates,
+  type DefaultOpenAITypeTemplates,
+} from './template.js';
 
 export type OpenAIFunctionsTuple = [
   OpenAIFunctionSchema,
@@ -60,7 +60,7 @@ export type FunctionSchemasArray<T extends OpenAIFunctionsTuple> = ZodDefault<
 export type OpenAIFunctionProps<
   FName extends string,
   FDescription extends string,
-  FParams extends AnyZodObject,
+  FParams extends ZodType<any, any, any>,
   DTypes extends DisabledTypes,
 > = {
   name: FName;
@@ -72,7 +72,7 @@ export type OpenAIFunctionProps<
 export class OpenAIFunction<
   FName extends string,
   FDescription extends string,
-  FParams extends AnyZodObject,
+  FParams extends ZodType<any, any, any>,
   DTypes extends DisabledTypes = typeof disallowedTypes,
 > extends BaseHopfieldFunction<
   FName,
@@ -120,7 +120,7 @@ export class OpenAIFunction<
   static function<
     FName extends string,
     FDescription extends string,
-    FParams extends AnyZodObject,
+    FParams extends ZodType<any, any, any>,
     DTypes extends DisabledTypes,
   >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
     return new OpenAIFunction(opts);

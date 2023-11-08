@@ -2,10 +2,11 @@ import type OpenAI from 'openai';
 
 import { OpenAIEmbedding, OpenAIEmbeddingSchema } from './embedding.js';
 
-import { type DefaultChatN, defaultChatN } from '../chat.js';
+import type { ZodType } from 'zod';
+import { defaultChatN, type DefaultChatN } from '../chat.js';
 import {
-  type DefaultEmbeddingCount,
   defaultEmbeddingCount,
+  type DefaultEmbeddingCount,
 } from '../embedding.js';
 import type { DisabledTypes } from '../function.js';
 import { BaseHopfield } from '../provider.js';
@@ -13,19 +14,18 @@ import type { TypeTemplates } from '../template.js';
 import { OpenAIChat, OpenAIChatSchema } from './chat/non-streaming.js';
 import { OpenAIFunction, type OpenAIFunctionProps } from './function.js';
 import {
+  defaultOpenAIChatModelName,
+  defaultOpenAIEmbeddingModelName,
   type DefaultOpenAIChatModelName,
   type DefaultOpenAIEmbeddingModelName,
   type OpenAIChatModelName,
   type OpenAIEmbeddingModelName,
-  defaultOpenAIChatModelName,
-  defaultOpenAIEmbeddingModelName,
 } from './models.js';
 import {
-  type DefaultOpenAITypeTemplates,
   OpenAIChatTemplate,
   defaultOpenAITypeTemplates,
+  type DefaultOpenAITypeTemplates,
 } from './template.js';
-import type { AnyZodObject } from 'zod';
 
 export class OpenAIHopfield<
   Provider extends OpenAI,
@@ -79,7 +79,7 @@ export class OpenAIHopfield<
   override function<
     FName extends string,
     FDescription extends string,
-    FParams extends AnyZodObject,
+    FParams extends ZodType<any, any, any>,
     DTypes extends DisabledTypes, // = typeof disallowedTypes,
   >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
     return new OpenAIFunction(opts);

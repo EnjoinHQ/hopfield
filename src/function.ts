@@ -4,12 +4,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import type { BaseHopfieldChatTemplate, TypeTemplates } from './template.js';
 import type { IsEmptyArray } from './type-utils.js';
-import {
-  type AnyZodObject,
-  ZodFirstPartyTypeKind,
-  type ZodTypeDef,
-  z,
-} from 'zod';
+import { ZodFirstPartyTypeKind, type ZodTypeDef, z, type ZodType } from 'zod';
 import type { Refs } from 'zod-to-json-schema/src/Refs.js';
 import type { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef.js';
 
@@ -118,7 +113,7 @@ const DescriptionSchema = z.string().min(1).max(500);
 export type BaseHopfieldFunctionProps<
   FName extends string,
   FDescription extends string,
-  FParams extends AnyZodObject,
+  FParams extends ZodType<any, any, any>,
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
   Template extends BaseHopfieldChatTemplate<TTemplates>,
@@ -133,7 +128,7 @@ export type BaseHopfieldFunctionProps<
 export abstract class BaseHopfieldFunction<
   FName extends string,
   FDescription extends string,
-  FParams extends AnyZodObject,
+  FParams extends ZodType<any, any, any>,
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
   Template extends BaseHopfieldChatTemplate<TTemplates>,
