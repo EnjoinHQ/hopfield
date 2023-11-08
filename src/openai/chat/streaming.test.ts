@@ -35,8 +35,8 @@ it('should expose correct exports', () => {
 
 test('should set a model name', async () => {
   expect(
-    hop.client(openai).chat('gpt-4-1106-preview').streaming().model,
-  ).toMatchInlineSnapshot('"gpt-4-1106-preview"');
+    hop.client(openai).chat('gpt-4-0613').streaming().model,
+  ).toMatchInlineSnapshot('"gpt-4-0613"');
 });
 
 test('should set a default model name', async () => {

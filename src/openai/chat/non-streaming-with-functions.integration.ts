@@ -12,7 +12,7 @@ const TEST_TIMEOUT = 8_000;
 const hopfield = hop.client(openai).provider(openAIClient);
 
 // change the model here to see performance diff
-const hopfieldChat = hopfield.chat('gpt-3.5-turbo-1106');
+const hopfieldChat = hopfield.chat('gpt-4-0613');
 
 const classifyMessage = hopfield.function({
   name: 'classifyMessage',
@@ -35,8 +35,8 @@ const getMessageActions = hopfield.function({
         'A short summary of the message. This MUST be less than 5 words.',
       ),
     links: z
-      .array(z.string().describe('Markdown link.'))
-      .describe('ALL Markdown links in the message.'),
+      .array(z.string().describe('Link parsed from Markdown.'))
+      .describe('All links in the message.'),
   }),
 });
 
@@ -83,17 +83,17 @@ describe.concurrent('non-streaming with functions', () => {
         'https://githubbox.com/pmndrs/zustand/tree/main/examples/demo',
       ] as const;
 
-      expect(
-        parsed.choices[0].__type === 'function_call' &&
-          parsed.choices[0].message.function_call.arguments.links.length,
-      ).toEqual(actualLinks.length);
-
       for (const link of actualLinks) {
         expect(
           parsed.choices[0].__type === 'function_call' &&
             parsed.choices[0].message.function_call.arguments.links,
         ).toContain(link);
       }
+
+      expect(
+        parsed.choices[0].__type === 'function_call' &&
+          parsed.choices[0].message.function_call.arguments.links.length,
+      ).toEqual(actualLinks.length);
     },
     TEST_TIMEOUT * 2,
   );
@@ -131,7 +131,6 @@ describe.concurrent('non-streaming with functions', () => {
       const actualLinks = [
         'https://johns-hopkins.com/3322301-sflk-1jsdlkfj/2904nd',
         'https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/',
-        'https://github.com/sponsors/colinhacks',
         'https://github.com/sponsors/colinhacks',
       ];
 
@@ -180,8 +179,8 @@ describe.concurrent('non-streaming with functions', () => {
 
       expect(
         parsed.choices[0].__type === 'function_call' &&
-          parsed.choices[0].message.function_call.arguments.links,
-      ).toContain(actualLink);
+          parsed.choices[0].message.function_call.arguments.links?.[0],
+      ).toEqual(actualLink);
 
       expect(
         parsed.choices[0].__type === 'function_call' &&
