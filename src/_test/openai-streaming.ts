@@ -3,7 +3,7 @@ export const openaiStreamBasicMessage = [
     id: 'chatcmpl-72991',
     object: 'chat.completion.chunk',
     created: 1690485556,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -19,7 +19,7 @@ export const openaiStreamBasicMessage = [
     id: 'chatcmpl-72991',
     object: 'chat.completion.chunk',
     created: 1690485556,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -34,7 +34,7 @@ export const openaiStreamBasicMessage = [
     id: 'chatcmpl-72991',
     object: 'chat.completion.chunk',
     created: 1690485556,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -49,7 +49,7 @@ export const openaiStreamBasicMessage = [
     id: 'chatcmpl-72991',
     object: 'chat.completion.chunk',
     created: 1690485556,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -64,7 +64,7 @@ export const openaiStreamBasicMessage = [
     id: 'chatcmpl-72991',
     object: 'chat.completion.chunk',
     created: 1690485556,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -80,7 +80,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -100,7 +100,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -117,7 +117,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -134,7 +134,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -151,7 +151,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -168,7 +168,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -185,7 +185,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -202,7 +202,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -219,7 +219,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -236,7 +236,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -253,7 +253,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -270,7 +270,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -287,7 +287,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -304,7 +304,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -321,7 +321,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -338,7 +338,7 @@ export const openaiStreamFunctionCallLengthLimited = [
     id: 'chatcmpl-238907',
     object: 'chat.completion.chunk',
     created: 1690485893,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -354,7 +354,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -370,7 +370,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -385,7 +385,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -400,7 +400,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -415,7 +415,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -430,7 +430,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -445,7 +445,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -460,7 +460,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -475,7 +475,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -490,7 +490,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -505,7 +505,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -520,7 +520,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -535,7 +535,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -550,7 +550,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -565,7 +565,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -580,7 +580,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -595,7 +595,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -610,7 +610,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -625,7 +625,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -640,7 +640,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -655,7 +655,7 @@ export const openaiStreamLengthLimited = [
     id: 'chatcmpl-234897',
     object: 'chat.completion.chunk',
     created: 1690485855,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -671,7 +671,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -691,7 +691,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -708,7 +708,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -725,7 +725,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -742,7 +742,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -759,7 +759,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -776,7 +776,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -793,7 +793,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -810,7 +810,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -827,7 +827,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -844,7 +844,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -861,7 +861,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -878,7 +878,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -895,7 +895,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -912,7 +912,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -929,7 +929,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -946,7 +946,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -963,7 +963,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -980,7 +980,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -997,7 +997,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1014,7 +1014,7 @@ export const openaiStreamFunctionCall = [
     id: 'chatcmpl-7878123',
     object: 'chat.completion.chunk',
     created: 1690485919,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1030,7 +1030,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1046,7 +1046,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1061,7 +1061,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 1,
@@ -1077,7 +1077,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 1,
@@ -1092,7 +1092,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1107,7 +1107,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 1,
@@ -1122,7 +1122,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1137,7 +1137,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 1,
@@ -1152,7 +1152,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 0,
@@ -1165,7 +1165,7 @@ export const openaiStreamTwoResponses = [
     id: 'chatcmpl-334897',
     object: 'chat.completion.chunk',
     created: 1690486212,
-    model: 'gpt-3.5-turbo-0613',
+    model: 'gpt-3.5-turbo-1106',
     choices: [
       {
         index: 1,

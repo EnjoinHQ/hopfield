@@ -12,7 +12,7 @@ const TEST_TIMEOUT = 8_000;
 const hopfield = hop.client(openai).provider(openAIClient);
 
 // change the model here to see performance diff
-const hopfieldChat = hopfield.chat('gpt-3.5-turbo-0613');
+const hopfieldChat = hopfield.chat('gpt-3.5-turbo-1106');
 
 const classifyMessage = hopfield.function({
   name: 'classifyMessage',

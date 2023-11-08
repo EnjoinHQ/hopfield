@@ -10,7 +10,7 @@ const openaiClient = new OpenAI({
 
 const hopfield = hop.client(openai).provider(openaiClient);
 
-const chat = hopfield.chat('gpt-3.5-turbo-16k-0613');
+const chat = hopfield.chat('gpt-3.5-turbo-1106');
 
 test('test non-streaming chat', async () => {
   const result = await chat.get({

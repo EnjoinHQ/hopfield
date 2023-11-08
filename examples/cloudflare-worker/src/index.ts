@@ -18,7 +18,7 @@ export default {
 
     const hopfield = hop.client(openai).provider(openaiClient);
 
-    const chat = hopfield.chat('gpt-3.5-turbo-16k-0613').streaming();
+    const chat = hopfield.chat('gpt-3.5-turbo-1106').streaming();
 
     const result = await chat.get({
       temperature: 0,

@@ -1,22 +1,22 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import hop from 'hopfield';
-import openai from 'hopfield/openai';
-import OpenAI from 'openai';
-import { kv } from '@vercel/kv';
-import { docs } from './docs';
-import { hashString } from './hash';
+import hop from "hopfield";
+import openai from "hopfield/openai";
+import OpenAI from "openai";
+import { kv } from "@vercel/kv";
+import { docs } from "./docs";
+import { hashString } from "./hash";
 
 // Create an OpenAI API client
 const openaiClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 // Instantiate a new Hopfield client with the OpenAI API client
 const hopfield = hop.client(openai).provider(openaiClient);
 
 // Create the Hopfield streaming chat provider
-const chat = hopfield.chat('gpt-3.5-turbo-16k-0613').streaming();
+const chat = hopfield.chat("gpt-3.5-turbo-1106").streaming();
 
 const prompt = `Provide a cool use of Hopfield from the context below, with a short paragraph introduction of what Hopfield does, and then a Typescript example in 20 lines of code or less: \n\n${docs}`;
 
@@ -32,12 +32,12 @@ export async function CodeChat() {
   // construct messages with hop.inferMessageInput
   const messages: hop.inferMessageInput<typeof chat>[] = [
     {
-      role: 'system',
+      role: "system",
       content:
-        'You are a developer evangelist for the Hopfield Typescript npm package. You ALWAYS respond using Markdown. The docs for Hopfield are located at https://hopfield.ai.',
+        "You are a developer evangelist for the Hopfield Typescript npm package. You ALWAYS respond using Markdown. The docs for Hopfield are located at https://hopfield.ai.",
     },
     {
-      role: 'user',
+      role: "user",
       content: prompt,
     },
   ];
@@ -52,11 +52,11 @@ export async function CodeChat() {
       // we map to a string to store in Redis, to save on costs :sweat:
       const storedResponse = chunks
         .map((chunk) =>
-          chunk.choices[0].__type === 'content'
+          chunk.choices[0].__type === "content"
             ? chunk.choices[0].delta.content
-            : '',
+            : ""
         )
-        .join('');
+        .join("");
 
       await kv.set(promptHash, storedResponse);
       // expire every ten minutes
@@ -105,7 +105,7 @@ async function RecursiveTokens({ reader }: RecursiveTokensProps) {
 
   return (
     <>
-      {value.choices[0].__type === 'content' ? (
+      {value.choices[0].__type === "content" ? (
         value.choices[0].delta.content
       ) : (
         <></>
@@ -125,18 +125,18 @@ const getCachedResponse = async (prompt: string) => {
   const cached = (await kv.get(prompt)) as string | undefined;
 
   if (cached) {
-    const chunks = cached.split(' ');
+    const chunks = cached.split(" ");
     const stream = new ReadableStream<hop.inferResult<typeof chat>>({
       async start(controller) {
         let id = 0;
         for (const chunk of chunks) {
           const fakeChunk: hop.inferResult<typeof chat> = {
-            model: 'gpt-3.5-turbo-16k-0613',
+            model: "gpt-3.5-turbo-1106",
             id: String(id++),
             created: Date.now(),
             choices: [
               {
-                __type: 'content',
+                __type: "content",
                 delta: {
                   content: `${chunk} `,
                 },
@@ -150,8 +150,8 @@ const getCachedResponse = async (prompt: string) => {
             setTimeout(
               r,
               // get a random number between 10ms and 50ms to simulate a random delay
-              Math.floor(Math.random() * 40) + 10,
-            ),
+              Math.floor(Math.random() * 40) + 10
+            )
           );
         }
         controller.close();

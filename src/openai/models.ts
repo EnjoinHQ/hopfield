@@ -18,9 +18,9 @@ export const openAIChatModelNames = [
 export type OpenAIChatModelName = typeof openAIChatModelNames[number];
 
 export const openAIChatModelNamesWithFunctionCalling = [
+  'gpt-3.5-turbo-1106',
   'gpt-4-0613',
   'gpt-4-32k-0613',
-  'gpt-3.5-turbo-1106',
 ] as const;
 
 export const defaultOpenAIChatModelName =

@@ -24,7 +24,7 @@ const openaiClient = new OpenAI({
 const hopfield = hop.client(openai).provider(openaiClient);
 
 // Create the Hopfield streaming chat provider
-const chat = hopfield.chat("gpt-3.5-turbo-16k-0613").streaming();
+const chat = hopfield.chat("gpt-3.5-turbo-16k-1106").streaming();
 ```
 
 ### Constructing Messages & Streaming
