@@ -1,6 +1,9 @@
 import type { ZodType } from 'zod';
 
-export abstract class BaseHopfieldSchema {
-  abstract get parameters(): ZodType<any, any, any>;
-  abstract get returnType(): ZodType<any, any, any>;
+export abstract class BaseHopfieldSchema<
+  P = ZodType<any, any, any>,
+  R = ZodType<any, any, any>,
+> {
+  abstract get parameters(): P;
+  abstract get returnType(): R;
 }

@@ -82,7 +82,7 @@ export class OpenAIHopfield<
     FParams extends ZodType<any, any, any>,
     DTypes extends DisabledTypes, // = typeof disallowedTypes,
   >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
-    return new OpenAIFunction(opts);
+    return new OpenAIFunction<FName, FDescription, FParams, DTypes>(opts);
   }
 
   override template(): OpenAIChatTemplate<DefaultOpenAITypeTemplates>;

@@ -132,7 +132,7 @@ export abstract class BaseHopfieldFunction<
   DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
   Template extends BaseHopfieldChatTemplate<TTemplates>,
-> extends BaseHopfieldSchema {
+> extends BaseHopfieldSchema<FParams> {
   name: FName;
   description: FDescription;
 

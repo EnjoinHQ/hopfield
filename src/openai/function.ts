@@ -123,7 +123,7 @@ export class OpenAIFunction<
     FParams extends ZodType<any, any, any>,
     DTypes extends DisabledTypes,
   >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
-    return new OpenAIFunction(opts);
+    return new OpenAIFunction<FName, FDescription, FParams, DTypes>(opts);
   }
 }
 
