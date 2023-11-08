@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.3.3
+
+### Patch Changes
+
+- [`d3c6ecf`](https://github.com/propology/hopfield/commit/d3c6ecfebe4e0e7760be418a48b42cc4f93730a5) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** fix types to use `ZodType<any, any, any>`.
+
 ## 0.3.2
 
 ### Patch Changes
