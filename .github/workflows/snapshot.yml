@@ -2,6 +2,9 @@ name: Snapshot
 
 on: workflow_dispatch
 
+permissions:
+  contents: write
+
 jobs:
   snapshot:
     name: Publish Snapshot
