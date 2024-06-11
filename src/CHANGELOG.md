@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.3.6
+
+### Patch Changes
+
+- [#30](https://github.com/EnjoinHQ/hopfield/pull/30) [`0b3aea08d092db91b7e90d7ed9f9874e0d1746e6`](https://github.com/EnjoinHQ/hopfield/commit/0b3aea08d092db91b7e90d7ed9f9874e0d1746e6) Thanks [@0xcadams](https://github.com/0xcadams)! - **Feature:**: updated the model names for OpenAI to be more complete and up to date.
+
 ## 0.3.5
 
 ### Patch Changes
