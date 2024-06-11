@@ -184,8 +184,8 @@ guarantees with Zod, and composability across providers.
 ::: info API Providers
 
 We currently only support OpenAI, but are
-working on adding further providers. Reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions) if you have any suggestions!
+working on adding further providers. Reach out on
+[Github Discussions](https://github.com/EnjoinHQ/hopfield/discussions) if you have any suggestions!
 
 :::
 
@@ -359,8 +359,8 @@ guarantees with Zod.
 ::: info API Providers
 
 We currently only support OpenAI, but are
-working on adding further providers. Reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions) if you have any suggestions!
+working on adding further providers. Reach out on
+[Github Discussions](https://github.com/EnjoinHQ/hopfield/discussions) if you have any suggestions!
 
 :::
 
@@ -538,8 +538,8 @@ const response = await chat.get(
 
 ::: info Feedback
 
-To influence these features, reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions).
+To influence these features, reach out on
+[Github Discussions](https://github.com/EnjoinHQ/hopfield/discussions).
 We want your feedback!
 
 :::
@@ -936,16 +936,16 @@ const members = [
       <img img-light src="https://img.shields.io/npm/dm/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="Downloads per month">
     </picture>
   </a>
-  <a href="https://github.com/propology/hopfield/blob/main/LICENSE">
+  <a href="https://github.com/EnjoinHQ/hopfield/blob/main/LICENSE">
     <picture>
       <img img-dark src="https://img.shields.io/npm/l/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="MIT License">
       <img img-light src="https://img.shields.io/npm/l/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="MIT License">
     </picture>
   </a>
-  <a href="https://github.com/propology/hopfield">
+  <a href="https://github.com/EnjoinHQ/hopfield">
     <picture>
-      <img img-dark src="https://img.shields.io/github/stars/propology/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="GitHub Repo stars">
-      <img img-light src="https://img.shields.io/github/stars/propology/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="GitHub Repo stars">
+      <img img-dark src="https://img.shields.io/github/stars/EnjoinHQ/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="GitHub Repo stars">
+      <img img-light src="https://img.shields.io/github/stars/EnjoinHQ/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="GitHub Repo stars">
     </picture>
   </a>
 </div>
@@ -1156,8 +1156,7 @@ Oh, and liking Typescript is a nice-to-have.
 
 ## Community
 
-If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
-or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the 🐇-hopfield channel.
+If you have questions or need help, reach out to the community in the [Hopfield GitHub Discussions](https://github.com/EnjoinHQ/hopfield/discussions).
 
 <div align="center" style="width:100%;">
   <VPTeamMembers :members="members" />
@@ -1207,7 +1206,7 @@ include any custom code for streaming token by token.
 
 ### Backpressure
 
-The readable stream handles backpressure with a pull-based approach. See our [tests](https://github.com/propology/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure. For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
+The readable stream handles backpressure with a pull-based approach. See our [tests](https://github.com/EnjoinHQ/hopfield/blob/main/src/utils.test.ts) for how Hopfield handles backpressure. For a more detailed explanation on "backpressure" and how it factors into streaming LLM responses, please see the
 [vercel/ai docs](https://sdk.vercel.ai/docs/concepts/backpressure-and-cancellation).
 
 ## Usage

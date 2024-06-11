@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://hopfield.ai">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/propology/hopfield/main/.github/hopfield-w-text.png">
-      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/propology/hopfield/main/.github/hopfield-white-w-text.png" width="auto" height="120">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/EnjoinHQ/hopfield/main/.github/hopfield-w-text.png">
+      <img alt="Hopfield logo" src="https://raw.githubusercontent.com/EnjoinHQ/hopfield/main/.github/hopfield-white-w-text.png" width="auto" height="120">
     </picture>
   </a>
 </p>
@@ -22,7 +22,7 @@
       <img src="https://img.shields.io/npm/dm/hopfield?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="Downloads per month">
     </picture>
   </a>
-  <a href="https://github.com/propology/hopfield/blob/main/LICENSE">
+  <a href="https://github.com/EnjoinHQ/hopfield/blob/main/LICENSE">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/npm/l/hopfield?colorA=21262d&colorB=21262d&style=flat">
       <img src="https://img.shields.io/npm/l/hopfield?colorA=f6f8fa&colorB=f6f8fa&style=flat" alt="MIT License">
@@ -125,8 +125,7 @@ For full documentation, visit [hopfield.ai](https://hopfield.ai).
 
 ## Community
 
-If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
-or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the `🐇-hopfield` channel.
+If you have questions or need help, reach out to the community in the [Hopfield GitHub Discussions](https://github.com/EnjoinHQ/hopfield/discussions).
 
 ## Inspiration
 
@@ -144,4 +143,4 @@ If you like Hopfield, go star them on Github too.
 
 ## Contributing
 
-If you're interested in contributing to Hopfield, please read our [contributing docs](https://github.com/propology/hopfield/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
+If you're interested in contributing to Hopfield, please read our [contributing docs](https://github.com/EnjoinHQ/hopfield/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.

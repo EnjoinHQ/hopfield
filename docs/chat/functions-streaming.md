@@ -79,8 +79,8 @@ const response = await chat.get(
 
 ::: info Feedback
 
-To influence these features, reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions).
+To influence these features, reach out on
+[Github Discussions](https://github.com/EnjoinHQ/hopfield/discussions).
 We want your feedback!
 
 :::

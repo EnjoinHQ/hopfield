@@ -12,7 +12,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Hopfield with Server Components',
     description: 'Hopfield with React Server Components streaming on the Edge',
-    creator: '@propology_',
+    creator: '@EnjoinHQ',
   },
   openGraph: {
     type: 'website',
