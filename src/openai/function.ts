@@ -1,16 +1,11 @@
-import {
-  BaseHopfieldFunction,
-  type DisabledTypes,
-  type HopfieldFunctionOptions,
-} from '../function.js';
+import { BaseHopfieldFunction } from '../function.js';
 import type { TypeTemplates } from '../template.js';
 
 import {
-  ZodArray,
-  ZodDefault,
-  ZodFirstPartyTypeKind,
-  ZodType,
-  ZodUnion,
+  type ZodArray,
+  type ZodDefault,
+  type ZodType,
+  type ZodUnion,
   z,
 } from 'zod';
 import {
@@ -23,12 +18,6 @@ export type OpenAIFunctionsTuple = [
   OpenAIFunctionSchema,
   ...OpenAIFunctionSchema[],
 ];
-
-const disallowedTypes = [
-  ZodFirstPartyTypeKind.ZodAny,
-  ZodFirstPartyTypeKind.ZodBigInt,
-  ZodFirstPartyTypeKind.ZodTuple,
-] as const satisfies readonly ZodFirstPartyTypeKind[];
 
 const openAITypeTemplates = {
   ZodEnum: <D extends string>(description: D) =>
@@ -61,30 +50,24 @@ export type OpenAIFunctionProps<
   FName extends string,
   FDescription extends string,
   FParams extends ZodType<any, any, any>,
-  DTypes extends DisabledTypes,
 > = {
   name: FName;
   description: FDescription;
   parameters: FParams;
-  options?: HopfieldFunctionOptions<DTypes>;
 };
 
 export class OpenAIFunction<
   FName extends string,
   FDescription extends string,
   FParams extends ZodType<any, any, any>,
-  DTypes extends DisabledTypes = typeof disallowedTypes,
 > extends BaseHopfieldFunction<
   FName,
   FDescription,
   FParams,
-  DTypes,
   DefaultOpenAITypeTemplates,
   OpenAIChatTemplate<DefaultOpenAITypeTemplates>
 > {
-  constructor(
-    props: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>,
-  ) {
+  constructor(props: OpenAIFunctionProps<FName, FDescription, FParams>) {
     super({
       ...props,
       template: new OpenAIChatTemplate({
@@ -113,17 +96,12 @@ export class OpenAIFunction<
     return openAITypeTemplates;
   }
 
-  protected get _defaultDisabledTypes() {
-    return disallowedTypes;
-  }
-
   static function<
     FName extends string,
     FDescription extends string,
     FParams extends ZodType<any, any, any>,
-    DTypes extends DisabledTypes,
-  >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
-    return new OpenAIFunction<FName, FDescription, FParams, DTypes>(opts);
+  >(opts: OpenAIFunctionProps<FName, FDescription, FParams>) {
+    return new OpenAIFunction<FName, FDescription, FParams>(opts);
   }
 }
 

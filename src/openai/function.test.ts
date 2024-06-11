@@ -8,7 +8,6 @@ import * as Exports from './function.js';
 
 import hop from '../index.js';
 import openai from './index.js';
-import { z } from 'zod';
 
 it('should expose correct exports', () => {
   expect(Object.keys(Exports)).toMatchInlineSnapshot(`
@@ -82,76 +81,6 @@ describe.concurrent('test functions', () => {
           \\"message\\": \\"Required\\"
         }
       ]
-      Version: hopfield@x.y.z"
-    `);
-  });
-
-  test('should fail with no enum description', () => {
-    expect(
-      () =>
-        hop.client(openai).function({
-          ...weatherFunctionParams,
-          parameters: z.object({
-            location: z
-              .string()
-              .describe('The city and state, e.g. San Francisco, CA'),
-            unit: z.enum(['celsius', 'fahrenheit']),
-          }),
-        }).jsonSchema,
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "You must define a description for the type: ZodEnum
-
-      Docs: https://hopfield.ai/chat/functions
-      Details: There must be a description provided for ZodEnum, to describe what the function does for the LLM to infer a value.
-      Version: hopfield@x.y.z"
-    `);
-  });
-
-  test('should fail with no string description', () => {
-    expect(
-      () =>
-        hop.client(openai).function({
-          ...weatherFunctionParams,
-          parameters: z.object({
-            location: z.string(),
-            unit: z
-              .enum(['celsius', 'fahrenheit'])
-              .describe(
-                hop
-                  .client(openai)
-                  .template()
-                  .enum('The unit for the temperature.'),
-              ),
-          }),
-        }).jsonSchema,
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "You must define a description for the type: ZodString
-
-      Docs: https://hopfield.ai/chat/functions
-      Details: There must be a description provided for ZodString, to describe what the function does for the LLM to infer a value.
-      Version: hopfield@x.y.z"
-    `);
-  });
-
-  test('should fail with no enum templated description', () => {
-    expect(
-      () =>
-        hop.client(openai).function({
-          ...weatherFunctionParams,
-          parameters: z.object({
-            location: z
-              .string()
-              .describe('The city and state, e.g. San Francisco, CA'),
-            unit: z
-              .enum(['celsius', 'fahrenheit'])
-              .describe('The unit for the temperature.'),
-          }),
-        }).jsonSchema,
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "You should template your descriptions.
-
-      Docs: https://hopfield.ai/chat/functions
-      Details: It's recommended to template your descriptions - we recommend ending the type ZodEnum with \\" This must always be a possible value from the \`enum\` array.\\".
       Version: hopfield@x.y.z"
     `);
   });

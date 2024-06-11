@@ -7,8 +7,8 @@ import {
 } from '../../chat.js';
 import type { LimitedTupleWithUnion } from '../../type-utils.js';
 
-import OpenAI from 'openai';
-import { ZodUnion, z } from 'zod';
+import type OpenAI from 'openai';
+import { type ZodUnion, z } from 'zod';
 import { readableFromAsyncIterable } from '../../utils.js';
 import type {
   FunctionConfigsUnion,

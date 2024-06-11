@@ -1,4 +1,4 @@
-import { type ZodLiteral, ZodNumber } from 'zod';
+import type { ZodLiteral, ZodNumber } from 'zod';
 
 /**
  * Prints custom error message
@@ -138,44 +138,139 @@ export type IsEmptyArray<T extends any[]> = T extends [infer _X, ...infer _Rest]
 export type LimitedTuple<N extends number, T> = N extends 1
   ? [T]
   : N extends 2
-  ? [T, T]
-  : N extends 3
-  ? [T, T, T]
-  : N extends 4
-  ? [T, T, T, T]
-  : N extends 5
-  ? [T, T, T, T, T]
-  : N extends 6
-  ? [T, T, T, T, T, T]
-  : N extends 7
-  ? [T, T, T, T, T, T, T]
-  : N extends 8
-  ? [T, T, T, T, T, T, T, T]
-  : N extends 9
-  ? [T, T, T, T, T, T, T, T, T]
-  : N extends 10
-  ? [T, T, T, T, T, T, T, T, T, T]
-  : N extends 11
-  ? [T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 12
-  ? [T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 13
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 14
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 15
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 16
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 17
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 18
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 19
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : N extends 20
-  ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
-  : never;
+    ? [T, T]
+    : N extends 3
+      ? [T, T, T]
+      : N extends 4
+        ? [T, T, T, T]
+        : N extends 5
+          ? [T, T, T, T, T]
+          : N extends 6
+            ? [T, T, T, T, T, T]
+            : N extends 7
+              ? [T, T, T, T, T, T, T]
+              : N extends 8
+                ? [T, T, T, T, T, T, T, T]
+                : N extends 9
+                  ? [T, T, T, T, T, T, T, T, T]
+                  : N extends 10
+                    ? [T, T, T, T, T, T, T, T, T, T]
+                    : N extends 11
+                      ? [T, T, T, T, T, T, T, T, T, T, T]
+                      : N extends 12
+                        ? [T, T, T, T, T, T, T, T, T, T, T, T]
+                        : N extends 13
+                          ? [T, T, T, T, T, T, T, T, T, T, T, T, T]
+                          : N extends 14
+                            ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T]
+                            : N extends 15
+                              ? [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T]
+                              : N extends 16
+                                ? [
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                    T,
+                                  ]
+                                : N extends 17
+                                  ? [
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                      T,
+                                    ]
+                                  : N extends 18
+                                    ? [
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                        T,
+                                      ]
+                                    : N extends 19
+                                      ? [
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                          T,
+                                        ]
+                                      : N extends 20
+                                        ? [
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                            T,
+                                          ]
+                                        : never;
 
 type ZL<T> = ZodLiteral<T>;
 
@@ -186,206 +281,227 @@ type ZL<T> = ZodLiteral<T>;
 export type LimitedTupleWithUnion<N extends number> = N extends 1
   ? [ZL<0>]
   : N extends 2
-  ? [ZL<0>, ZL<1>]
-  : N extends 3
-  ? [ZL<0>, ZL<1>, ZL<2>]
-  : N extends 4
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>]
-  : N extends 5
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>]
-  : N extends 6
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>]
-  : N extends 7
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>]
-  : N extends 8
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>, ZL<7>]
-  : N extends 9
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>, ZL<7>, ZL<8>]
-  : N extends 10
-  ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>, ZL<7>, ZL<8>, ZL<9>]
-  : N extends 11
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-    ]
-  : N extends 12
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-    ]
-  : N extends 13
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-    ]
-  : N extends 14
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-    ]
-  : N extends 15
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-    ]
-  : N extends 16
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-      ZL<15>,
-    ]
-  : N extends 17
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-      ZL<15>,
-      ZL<16>,
-    ]
-  : N extends 18
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-      ZL<15>,
-      ZL<16>,
-      ZL<17>,
-    ]
-  : N extends 19
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-      ZL<15>,
-      ZL<16>,
-      ZL<17>,
-      ZL<18>,
-    ]
-  : N extends 20
-  ? [
-      ZL<0>,
-      ZL<1>,
-      ZL<2>,
-      ZL<3>,
-      ZL<4>,
-      ZL<5>,
-      ZL<6>,
-      ZL<7>,
-      ZL<8>,
-      ZL<9>,
-      ZL<10>,
-      ZL<11>,
-      ZL<12>,
-      ZL<13>,
-      ZL<14>,
-      ZL<15>,
-      ZL<16>,
-      ZL<17>,
-      ZL<18>,
-      ZL<19>,
-    ]
-  : never;
+    ? [ZL<0>, ZL<1>]
+    : N extends 3
+      ? [ZL<0>, ZL<1>, ZL<2>]
+      : N extends 4
+        ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>]
+        : N extends 5
+          ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>]
+          : N extends 6
+            ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>]
+            : N extends 7
+              ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>]
+              : N extends 8
+                ? [ZL<0>, ZL<1>, ZL<2>, ZL<3>, ZL<4>, ZL<5>, ZL<6>, ZL<7>]
+                : N extends 9
+                  ? [
+                      ZL<0>,
+                      ZL<1>,
+                      ZL<2>,
+                      ZL<3>,
+                      ZL<4>,
+                      ZL<5>,
+                      ZL<6>,
+                      ZL<7>,
+                      ZL<8>,
+                    ]
+                  : N extends 10
+                    ? [
+                        ZL<0>,
+                        ZL<1>,
+                        ZL<2>,
+                        ZL<3>,
+                        ZL<4>,
+                        ZL<5>,
+                        ZL<6>,
+                        ZL<7>,
+                        ZL<8>,
+                        ZL<9>,
+                      ]
+                    : N extends 11
+                      ? [
+                          ZL<0>,
+                          ZL<1>,
+                          ZL<2>,
+                          ZL<3>,
+                          ZL<4>,
+                          ZL<5>,
+                          ZL<6>,
+                          ZL<7>,
+                          ZL<8>,
+                          ZL<9>,
+                          ZL<10>,
+                        ]
+                      : N extends 12
+                        ? [
+                            ZL<0>,
+                            ZL<1>,
+                            ZL<2>,
+                            ZL<3>,
+                            ZL<4>,
+                            ZL<5>,
+                            ZL<6>,
+                            ZL<7>,
+                            ZL<8>,
+                            ZL<9>,
+                            ZL<10>,
+                            ZL<11>,
+                          ]
+                        : N extends 13
+                          ? [
+                              ZL<0>,
+                              ZL<1>,
+                              ZL<2>,
+                              ZL<3>,
+                              ZL<4>,
+                              ZL<5>,
+                              ZL<6>,
+                              ZL<7>,
+                              ZL<8>,
+                              ZL<9>,
+                              ZL<10>,
+                              ZL<11>,
+                              ZL<12>,
+                            ]
+                          : N extends 14
+                            ? [
+                                ZL<0>,
+                                ZL<1>,
+                                ZL<2>,
+                                ZL<3>,
+                                ZL<4>,
+                                ZL<5>,
+                                ZL<6>,
+                                ZL<7>,
+                                ZL<8>,
+                                ZL<9>,
+                                ZL<10>,
+                                ZL<11>,
+                                ZL<12>,
+                                ZL<13>,
+                              ]
+                            : N extends 15
+                              ? [
+                                  ZL<0>,
+                                  ZL<1>,
+                                  ZL<2>,
+                                  ZL<3>,
+                                  ZL<4>,
+                                  ZL<5>,
+                                  ZL<6>,
+                                  ZL<7>,
+                                  ZL<8>,
+                                  ZL<9>,
+                                  ZL<10>,
+                                  ZL<11>,
+                                  ZL<12>,
+                                  ZL<13>,
+                                  ZL<14>,
+                                ]
+                              : N extends 16
+                                ? [
+                                    ZL<0>,
+                                    ZL<1>,
+                                    ZL<2>,
+                                    ZL<3>,
+                                    ZL<4>,
+                                    ZL<5>,
+                                    ZL<6>,
+                                    ZL<7>,
+                                    ZL<8>,
+                                    ZL<9>,
+                                    ZL<10>,
+                                    ZL<11>,
+                                    ZL<12>,
+                                    ZL<13>,
+                                    ZL<14>,
+                                    ZL<15>,
+                                  ]
+                                : N extends 17
+                                  ? [
+                                      ZL<0>,
+                                      ZL<1>,
+                                      ZL<2>,
+                                      ZL<3>,
+                                      ZL<4>,
+                                      ZL<5>,
+                                      ZL<6>,
+                                      ZL<7>,
+                                      ZL<8>,
+                                      ZL<9>,
+                                      ZL<10>,
+                                      ZL<11>,
+                                      ZL<12>,
+                                      ZL<13>,
+                                      ZL<14>,
+                                      ZL<15>,
+                                      ZL<16>,
+                                    ]
+                                  : N extends 18
+                                    ? [
+                                        ZL<0>,
+                                        ZL<1>,
+                                        ZL<2>,
+                                        ZL<3>,
+                                        ZL<4>,
+                                        ZL<5>,
+                                        ZL<6>,
+                                        ZL<7>,
+                                        ZL<8>,
+                                        ZL<9>,
+                                        ZL<10>,
+                                        ZL<11>,
+                                        ZL<12>,
+                                        ZL<13>,
+                                        ZL<14>,
+                                        ZL<15>,
+                                        ZL<16>,
+                                        ZL<17>,
+                                      ]
+                                    : N extends 19
+                                      ? [
+                                          ZL<0>,
+                                          ZL<1>,
+                                          ZL<2>,
+                                          ZL<3>,
+                                          ZL<4>,
+                                          ZL<5>,
+                                          ZL<6>,
+                                          ZL<7>,
+                                          ZL<8>,
+                                          ZL<9>,
+                                          ZL<10>,
+                                          ZL<11>,
+                                          ZL<12>,
+                                          ZL<13>,
+                                          ZL<14>,
+                                          ZL<15>,
+                                          ZL<16>,
+                                          ZL<17>,
+                                          ZL<18>,
+                                        ]
+                                      : N extends 20
+                                        ? [
+                                            ZL<0>,
+                                            ZL<1>,
+                                            ZL<2>,
+                                            ZL<3>,
+                                            ZL<4>,
+                                            ZL<5>,
+                                            ZL<6>,
+                                            ZL<7>,
+                                            ZL<8>,
+                                            ZL<9>,
+                                            ZL<10>,
+                                            ZL<11>,
+                                            ZL<12>,
+                                            ZL<13>,
+                                            ZL<14>,
+                                            ZL<15>,
+                                            ZL<16>,
+                                            ZL<17>,
+                                            ZL<18>,
+                                            ZL<19>,
+                                          ]
+                                        : never;

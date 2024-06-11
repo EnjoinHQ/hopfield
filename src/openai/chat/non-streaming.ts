@@ -11,8 +11,8 @@ import {
 } from './non-streaming-with-functions.js';
 import { MessageAssistant, OpenAIChatBaseInput } from './shared.js';
 import { OpenAIChatStreamingSchema, OpenAIStreamingChat } from './streaming.js';
-import OpenAI from 'openai';
-import { ZodUnion, z } from 'zod';
+import type OpenAI from 'openai';
+import { type ZodUnion, z } from 'zod';
 
 /**
  * Omitted content due to a flag from our content filters.
@@ -145,7 +145,7 @@ export class OpenAIChatSchema<
     });
   }
 
-  functions<NewFunctions extends OpenAIFunctionsTuple,>(
+  functions<NewFunctions extends OpenAIFunctionsTuple>(
     functions: NewFunctions,
   ): OpenAIChatWithFunctionsSchema<ModelName, N, NewFunctions> {
     return new OpenAIChatWithFunctionsSchema({
@@ -201,7 +201,7 @@ export class OpenAIChat<
     });
   }
 
-  override functions<NewFunctions extends OpenAIFunctionsTuple,>(
+  override functions<NewFunctions extends OpenAIFunctionsTuple>(
     functions: NewFunctions,
   ): OpenAIChatWithFunctions<Provider, ModelName, N, NewFunctions> {
     return new OpenAIChatWithFunctions({

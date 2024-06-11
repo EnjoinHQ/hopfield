@@ -8,7 +8,7 @@ export const defaultOpenAITypeTemplates = {
 
 export type DefaultOpenAITypeTemplates = typeof defaultOpenAITypeTemplates;
 
-export type OpenAIChatTemplateProps<TTemplates extends TypeTemplates,> = {
+export type OpenAIChatTemplateProps<TTemplates extends TypeTemplates> = {
   templates: TTemplates;
 };
 
@@ -25,7 +25,7 @@ export class OpenAIChatTemplate<
     return defaultOpenAITypeTemplates.ZodEnum(description);
   }
 
-  static template<TTemplates extends TypeTemplates,>(
+  static template<TTemplates extends TypeTemplates>(
     opts: OpenAIChatTemplateProps<TTemplates>,
   ) {
     return new OpenAIChatTemplate(opts);

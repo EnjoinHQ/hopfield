@@ -7,7 +7,7 @@ export type TypeTemplates =
     >
   | false;
 
-export type BaseHopfieldChatTemplateProps<TTemplates extends TypeTemplates,> = {
+export type BaseHopfieldChatTemplateProps<TTemplates extends TypeTemplates> = {
   /**
    * Allows you to specify custom templates to use for different Zod types.
    */

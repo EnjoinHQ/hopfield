@@ -156,25 +156,3 @@ if (response.choices[0].__type === "function_call") {
   //      ^?
 }
 ```
-
-### Options
-
-The `function` also allows an optional `options` parameter, which lets you override the runtime checks for the
-schema. This includes the checks for requiring descriptions on Zod schema parameters, as well as overriding the
-list of "disabled types", which are Zod types which typically produce unreliable results from an LLM.
-
-```ts
-type HopfieldFunctionOptions = {
-  /**
-   * Allows descriptions to not be checked on the function parameters. This defaults to `true`.
-   */
-  requireDescriptions?: boolean;
-  /**
-   * Allows you override or disable "unstable" types, which are types that do not typically
-   * produce good results with a given model. These are defined on a per-model basis.
-   *
-   * Set to false to allow all "unstable" types.
-   */
-  disabledTypes?: ZodFirstPartyTypeKind[] | false;
-};
-```

@@ -1,10 +1,10 @@
-import {
-  type InferInput,
-  type InferInputMessage,
-  type InferResult,
-  type InferStreamingResult,
-  type StreamingOptions,
-  type StreamingWithFunctionsOptions,
+import type {
+  InferInput,
+  InferInputMessage,
+  InferResult,
+  InferStreamingResult,
+  StreamingOptions,
+  StreamingWithFunctionsOptions,
 } from './chat.js';
 import type { BaseHopfield } from './provider.js';
 

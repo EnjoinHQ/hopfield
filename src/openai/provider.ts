@@ -8,7 +8,6 @@ import {
   defaultEmbeddingCount,
   type DefaultEmbeddingCount,
 } from '../embedding.js';
-import type { DisabledTypes } from '../function.js';
 import { BaseHopfield } from '../provider.js';
 import type { TypeTemplates } from '../template.js';
 import { OpenAIChat, OpenAIChatSchema } from './chat/non-streaming.js';
@@ -80,9 +79,8 @@ export class OpenAIHopfield<
     FName extends string,
     FDescription extends string,
     FParams extends ZodType<any, any, any>,
-    DTypes extends DisabledTypes, // = typeof disallowedTypes,
-  >(opts: OpenAIFunctionProps<FName, FDescription, FParams, DTypes>) {
-    return new OpenAIFunction<FName, FDescription, FParams, DTypes>(opts);
+  >(opts: OpenAIFunctionProps<FName, FDescription, FParams>) {
+    return new OpenAIFunction<FName, FDescription, FParams>(opts);
   }
 
   override template(): OpenAIChatTemplate<DefaultOpenAITypeTemplates>;

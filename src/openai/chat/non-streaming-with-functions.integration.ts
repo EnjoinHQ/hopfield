@@ -318,9 +318,6 @@ describe.concurrent('non-streaming with functions', () => {
           summary: z.string().describe('The summary of the message.'),
           category: SupportCategoryEnum,
         }),
-        options: {
-          requireDescriptions: false,
-        },
       });
 
       const chat = hopfieldChat.functions([classifyMessage]);
@@ -420,9 +417,6 @@ describe.concurrent('non-streaming with functions', () => {
           summary: z.string().describe('The summary of the message.'),
           category: SupportCategoryEnum,
         }),
-        options: {
-          requireDescriptions: false,
-        },
       });
 
       const chat = hopfieldChat.functions([classifyMessage]);

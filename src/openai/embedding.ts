@@ -5,8 +5,8 @@ import {
   type OpenAIEmbeddingModelName,
   defaultOpenAIEmbeddingModelName,
 } from './models.js';
-import OpenAI from 'openai';
-import { ZodArray, ZodNumber, ZodString, z } from 'zod';
+import type OpenAI from 'openai';
+import { type ZodArray, type ZodNumber, type ZodString, z } from 'zod';
 
 export interface EmbeddingLengths
   extends Record<OpenAIEmbeddingModelName, ZodNumber[]> {
@@ -132,7 +132,7 @@ export class OpenAIEmbedding<
 
   async get(
     input: Omit<z.input<typeof this.parameters>, 'model'>,
-  ): Promise<typeof this.returnType['_output']> {
+  ): Promise<(typeof this.returnType)['_output']> {
     const parsedInput = await this.parameters.parseAsync(input);
 
     const response = await this.provider.embeddings.create(
