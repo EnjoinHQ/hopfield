@@ -139,8 +139,6 @@ Shoutout to these projects which inspired us:
 - [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
 - [abitype](https://github.com/wagmi-dev/abitype)
 
-If you like Hopfield, go star them on Github too.
-
 ## Contributing
 
 If you're interested in contributing to Hopfield, please read our [contributing docs](https://github.com/EnjoinHQ/hopfield/blob/main/.github/CONTRIBUTING.md) **before submitting a pull request**.
