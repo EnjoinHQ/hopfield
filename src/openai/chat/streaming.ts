@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
-import { ZodUnion, z } from 'zod';
+import type OpenAI from 'openai';
+import { type ZodUnion, z } from 'zod';
 import {
   BaseHopfieldChat,
   type InferResult,
@@ -178,7 +178,7 @@ export class OpenAIChatStreamingSchema<
     });
   }
 
-  functions<NewFunctions extends OpenAIFunctionsTuple,>(
+  functions<NewFunctions extends OpenAIFunctionsTuple>(
     functions: NewFunctions,
   ) {
     return new OpenAIChatWithFunctionsStreamingSchema({
@@ -267,7 +267,7 @@ export class OpenAIStreamingChat<
     return result;
   }
 
-  override functions<NewFunctions extends OpenAIFunctionsTuple,>(
+  override functions<NewFunctions extends OpenAIFunctionsTuple>(
     functions: NewFunctions,
   ) {
     return new OpenAIChatWithFunctionsStreaming({

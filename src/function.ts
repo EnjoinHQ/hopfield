@@ -1,15 +1,12 @@
 import { BaseHopfieldSchema } from './base.js';
 import { BaseError } from './errors.js';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { zodToJsonSchema, type JsonSchema7Type } from 'zod-to-json-schema';
 
 import type { BaseHopfieldChatTemplate, TypeTemplates } from './template.js';
 import type { IsEmptyArray } from './type-utils.js';
-import { ZodFirstPartyTypeKind, type ZodTypeDef, z, type ZodType } from 'zod';
-import type { Refs } from 'zod-to-json-schema/src/Refs.js';
-import type { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef.js';
+import { z, type ZodType } from 'zod';
 
 export type AnyBaseHopfieldFunction = BaseHopfieldFunction<
-  any,
   any,
   any,
   any,
@@ -28,11 +25,6 @@ export type FunctionPropertyOrNever<
 > = IsEmptyArray<T> extends true
   ? never
   : [FunctionProperty<T[number], K>, ...FunctionProperty<T[number], K>[]];
-
-export type DisabledTypes =
-  | ZodFirstPartyTypeKind[]
-  | readonly ZodFirstPartyTypeKind[]
-  | false;
 
 export interface JsonSchemaFunction<
   Name extends string,
@@ -59,31 +51,6 @@ export interface JsonSchemaFunction<
    */
   parameters: JsonSchema7Type;
 }
-
-const requiredDescriptionTypes: ZodFirstPartyTypeKind[] = [
-  ZodFirstPartyTypeKind.ZodBigInt,
-  ZodFirstPartyTypeKind.ZodBoolean,
-  ZodFirstPartyTypeKind.ZodDate,
-  ZodFirstPartyTypeKind.ZodEnum,
-  ZodFirstPartyTypeKind.ZodFunction,
-  ZodFirstPartyTypeKind.ZodNativeEnum,
-  ZodFirstPartyTypeKind.ZodNumber,
-  ZodFirstPartyTypeKind.ZodString,
-];
-
-export type HopfieldFunctionOptions<D extends DisabledTypes,> = {
-  /**
-   * Allows descriptions to not be checked on the function parameters. This defaults to `true`.
-   */
-  requireDescriptions?: boolean;
-  /**
-   * Allows you override or disable "unstable" types, which are types that do not typically
-   * produce good results with a given model. These are defined on a per-model basis.
-   *
-   * Set to false to allow all "unstable" types.
-   */
-  disabledTypes?: D;
-};
 
 const stringToJSONSchema = z.string().transform((str, ctx): object => {
   try {
@@ -114,7 +81,6 @@ export type BaseHopfieldFunctionProps<
   FName extends string,
   FDescription extends string,
   FParams extends ZodType<any, any, any>,
-  DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
   Template extends BaseHopfieldChatTemplate<TTemplates>,
 > = {
@@ -122,14 +88,12 @@ export type BaseHopfieldFunctionProps<
   description: FDescription;
   parameters: FParams;
   template: Template;
-  options?: HopfieldFunctionOptions<DTypes>;
 };
 
 export abstract class BaseHopfieldFunction<
   FName extends string,
   FDescription extends string,
   FParams extends ZodType<any, any, any>,
-  DTypes extends DisabledTypes,
   TTemplates extends TypeTemplates,
   Template extends BaseHopfieldChatTemplate<TTemplates>,
 > extends BaseHopfieldSchema<FParams> {
@@ -138,19 +102,16 @@ export abstract class BaseHopfieldFunction<
 
   parameters: FParams;
   protected _template: Template;
-  protected _options: HopfieldFunctionOptions<DTypes>;
 
   constructor({
     name,
     description,
     parameters,
     template,
-    options = {},
   }: BaseHopfieldFunctionProps<
     FName,
     FDescription,
     FParams,
-    DTypes,
     TTemplates,
     Template
   >) {
@@ -161,11 +122,9 @@ export abstract class BaseHopfieldFunction<
     this.parameters = parameters;
 
     this._template = template;
-    this._options = options;
   }
 
   protected abstract get _defaultTypeTemplates(): TypeTemplates;
-  protected abstract get _defaultDisabledTypes(): DisabledTypes;
 
   /**
    * Returns a formatted JSON schema function definition for LLM function calling.
@@ -191,77 +150,11 @@ export abstract class BaseHopfieldFunction<
       });
     }
 
-    const onParseDef = (
-      def: ZodTypeDef,
-      _refs: Refs,
-      schema: JsonSchema7Type,
-    ) => {
-      const typeName: ZodFirstPartyTypeKind = (def as any).typeName;
-
-      const templates =
-        this._template._templates === false
-          ? false
-          : {
-              ...this._defaultTypeTemplates,
-              ...this._template._templates,
-            };
-      const requireDescriptions = this._options.requireDescriptions ?? true;
-      const disabledTypes = !this._options.disabledTypes
-        ? false
-        : {
-            ...this._defaultDisabledTypes,
-            ...this._options.disabledTypes,
-          };
-
-      // check here for typeName and description being defined
-      if (
-        requireDescriptions &&
-        requiredDescriptionTypes.includes(typeName) &&
-        !schema.description
-      ) {
-        throw new BaseError(
-          `You must define a description for the type: ${typeName}`,
-          {
-            docsPath: '/chat/functions',
-            details: `There must be a description provided for ${typeName}, to describe what the function does for the LLM to infer a value.`,
-          },
-        );
-      }
-
-      const descriptionEnding =
-        typeof templates === 'object'
-          ? templates?.[typeName]?.('' as any) ?? null
-          : null;
-
-      if (
-        descriptionEnding &&
-        schema.description &&
-        !schema.description?.endsWith(descriptionEnding)
-      ) {
-        throw new BaseError('You should template your descriptions.', {
-          docsPath: '/chat/functions',
-          details: `It's recommended to template your descriptions - we recommend ending the type ${typeName} with "${descriptionEnding}".`,
-        });
-      }
-
-      // check here for disabled types
-      if (
-        typeof disabledTypes !== 'boolean' &&
-        disabledTypes.includes(typeName)
-      ) {
-        throw new BaseError(`You should not use ${typeName}.`, {
-          docsPath: '/chat/functions',
-          details: `You should not use ${typeName} yet - it provides unreliable results from LLMs.`,
-        });
-      }
-    };
-
     return {
       name: this.name,
       description: this.description,
       parameters: zodToJsonSchema(this.parameters as any, {
         $refStrategy: 'none',
-        onParseDef,
       }) as object,
     } as const;
   }

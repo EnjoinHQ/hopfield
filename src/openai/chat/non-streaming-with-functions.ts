@@ -25,8 +25,8 @@ import {
   OpenAIChatWithFunctionsStreamingSchema,
 } from './streaming-with-functions.js';
 import { AssistantRole } from './streaming.js';
-import OpenAI from 'openai';
-import { ZodUnion, z } from 'zod';
+import type OpenAI from 'openai';
+import { type ZodUnion, z } from 'zod';
 
 export type OpenAIChatWithFunctionsSchemaProps<
   ModelName extends OpenAIChatModelName,
@@ -156,7 +156,7 @@ export class OpenAIChatWithFunctionsSchema<
     });
   }
 
-  functions<NewFunctions extends OpenAIFunctionsTuple,>(
+  functions<NewFunctions extends OpenAIFunctionsTuple>(
     functions: NewFunctions,
   ) {
     return new OpenAIChatWithFunctionsSchema({

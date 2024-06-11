@@ -42,16 +42,16 @@ const members = [
       <img img-light src="https://img.shields.io/npm/dm/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="Downloads per month">
     </picture>
   </a>
-  <a href="https://github.com/propology/hopfield/blob/main/LICENSE">
+  <a href="https://github.com/EnjoinHQ/hopfield/blob/main/LICENSE">
     <picture>
       <img img-dark src="https://img.shields.io/npm/l/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="MIT License">
       <img img-light src="https://img.shields.io/npm/l/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="MIT License">
     </picture>
   </a>
-  <a href="https://github.com/propology/hopfield">
+  <a href="https://github.com/EnjoinHQ/hopfield">
     <picture>
-      <img img-dark src="https://img.shields.io/github/stars/propology/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="GitHub Repo stars">
-      <img img-light src="https://img.shields.io/github/stars/propology/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="GitHub Repo stars">
+      <img img-dark src="https://img.shields.io/github/stars/EnjoinHQ/hopfield?colorA=2e2e33&colorB=2e2e33&style=flat" alt="GitHub Repo stars">
+      <img img-light src="https://img.shields.io/github/stars/EnjoinHQ/hopfield?colorA=fafafa&colorB=fafafa&style=flat" alt="GitHub Repo stars">
     </picture>
   </a>
 </div>
@@ -262,8 +262,7 @@ Oh, and liking Typescript is a nice-to-have.
 
 ## Community
 
-If you have questions or need help, reach out to the community at the [Hopfield GitHub Discussions](https://github.com/propology/hopfield/discussions)
-or join the [Propology Discord](https://discord.gg/2hag5fc6) and check out the `🐇-hopfield` channel.
+If you have questions or need help, reach out to the community in the [Hopfield GitHub Discussions](https://github.com/EnjoinHQ/hopfield/discussions).
 
 <div align="center" style="width:100%;">
   <VPTeamMembers :members="members" />

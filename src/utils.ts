@@ -3,8 +3,8 @@ import type { StringifiedArray, StringifiedObject } from './types.js';
 type JsonStringifyReturn<T extends object | object[]> = T extends object[]
   ? StringifiedArray
   : T extends object
-  ? StringifiedObject
-  : never;
+    ? StringifiedObject
+    : never;
 
 export function jsonStringify<T extends object | object[]>(
   value: T,

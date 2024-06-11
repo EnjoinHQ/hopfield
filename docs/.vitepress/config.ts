@@ -68,7 +68,7 @@ export default withTwoslash(
         provider: 'local',
       },
       editLink: {
-        pattern: 'https://github.com/propology/hopfield/edit/main/docs/:path',
+        pattern: 'https://github.com/EnjoinHQ/hopfield/edit/main/docs/:path',
         text: 'Suggest changes to this page',
       },
       footer: {
@@ -89,11 +89,11 @@ export default withTwoslash(
           items: [
             {
               text: 'Release Notes ',
-              link: 'https://github.com/propology/hopfield/releases',
+              link: 'https://github.com/EnjoinHQ/hopfield/releases',
             },
             {
               text: 'Contributing ',
-              link: 'https://github.com/propology/hopfield/blob/main/.github/CONTRIBUTING.md',
+              link: 'https://github.com/EnjoinHQ/hopfield/blob/main/.github/CONTRIBUTING.md',
             },
           ],
         },
@@ -173,9 +173,8 @@ export default withTwoslash(
       },
       siteTitle: false,
       socialLinks: [
-        { icon: 'twitter', link: 'https://twitter.com/propology_' },
-        { icon: 'discord', link: 'https://discord.gg/2hag5fc6' },
-        { icon: 'github', link: 'https://github.com/propology/hopfield' },
+        { icon: 'twitter', link: 'https://twitter.com/EnjoinHQ' },
+        { icon: 'github', link: 'https://github.com/EnjoinHQ/hopfield' },
       ],
     },
     title:

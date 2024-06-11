@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.3.3/schema.json",
   "files": {
     "ignore": [
       "_cjs",
@@ -29,9 +29,6 @@
       "correctness": {
         "noUnusedVariables": "error"
       },
-      "nursery": {
-        "useGroupedTypeImport": "off"
-      },
       "performance": {
         "noDelete": "off"
       },
@@ -50,7 +47,6 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingComma": "all",
       "semicolons": "always"
     }
   },

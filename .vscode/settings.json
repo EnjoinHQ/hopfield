@@ -4,8 +4,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.codeActionsOnSave": {
-    "quickfix.biome": true,
-    "source.organizeImports.biome": true
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"

@@ -17,7 +17,7 @@ export function Footer() {
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://github.com/propology/hopfield/tree/main/examples/next-13"
+        href="https://github.com/EnjoinHQ/hopfield/tree/main/examples/next-13"
         className="relative w-8 h-8"
       >
         <Image src={gh} alt="github logo" fill />

@@ -11,8 +11,8 @@ guarantees with Zod.
 ::: info API Providers
 
 We currently only support OpenAI, but are
-working on adding further providers. Reach out on [Discord](https://discord.gg/2hag5fc6) or
-[Github Discussions](https://github.com/propology/hopfield/discussions) if you have any suggestions!
+working on adding further providers. Reach out on
+[Github Discussions](https://github.com/EnjoinHQ/hopfield/discussions) if you have any suggestions!
 
 :::
 
