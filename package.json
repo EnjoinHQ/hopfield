@@ -11,7 +11,7 @@
     "changeset:release": "bun run build && bun run prepublishOnly && changeset publish",
     "changeset:version": "changeset version && bun scripts/updateVersion.ts && bun install --lockfile-only",
     "clean": "rimraf src/_esm src/_cjs src/_types *.tsbuildinfo",
-    "docs:build": "bun run build && cd docs && bun run build",
+    "docs:build": "pnpm run build && cd docs && pnpm run build",
     "docs:dev": "cd docs && bun run dev",
     "format": "biome format . --write",
     "generate": "bun scripts/concatDocs.ts",
