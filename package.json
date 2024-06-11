@@ -15,7 +15,7 @@
     "format": "biome format . --write",
     "generate": "bun scripts/concatDocs.ts",
     "lint": "biome check .",
-    "lint:fix": "bun run lint --apply",
+    "lint:fix": "bun run lint --write",
     "postinstall": "bun run generate && bun x patch-package",
     "prepare": "bun x simple-git-hooks",
     "prepublishOnly": "bun scripts/prepublishOnly.ts",
