@@ -50,7 +50,7 @@ describe.concurrent('streaming', () => {
             : '';
       }
 
-      expect(content).toMatchInlineSnapshot('"Fold and devour."');
+      expect(content).toMatchInlineSnapshot('"Upside-down slice."');
       expect(onChunkTypes).toEqual(onDoneTypes);
     },
     TEST_TIMEOUT,
@@ -90,24 +90,26 @@ describe.concurrent('streaming', () => {
         }
       }
 
-      expect(content1).toMatchInlineSnapshot('"Fold and devour."');
-      expect(content2).toMatchInlineSnapshot('"Fold and devour."');
+      expect(content1).toMatchInlineSnapshot('"Upside-down slice."');
+      expect(content2).toMatchInlineSnapshot('"Upside-down slice."');
       expect(onChunkTypes).toMatchInlineSnapshot(`
-      [
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "content",
-        "stop",
-        "stop",
-      ]
-    `);
+        [
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "content",
+          "stop",
+          "stop",
+        ]
+      `);
     },
     TEST_TIMEOUT,
   );
@@ -136,7 +138,7 @@ describe.concurrent('streaming', () => {
             : '';
       }
 
-      expect(content).toMatchInlineSnapshot('"Fold and devour."');
+      expect(content).toMatchInlineSnapshot('"Upside-down slice."');
     },
     TEST_TIMEOUT,
   );
@@ -170,7 +172,7 @@ describe.concurrent('streaming', () => {
         readCount++;
       }
 
-      expect(content).toMatchInlineSnapshot('"Fold"');
+      expect(content).toMatchInlineSnapshot('"Ups"');
 
       const postCancelRead = await reader.read();
       expect(postCancelRead.done).toBe(true);

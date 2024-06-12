@@ -42,7 +42,7 @@ describe.concurrent('non-streaming chat', () => {
   test('all test messages', async () => {
     const allTests = [openaiBasicMessage, openaiLengthLimited];
 
-    const testChat = hop.client(openai).chat();
+    const testChat = hop.client(openai).chat('gpt-4o-2024-05-13');
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -157,7 +157,10 @@ describe.concurrent('non-streaming functions chat', () => {
       openaiLengthLimited,
     ];
 
-    const testChat = hop.client(openai).chat().functions([weatherFunction]);
+    const testChat = hop
+      .client(openai)
+      .chat('gpt-4o-2024-05-13')
+      .functions([weatherFunction]);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
