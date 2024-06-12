@@ -8,8 +8,8 @@ const TEST_TIMEOUT = 8_000;
 
 const hopfield = hop.client(openai).provider(openAIClient);
 
-const chat = hopfield.chat('gpt-3.5-turbo-16k-0613').streaming();
-const chatMultiple = hopfield.chat('gpt-3.5-turbo-16k-0613', 2).streaming();
+const chat = hopfield.chat('gpt-4o-2024-05-13').streaming();
+const chatMultiple = hopfield.chat('gpt-4o-2024-05-13', 2).streaming();
 
 const messages: hop.inferMessageInput<typeof chat>[] = [
   {

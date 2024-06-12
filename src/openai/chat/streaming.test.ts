@@ -15,7 +15,7 @@ import {
 } from '../../_test/openai-streaming.js';
 import openai from '../index.js';
 
-const chat = hop.client(openai).chat('gpt-3.5-turbo-1106').streaming();
+const chat = hop.client(openai).chat('gpt-4o-2024-05-13').streaming();
 const chatWithFunction = chat.functions([weatherFunction]);
 
 it('should expose correct exports', () => {
@@ -35,13 +35,13 @@ it('should expose correct exports', () => {
 
 test('should set a model name', async () => {
   expect(
-    hop.client(openai).chat('gpt-4-0613').streaming().model,
-  ).toMatchInlineSnapshot('"gpt-4-0613"');
+    hop.client(openai).chat('gpt-4-turbo-2024-04-09').streaming().model,
+  ).toMatchInlineSnapshot('"gpt-4-turbo-2024-04-09"');
 });
 
 test('should set a default model name', async () => {
   expect(hop.client(openai).chat().streaming().model).toMatchInlineSnapshot(
-    '"gpt-3.5-turbo-1106"',
+    '"gpt-4o"',
   );
 });
 
@@ -51,7 +51,7 @@ describe.concurrent('streaming chat', () => {
 
     const allTypes: string[] = [];
 
-    const testChat = hop.client(openai).chat().streaming();
+    const testChat = hop.client(openai).chat('gpt-4o-2024-05-13').streaming();
 
     for (const messages of allTests) {
       const output = messages.map((m) => testChat.returnType.parse(m));
@@ -73,7 +73,7 @@ describe.concurrent('streaming chat', () => {
 
     const testChat = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming();
 
     for (const messages of allTests) {
@@ -97,7 +97,7 @@ describe.concurrent('streaming chat', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -119,7 +119,7 @@ describe.concurrent('streaming chat', () => {
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485919,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 0,
@@ -144,7 +144,7 @@ describe.concurrent('streaming chat', () => {
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485893,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 0,
@@ -165,7 +165,7 @@ describe.concurrent('streaming chat', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -183,13 +183,13 @@ describe.concurrent('streaming chat', () => {
   test('should parse a streaming content with index', async () => {
     const parsed = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming()
       .returnType.parse({
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485556,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 1,
@@ -209,7 +209,7 @@ describe.concurrent('streaming chat', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -225,13 +225,13 @@ describe.concurrent('streaming chat', () => {
   test('should parse a streaming stop with two indices', async () => {
     const parsed = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming()
       .returnType.parse({
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485556,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 1,
@@ -250,7 +250,7 @@ describe.concurrent('streaming chat', () => {
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485919,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 0,
@@ -267,7 +267,7 @@ describe.concurrent('streaming chat', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485893,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -294,7 +294,7 @@ describe.concurrent('streaming chat with function', () => {
 
     const testChat = hop
       .client(openai)
-      .chat()
+      .chat('gpt-4o-2024-05-13')
       .streaming()
       .functions([weatherFunction]);
 
@@ -320,7 +320,7 @@ describe.concurrent('streaming chat with function', () => {
 
     const testChat = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming()
       .functions([weatherFunction]);
 
@@ -345,7 +345,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -367,7 +367,7 @@ describe.concurrent('streaming chat with function', () => {
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485919,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 0,
@@ -407,7 +407,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485919,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -432,7 +432,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485893,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -456,7 +456,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -474,14 +474,14 @@ describe.concurrent('streaming chat with function', () => {
   test('should parse a streaming content with index', async () => {
     const parsed = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming()
       .functions([weatherFunction])
       .returnType.parse({
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485556,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 1,
@@ -501,7 +501,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485556,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -517,14 +517,14 @@ describe.concurrent('streaming chat with function', () => {
   test('should parse a streaming stop with two indices', async () => {
     const parsed = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .streaming()
       .functions([weatherFunction])
       .returnType.parse({
         id: 'chatcmpl-12345',
         object: 'chat.completion.chunk',
         created: 1690485556,
-        model: 'gpt-3.5-turbo-1106',
+        model: 'gpt-4o-2024-05-13',
         choices: [
           {
             index: 1,
@@ -542,7 +542,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485919,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,
@@ -562,7 +562,7 @@ describe.concurrent('streaming chat with function', () => {
       id: 'chatcmpl-12345',
       object: 'chat.completion.chunk',
       created: 1690485893,
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-2024-05-13',
       choices: [
         {
           index: 0,

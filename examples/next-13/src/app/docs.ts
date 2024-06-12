@@ -1224,7 +1224,7 @@ const openaiClient = new OpenAI({ apiKey: "OPENAI_API_KEY" });
 // Pass the OpenAI client into Hopfield
 const hopfield = hop.client(openai).provider(openaiClient);
 // Create a streaming chat provider
-const chat = hopfield.chat("gpt-3.5-turbo-16k-1106").streaming();
+const chat = hopfield.chat("gpt-4o-2024-05-13").streaming();
 
 export type ChatResponseProps = {
   prompt: string;
