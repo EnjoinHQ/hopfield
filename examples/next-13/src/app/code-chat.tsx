@@ -16,7 +16,7 @@ const openaiClient = new OpenAI({
 const hopfield = hop.client(openai).provider(openaiClient);
 
 // Create the Hopfield streaming chat provider
-const chat = hopfield.chat('gpt-3.5-turbo-1106').streaming();
+const chat = hopfield.chat('gpt-4o-2024-05-13').streaming();
 
 const prompt = `Provide a cool use of Hopfield from the context below, with a short paragraph introduction of what Hopfield does, and then a Typescript example in 20 lines of code or less: \n\n${docs}`;
 
@@ -131,7 +131,7 @@ const getCachedResponse = async (prompt: string) => {
         let id = 0;
         for (const chunk of chunks) {
           const fakeChunk: hop.inferResult<typeof chat> = {
-            model: 'gpt-3.5-turbo-1106',
+            model: 'gpt-4o-2024-05-13',
             id: String(id++),
             created: Date.now(),
             choices: [

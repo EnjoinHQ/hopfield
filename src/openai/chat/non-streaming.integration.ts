@@ -8,8 +8,8 @@ const TEST_TIMEOUT = 8_000;
 
 const hopfield = hop.client(openai).provider(openAIClient);
 
-const chat = hopfield.chat('gpt-3.5-turbo-16k-0613');
-const chatMultiple = hopfield.chat('gpt-3.5-turbo-16k-0613', 2);
+const chat = hopfield.chat('gpt-3.5-turbo-0613');
+const chatMultiple = hopfield.chat('gpt-3.5-turbo-0613', 2);
 
 describe.concurrent('non-streaming', () => {
   test(
@@ -29,18 +29,18 @@ describe.concurrent('non-streaming', () => {
       });
 
       expect(parsed.choices).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "stop",
-          "finish_reason": "stop",
-          "index": 0,
-          "message": {
-            "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
-            "role": "assistant",
+        [
+          {
+            "__type": "stop",
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
+              "role": "assistant",
+            },
           },
-        },
-      ]
-    `);
+        ]
+      `);
     },
     TEST_TIMEOUT,
   );
@@ -62,27 +62,27 @@ describe.concurrent('non-streaming', () => {
       });
 
       expect(parsed.choices).toMatchInlineSnapshot(`
-      [
-        {
-          "__type": "stop",
-          "finish_reason": "stop",
-          "index": 0,
-          "message": {
-            "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
-            "role": "assistant",
+        [
+          {
+            "__type": "stop",
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
+              "role": "assistant",
+            },
           },
-        },
-        {
-          "__type": "stop",
-          "finish_reason": "stop",
-          "index": 1,
-          "message": {
-            "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
-            "role": "assistant",
+          {
+            "__type": "stop",
+            "finish_reason": "stop",
+            "index": 1,
+            "message": {
+              "content": "The coolest way to eat a pizza is by folding it in half and taking a big, satisfying bite.",
+              "role": "assistant",
+            },
           },
-        },
-      ]
-    `);
+        ]
+      `);
     },
     TEST_TIMEOUT,
   );

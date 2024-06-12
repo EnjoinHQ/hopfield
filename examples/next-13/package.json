@@ -12,13 +12,13 @@
     "@vercel/kv": "latest",
     "hopfield": "workspace:*",
     "next": "latest",
-    "openai": "4.16.1",
+    "openai": "4.50.0",
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest"
   },
   "devDependencies": {
-    "@types/node": "^20.8.1",
+    "@types/node": "^20.14.2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",

@@ -30,21 +30,19 @@ it('should expose correct exports', () => {
 
 test('should set a model name', async () => {
   expect(
-    hop.client(openai).chat('gpt-3.5-turbo-16k-0613').model,
-  ).toMatchInlineSnapshot('"gpt-3.5-turbo-16k-0613"');
+    hop.client(openai).chat('gpt-4o-2024-05-13').model,
+  ).toMatchInlineSnapshot('"gpt-4o-2024-05-13"');
 });
 
 test('should set a default model name', async () => {
-  expect(hop.client(openai).chat().model).toMatchInlineSnapshot(
-    '"gpt-3.5-turbo-1106"',
-  );
+  expect(hop.client(openai).chat().model).toMatchInlineSnapshot('"gpt-4o"');
 });
 
 describe.concurrent('non-streaming chat', () => {
   test('all test messages', async () => {
     const allTests = [openaiBasicMessage, openaiLengthLimited];
 
-    const testChat = hop.client(openai).chat();
+    const testChat = hop.client(openai).chat('gpt-4o-2024-05-13');
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -69,7 +67,7 @@ describe.concurrent('non-streaming chat', () => {
           ],
           "created": 1690495858,
           "id": "chatcmpl-8976324",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 3,
             "prompt_tokens": 28,
@@ -90,7 +88,7 @@ describe.concurrent('non-streaming chat', () => {
           ],
           "created": 1690495920,
           "id": "chatcmpl-1230789",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 10,
             "prompt_tokens": 27,
@@ -104,7 +102,7 @@ describe.concurrent('non-streaming chat', () => {
   test('two n messages', async () => {
     const allTests = [openaiTwoResponses];
 
-    const testChat = hop.client(openai).chat('gpt-3.5-turbo-1106', 2);
+    const testChat = hop.client(openai).chat('gpt-4o-2024-05-13', 2);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -138,7 +136,7 @@ describe.concurrent('non-streaming chat', () => {
           ],
           "created": 1690496163,
           "id": "chatcmpl-23490823",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 8,
             "prompt_tokens": 23,
@@ -159,7 +157,10 @@ describe.concurrent('non-streaming functions chat', () => {
       openaiLengthLimited,
     ];
 
-    const testChat = hop.client(openai).chat().functions([weatherFunction]);
+    const testChat = hop
+      .client(openai)
+      .chat('gpt-4o-2024-05-13')
+      .functions([weatherFunction]);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
 
@@ -184,7 +185,7 @@ describe.concurrent('non-streaming functions chat', () => {
           ],
           "created": 1690495858,
           "id": "chatcmpl-8976324",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 3,
             "prompt_tokens": 28,
@@ -212,7 +213,7 @@ describe.concurrent('non-streaming functions chat', () => {
           ],
           "created": 1690825708,
           "id": "chatcmpl-5544332211",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 26,
             "prompt_tokens": 72,
@@ -240,7 +241,7 @@ describe.concurrent('non-streaming functions chat', () => {
           ],
           "created": 1690496097,
           "id": "chatcmpl-098234",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 25,
             "prompt_tokens": 102,
@@ -261,7 +262,7 @@ describe.concurrent('non-streaming functions chat', () => {
           ],
           "created": 1690495920,
           "id": "chatcmpl-1230789",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 10,
             "prompt_tokens": 27,
@@ -277,7 +278,7 @@ describe.concurrent('non-streaming functions chat', () => {
 
     const testChat = hop
       .client(openai)
-      .chat('gpt-3.5-turbo-1106', 2)
+      .chat('gpt-4o-2024-05-13', 2)
       .functions([weatherFunction]);
 
     const allTypes: hop.inferResult<typeof testChat>[] = [];
@@ -312,7 +313,7 @@ describe.concurrent('non-streaming functions chat', () => {
           ],
           "created": 1690496163,
           "id": "chatcmpl-23490823",
-          "model": "gpt-3.5-turbo-1106",
+          "model": "gpt-4o-2024-05-13",
           "usage": {
             "completion_tokens": 8,
             "prompt_tokens": 23,
@@ -442,6 +443,15 @@ describe.concurrent('non-streaming functions chat', () => {
             0
           ],
           \\"message\\": \\"Invalid input\\"
+        },
+        {
+          \\"received\\": \\"gpt-4o-2024-05-13\\",
+          \\"code\\": \\"invalid_literal\\",
+          \\"expected\\": \\"gpt-4o\\",
+          \\"path\\": [
+            \\"model\\"
+          ],
+          \\"message\\": \\"Invalid literal value, expected \\\\\\"gpt-4o\\\\\\"\\"
         }
       ]"
     `);

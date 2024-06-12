@@ -2,7 +2,7 @@ export const openaiBasicMessage = {
   id: 'chatcmpl-8976324',
   object: 'chat.completion',
   created: 1690495858,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -24,7 +24,7 @@ export const openaiBasicFunctionCall = {
   id: 'chatcmpl-5544332211',
   object: 'chat.completion',
   created: 1690825708,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -50,7 +50,7 @@ export const openaiLengthLimited = {
   id: 'chatcmpl-1230789',
   object: 'chat.completion',
   created: 1690495920,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -72,7 +72,7 @@ export const openaiFunctionCallLengthLimited = {
   id: 'chatcmpl-908213',
   object: 'chat.completion',
   created: 1690496036,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -98,7 +98,7 @@ export const openaiFunctionCall = {
   id: 'chatcmpl-098234',
   object: 'chat.completion',
   created: 1690496097,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -124,7 +124,7 @@ export const openaiTwoResponses = {
   id: 'chatcmpl-23490823',
   object: 'chat.completion',
   created: 1690496163,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   choices: [
     {
       index: 0,
@@ -165,7 +165,7 @@ export const openaiAdversarial = {
     },
   ],
   created: 1690611868,
-  model: 'gpt-3.5-turbo-1106',
+  model: 'gpt-4o-2024-05-13',
   object: 'chat.completion',
   usage: {
     completion_tokens: 361,
