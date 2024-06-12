@@ -1,5 +1,11 @@
 # hopfield
 
+## 0.3.7
+
+### Patch Changes
+
+- [#32](https://github.com/EnjoinHQ/hopfield/pull/32) [`40d5dc9f1e972cfc503718fc8749e0613ae4b7ed`](https://github.com/EnjoinHQ/hopfield/commit/40d5dc9f1e972cfc503718fc8749e0613ae4b7ed) Thanks [@0xcadams](https://github.com/0xcadams)! - **Fix:** updated the default model name to be more recent.
+
 ## 0.3.6
 
 ### Patch Changes
