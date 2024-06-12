@@ -62,21 +62,7 @@ with best practices baked in.
 
 Add it to your project, along with any peer dependencies:
 
-::: code-group
-
-```bash [bun]
-bun i hopfield
-```
-
-```bash [pnpm]
-pnpm add hopfield
-```
-
-```bash [npm]
-npm i hopfield
-```
-
-:::
+`npm i hopfield`
 
 ### ready, set, `hop`
 

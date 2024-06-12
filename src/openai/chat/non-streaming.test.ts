@@ -35,9 +35,7 @@ test('should set a model name', async () => {
 });
 
 test('should set a default model name', async () => {
-  expect(hop.client(openai).chat().model).toMatchInlineSnapshot(
-    '"gpt-4o"',
-  );
+  expect(hop.client(openai).chat().model).toMatchInlineSnapshot('"gpt-4o"');
 });
 
 describe.concurrent('non-streaming chat', () => {

@@ -11,21 +11,7 @@ This section will help you start using Hopfield in your TypeScript project.
 
 First, you will need to install Hopfield.
 
-::: code-group
-
-```bash [bun]
-bun i hopfield
-```
-
-```bash [pnpm]
-pnpm add hopfield
-```
-
-```bash [npm]
-npm i hopfield
-```
-
-:::
+`npm i hopfield`
 
 ### OpenAI
 
@@ -34,21 +20,7 @@ We currently only support OpenAI (but are working on adding other providers).
 
 To use Hopfield, you will need to install the latest 4+ version of `openai`.
 
-::: code-group
-
-```bash [pnpm]
-pnpm add openai@4
-```
-
-```bash [npm]
-npm i openai@4
-```
-
-```bash [yarn]
-yarn add openai@4
-```
-
-:::
+`npm i openai@4`
 
 ## Create a Provider
 
